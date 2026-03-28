@@ -22,7 +22,7 @@ export function CheckoutForm() {
           made — this was a preview only.
         </p>
         <Link
-          href="/products"
+          href="/shop"
           className="mt-8 inline-flex rounded-full bg-stone-900 px-6 py-3 text-sm font-semibold text-white hover:bg-stone-800"
         >
           Back to shop

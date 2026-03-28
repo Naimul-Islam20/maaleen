@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { CollectionsSection } from "@/components/home/collections-section";
 import { HeroSlider } from "@/components/home/hero-slider";
 import { Container } from "@/components/layout/container";
 import { ProductCard } from "@/components/product/product-card";
@@ -17,6 +18,8 @@ export default function HomePage() {
         <HeroSlider />
       </section>
 
+      <CollectionsSection />
+
       <section>
         <Container className="py-14 sm:py-20">
           <div className="flex items-end justify-between gap-4">
@@ -24,7 +27,7 @@ export default function HomePage() {
               Featured
             </h2>
             <Link
-              href="/products"
+              href="/shop"
               className="text-sm font-medium text-[var(--accent)] hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
             >
               See all
@@ -47,7 +50,7 @@ export default function HomePage() {
               New arrivals
             </h2>
             <Link
-              href="/products"
+              href="/shop"
               className="text-sm font-medium text-[var(--accent)] hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
             >
               Shop new

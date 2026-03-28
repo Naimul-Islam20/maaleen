@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import { Container } from "@/components/layout/container";
+import { buildShopEditHref } from "@/data/shop-edits";
 
 const AUTO_MS = 6000;
 
@@ -17,9 +18,9 @@ const SLIDES = [
     image:
       "https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=1920&q=85",
     imageAlt: "",
-    primaryHref: "/products",
+    primaryHref: "/shop",
     primaryLabel: "Shop collection",
-    secondaryHref: "/products?category=dress",
+    secondaryHref: buildShopEditHref("evening-silhouettes"),
     secondaryLabel: "View dresses",
   },
   {
@@ -31,9 +32,9 @@ const SLIDES = [
     image:
       "https://images.unsplash.com/photo-1544022613-e87ca75a784a?w=1920&q=85",
     imageAlt: "",
-    primaryHref: "/products?category=outerwear",
+    primaryHref: buildShopEditHref("outer-layers"),
     primaryLabel: "Shop outerwear",
-    secondaryHref: "/products",
+    secondaryHref: buildShopEditHref("full-edit"),
     secondaryLabel: "Full collection",
   },
   {
@@ -45,7 +46,7 @@ const SLIDES = [
     image:
       "https://images.unsplash.com/photo-1496747611176-843222e1e57c?w=1920&q=85",
     imageAlt: "",
-    primaryHref: "/products",
+    primaryHref: buildShopEditHref("new-arrivals"),
     primaryLabel: "New arrivals",
     secondaryHref: "/cart",
     secondaryLabel: "Your bag",

@@ -40,7 +40,7 @@ export function ProductDetail({ product, related }) {
   return (
     <div className="grid gap-10 lg:grid-cols-2 lg:gap-12">
       <div className="space-y-3">
-        <div className="relative aspect-[4/5] overflow-hidden rounded-xl bg-stone-200">
+        <div className="relative aspect-[3/2] w-full overflow-hidden rounded-xl bg-stone-200 sm:aspect-[4/4]">
           {main ? (
             <Image
               src={main}

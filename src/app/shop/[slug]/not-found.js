@@ -10,7 +10,7 @@ export default function NotFound() {
         The product may have been removed or the link is incorrect.
       </p>
       <Link
-        href="/products"
+        href="/shop"
         className="mt-8 inline-flex rounded-full bg-stone-900 px-6 py-3 text-sm font-semibold text-white hover:bg-stone-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
       >
         Back to shop

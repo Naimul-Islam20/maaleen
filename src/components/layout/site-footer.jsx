@@ -1,13 +1,14 @@
 import Link from "next/link";
 import { Container } from "@/components/layout/container";
+import { buildShopEditHref } from "@/data/shop-edits";
 
 const groups = [
   {
     title: "Shop",
     links: [
-      { href: "/products", label: "All products" },
-      { href: "/products?category=dress", label: "Dresses" },
-      { href: "/products?category=tops", label: "Tops" },
+      { href: "/shop", label: "All products" },
+      { href: buildShopEditHref("evening-silhouettes"), label: "Dresses" },
+      { href: buildShopEditHref("everyday-tops"), label: "Tops" },
     ],
   },
   {

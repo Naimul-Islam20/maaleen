@@ -5,7 +5,10 @@ export function Breadcrumbs({ items }) {
     <nav aria-label="Breadcrumb" className="text-sm text-stone-500">
       <ol className="flex flex-wrap items-center gap-2">
         {items.map((item, i) => (
-          <li key={item.href} className="flex items-center gap-2">
+          <li
+            key={`${i}-${item.label}-${item.href}`}
+            className="flex items-center gap-2"
+          >
             {i > 0 ? (
               <span className="text-stone-300" aria-hidden>
                 /

@@ -27,7 +27,7 @@ export function CartView() {
           Discover dresses and layers curated for the season.
         </p>
         <Link
-          href="/products"
+          href="/shop"
           className="mt-8 inline-flex rounded-full bg-stone-900 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-stone-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
         >
           Continue shopping
@@ -45,7 +45,7 @@ export function CartView() {
             className="flex gap-4 rounded-xl border border-stone-200 bg-[var(--surface-elevated)] p-4 shadow-sm"
           >
             <Link
-              href={`/products/${line.slug}`}
+              href={`/shop/${line.slug}`}
               className="relative h-28 w-24 shrink-0 overflow-hidden rounded-lg bg-stone-200 sm:h-32 sm:w-28"
             >
               {line.image ? (
@@ -60,7 +60,7 @@ export function CartView() {
             </Link>
             <div className="min-w-0 flex-1">
               <Link
-                href={`/products/${line.slug}`}
+                href={`/shop/${line.slug}`}
                 className="font-medium text-stone-900 hover:text-[var(--accent)]"
               >
                 {line.name}
@@ -126,7 +126,7 @@ export function CartView() {
           Checkout
         </Link>
         <Link
-          href="/products"
+          href="/shop"
           className="mt-3 block text-center text-sm text-[var(--accent)] hover:underline"
         >
           Continue shopping
