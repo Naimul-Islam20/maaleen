@@ -298,7 +298,7 @@ export function SiteHeader() {
                 </span>
               ) : (
                 <Image
-                  src="/maaleen-logo-1.png"
+                  src="/Maaleen-Logo-1.png"
                   alt="Maaleen"
                   width={340}
                   height={100}
