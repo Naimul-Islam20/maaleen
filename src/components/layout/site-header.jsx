@@ -429,7 +429,7 @@ export function SiteHeader() {
                 className="inline-flex min-h-10 items-center justify-center gap-1.5 rounded-full border border-white/35 bg-white/10 px-3 text-xs font-semibold text-white transition-colors hover:border-white/55 hover:bg-white/15 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:gap-2 sm:px-4 sm:text-sm"
               >
                 <UserIcon className="h-4 w-4" />
-                <span>Login</span>
+                <span className="hidden sm:inline">Login</span>
               </Link>
             </div>
           </div>

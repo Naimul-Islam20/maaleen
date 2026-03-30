@@ -14,7 +14,7 @@
   margin-inline: auto;
   box-sizing: border-box;
   max-width: 100%;
-  padding-inline: 1rem;
+  padding-inline: 0.75rem;
 }
 
 /* Tablet (640px–1023px) */
@@ -28,7 +28,7 @@
 /* Desktop (1024px+) */
 @media (min-width: 1024px) {
   .maaleen-container {
-    max-width: 72rem;
+    max-width: 96rem;
     padding-inline: 2rem;
   }
 }
