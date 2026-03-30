@@ -1,60 +1,58 @@
 import Link from "next/link";
 import { Container } from "@/components/layout/container";
-import { buildShopEditHref } from "@/data/shop-edits";
 
 const groups = [
   {
-    title: "Shop",
+    title: "Company",
     links: [
-      { href: "/shop", label: "All products" },
-      { href: buildShopEditHref("evening-silhouettes"), label: "Dresses" },
-      { href: buildShopEditHref("everyday-tops"), label: "Tops" },
+      { href: "/about-us", label: "About Us" },
+      { href: "/contact", label: "Contact" },
     ],
   },
   {
-    title: "Support",
+    title: "Help",
     links: [
-      { href: "#", label: "Shipping" },
-      { href: "#", label: "Returns" },
-      { href: "#", label: "Contact" },
+      { href: "/size-guide", label: "Size Guide" },
+      { href: "/faqs", label: "FAQs" },
     ],
   },
   {
-    title: "Legal",
+    title: "Policies",
     links: [
-      { href: "#", label: "Privacy" },
-      { href: "#", label: "Terms" },
+      { href: "/privacy-policy", label: "Privacy Policy" },
+      { href: "/shipping-policy", label: "Shipping Policy" },
+      { href: "/return-policy", label: "Return Policy" },
     ],
   },
 ];
 
 export function SiteFooter() {
   return (
-    <footer className="mt-auto border-t border-stone-200 bg-stone-100/50">
-      <Container className="py-12">
+    <footer className="mt-auto border-t border-white/20 bg-[var(--accent)] text-white">
+      <Container className="py-12 sm:py-14">
         <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
           <div>
-            <p className="font-[family-name:var(--font-display)] text-lg text-stone-900">
+            <p className="font-[family-name:var(--font-display)] text-2xl leading-none tracking-wide text-white">
               Maaleen
             </p>
-            <p className="mt-2 max-w-xs text-sm leading-relaxed text-stone-600">
+            <p className="mt-4 max-w-xs text-sm leading-relaxed text-white/85">
               Curated dresses and wardrobe pieces with calm, modern tailoring.
             </p>
-            <p className="mt-4 text-xs text-stone-500">
+            <p className="mt-4 text-xs uppercase tracking-[0.14em] text-white/65">
               Newsletter coming soon — stay tuned.
             </p>
           </div>
           {groups.map((g) => (
             <div key={g.title}>
-              <p className="text-xs font-semibold uppercase tracking-wider text-stone-500">
+              <p className="text-xs font-semibold uppercase tracking-[0.16em] text-white/70">
                 {g.title}
               </p>
-              <ul className="mt-3 space-y-2">
+              <ul className="mt-4 space-y-2.5">
                 {g.links.map((l) => (
                   <li key={l.label}>
                     <Link
                       href={l.href}
-                      className="text-sm text-stone-600 transition-colors hover:text-[var(--accent)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
+                      className="inline-flex items-center gap-2 text-sm text-white/90 transition-colors hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
                     >
                       {l.label}
                     </Link>
@@ -64,7 +62,7 @@ export function SiteFooter() {
             </div>
           ))}
         </div>
-        <p className="mt-10 border-t border-stone-200 pt-8 text-center text-xs text-stone-500">
+        <p className="mt-12 border-t border-white/20 pt-8 text-center text-xs tracking-[0.08em] text-white/70">
           © {new Date().getFullYear()} Maaleen. All rights reserved.
         </p>
       </Container>

@@ -55,3 +55,51 @@ body {
   color: var(--foreground);
   font-family: var(--font-sans);
 }
+
+/* Home products Embla: slide width = share of carousel viewport (not fixed rem) so 4 fit on lg.
+   Margin between slides instead of flex gap — Embla loop + gap can collapse at the wrap. */
+.maaleen-products-embla {
+  container-type: inline-size;
+  width: 100%;
+}
+
+.maaleen-products-embla-slide {
+  flex: 0 0 calc((100cqi - 1.5rem) / 2);
+  min-width: 0;
+  box-sizing: border-box;
+  margin-inline-end: 1.5rem; /* gap-6 */
+}
+
+@media (min-width: 640px) {
+  .maaleen-products-embla-slide {
+    flex-basis: calc((100cqi - 1.5rem) / 2);
+  }
+}
+
+@media (min-width: 1024px) {
+  .maaleen-products-embla-slide {
+    flex-basis: calc((100cqi - 4.5rem) / 4);
+  }
+}
+
+/* (cart drawer animation now handled via Tailwind translate-x utilities) */
+
+/* Collections: one card per snap — 1-up on small screens, 2-up from md (matches Tailwind md).
+   Use margin between slides, not flex gap: Embla loop clones + gap can collapse space at the wrap. */
+.maaleen-collections-embla {
+  container-type: inline-size;
+  width: 100%;
+}
+
+.maaleen-collections-embla-slide {
+  flex: 0 0 100cqi;
+  min-width: 0;
+  box-sizing: border-box;
+  margin-inline-end: 1.5rem; /* same as gap-6; survives loop seam */
+}
+
+@media (min-width: 768px) {
+  .maaleen-collections-embla-slide {
+    flex-basis: calc((100cqi - 1.5rem) / 2);
+  }
+}

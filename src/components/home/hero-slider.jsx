@@ -81,7 +81,7 @@ export function HeroSlider() {
 
   return (
     <div
-      className="relative min-h-[min(88vh,52rem)] w-full overflow-hidden"
+      className="relative h-[28rem] w-full overflow-hidden sm:h-[34rem] lg:h-[40rem]"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
@@ -118,12 +118,12 @@ export function HeroSlider() {
       ))}
 
       {/* Content inside site container */}
-      <Container className="relative z-10 flex min-h-[min(88vh,52rem)] flex-col justify-center py-16 sm:py-24 lg:py-28">
+      <Container className="relative z-10 flex h-full flex-col justify-center py-10 sm:py-14 lg:py-16">
         <div className="max-w-xl">
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#e8c4c4]">
             {slide.eyebrow}
           </p>
-          <h1 className="mt-4 font-[family-name:var(--font-display)] text-4xl leading-tight tracking-tight text-white sm:text-5xl lg:text-6xl">
+          <h1 className="mt-4 overflow-hidden text-ellipsis whitespace-nowrap font-[family-name:var(--font-display)] text-4xl leading-tight tracking-tight text-white sm:text-5xl lg:text-6xl">
             {slide.title}
           </h1>
           <p className="mt-6 text-sm leading-relaxed text-stone-200 sm:text-base">

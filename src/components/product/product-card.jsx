@@ -1,15 +1,38 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import { formatPrice } from "@/lib/format";
+import { useWishlist } from "@/contexts/wishlist-context";
+
+function HeartIcon({ filled, className }) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill={filled ? "currentColor" : "none"}
+      stroke="currentColor"
+      strokeWidth="1.75"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+      aria-hidden
+    >
+      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+    </svg>
+  );
+}
 
 export function ProductCard({ product }) {
   const image = product.images?.[0];
   const onSale =
     product.compareAtPrice != null && product.compareAtPrice > product.price;
   const isNew = product.tags?.includes("new");
+  const { toggleItem, isWishlisted, ready } = useWishlist();
+  const wishlisted = ready && isWishlisted(product.id);
 
   return (
-    <article className="group">
+    <article className="group relative">
       <Link
         href={`/shop/${product.slug}`}
         className="block focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
@@ -38,7 +61,7 @@ export function ProductCard({ product }) {
           </div>
         </div>
         <div className="mt-3 space-y-1">
-          <h2 className="font-medium text-stone-900 group-hover:text-[var(--accent)] transition-colors">
+          <h2 className="font-medium text-stone-900 transition-colors group-hover:text-[var(--accent)]">
             {product.name}
           </h2>
           <div className="flex flex-wrap items-baseline gap-2">
@@ -53,6 +76,33 @@ export function ProductCard({ product }) {
           </div>
         </div>
       </Link>
+      <button
+        type="button"
+        aria-label={
+          wishlisted ? "Remove from wishlist" : "Add to wishlist"
+        }
+        aria-pressed={wishlisted}
+        onClick={() =>
+          toggleItem({
+            productId: product.id,
+            slug: product.slug,
+            name: product.name,
+            price: product.price,
+            currency: product.currency,
+            image,
+          })
+        }
+        className="absolute right-2 top-2 z-10 inline-flex h-9 w-9 items-center justify-center rounded-full border border-stone-200/80 bg-white/90 text-stone-700 shadow-sm backdrop-blur-sm transition-colors hover:border-stone-300 hover:bg-white hover:text-[var(--accent)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
+      >
+        <HeartIcon
+          filled={wishlisted}
+          className={
+            wishlisted
+              ? "h-[1.15rem] w-[1.15rem] text-[var(--accent)]"
+              : "h-[1.15rem] w-[1.15rem]"
+          }
+        />
+      </button>
     </article>
   );
 }

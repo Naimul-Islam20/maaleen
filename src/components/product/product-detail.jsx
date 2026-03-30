@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useState } from "react";
 import { useCart } from "@/contexts/cart-context";
 import { useToast } from "@/contexts/toast-context";
+import { useWishlist } from "@/contexts/wishlist-context";
 import { formatPrice } from "@/lib/format";
 import { ProductCard } from "./product-card";
 
@@ -13,6 +14,7 @@ export function ProductDetail({ product, related }) {
   const [color, setColor] = useState("");
   const { addItem } = useCart();
   const { showToast } = useToast();
+  const { toggleItem, isWishlisted, ready: wishReady } = useWishlist();
 
   const images = product.images ?? [];
   const main = images[imageIndex] ?? images[0];
@@ -80,9 +82,53 @@ export function ProductDetail({ product, related }) {
       </div>
 
       <div>
-        <h1 className="font-[family-name:var(--font-display)] text-3xl tracking-tight text-stone-900 sm:text-4xl">
-          {product.name}
-        </h1>
+        <div className="flex flex-wrap items-start justify-between gap-3">
+          <h1 className="font-[family-name:var(--font-display)] text-3xl tracking-tight text-stone-900 sm:text-4xl">
+            {product.name}
+          </h1>
+          <button
+            type="button"
+            aria-label={
+              wishReady && isWishlisted(product.id)
+                ? "Remove from wishlist"
+                : "Add to wishlist"
+            }
+            aria-pressed={wishReady && isWishlisted(product.id)}
+            onClick={() =>
+              toggleItem({
+                productId: product.id,
+                slug: product.slug,
+                name: product.name,
+                price: product.price,
+                currency: product.currency,
+                image: main,
+              })
+            }
+            className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-stone-200 bg-[var(--surface-elevated)] text-stone-700 transition-colors hover:border-stone-300 hover:text-[var(--accent)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill={
+                wishReady && isWishlisted(product.id)
+                  ? "currentColor"
+                  : "none"
+              }
+              stroke="currentColor"
+              strokeWidth="1.75"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className={
+                wishReady && isWishlisted(product.id)
+                  ? "h-5 w-5 text-[var(--accent)]"
+                  : "h-5 w-5"
+              }
+              aria-hidden
+            >
+              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+            </svg>
+          </button>
+        </div>
         <div className="mt-3 flex flex-wrap items-baseline gap-2">
           <span className="text-xl text-stone-900">
             {formatPrice(product.price, product.currency)}
@@ -169,7 +215,7 @@ export function ProductDetail({ product, related }) {
           <h2 className="font-[family-name:var(--font-display)] text-2xl text-stone-900">
             You may also like
           </h2>
-          <ul className="mt-8 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
+          <ul className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-2 sm:gap-8 lg:grid-cols-4">
             {related.map((p) => (
               <li key={p.id}>
                 <ProductCard product={p} />

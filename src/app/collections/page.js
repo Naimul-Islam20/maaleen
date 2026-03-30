@@ -32,10 +32,7 @@ export default function CollectionsPage() {
               key={slide.id}
               className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6"
             >
-              <CollectionColumn
-                item={slide.left}
-                priority={slideIdx === 0}
-              />
+              <CollectionColumn item={slide.left} priority={slideIdx === 0} />
               <CollectionColumn item={slide.right} priority={false} />
             </div>
           ))}
