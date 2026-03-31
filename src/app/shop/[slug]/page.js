@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import { Breadcrumbs } from "@/components/ui/breadcrumbs";
+import { Container } from "@/components/layout/container";
 import { ProductDetail } from "@/components/product/product-detail";
 import { getProductBySlug, getRelatedProducts } from "@/lib/products";
 
@@ -28,7 +29,7 @@ export default async function ProductPage({ params }) {
   const related = getRelatedProducts(slug, 4);
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6 sm:py-14">
+    <Container className="py-10 sm:py-14">
       <Breadcrumbs
         items={[
           { href: "/", label: "Home" },
@@ -43,6 +44,6 @@ export default async function ProductPage({ params }) {
       <div className="mt-8">
         <ProductDetail product={product} related={related} />
       </div>
-    </div>
+    </Container>
   );
 }

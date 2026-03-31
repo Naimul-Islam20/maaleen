@@ -43,6 +43,7 @@ export function ProductCard({ product }) {
               src={image}
               alt={`${product.name}${product.colors?.[0] ? ` — ${product.colors[0].name}` : ""}`}
               fill
+              draggable={false}
               className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03] motion-reduce:transition-none motion-reduce:group-hover:scale-100"
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
             />

@@ -70,6 +70,14 @@ body {
   margin-inline-end: 1.5rem; /* gap-6 */
 }
 
+/* Mobile-only: show 1 centered item with side peeks */
+@media (max-width: 639px) {
+  .maaleen-products-embla-slide {
+    flex: 0 0 72cqi; /* 72% of container — center is big, sides peek */
+    margin-inline-end: 1rem; /* gap between slides */
+  }
+}
+
 @media (min-width: 640px) {
   .maaleen-products-embla-slide {
     flex-basis: calc((100cqi - 1.5rem) / 2);

@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { Suspense } from "react";
 import { ProductShopIntro } from "@/components/product/product-shop-intro";
 import { ProductsCatalog } from "@/components/product/products-catalog";
+import { Container } from "@/components/layout/container";
 import { getShopEdit } from "@/data/shop-edits";
 import { getProducts } from "@/lib/products";
 
@@ -37,7 +38,7 @@ export default async function ShopPage({ searchParams }) {
   const products = getProducts();
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6 sm:py-14">
+    <Container className="py-10 sm:py-14">
       <Suspense
         fallback={
           <div className="space-y-4" aria-hidden>
@@ -58,6 +59,6 @@ export default async function ShopPage({ searchParams }) {
           <ProductsCatalog products={products} />
         </Suspense>
       </div>
-    </div>
+    </Container>
   );
 }

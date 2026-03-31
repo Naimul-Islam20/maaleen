@@ -16,6 +16,7 @@ export default function useEmblaAutoplay({
   autoplay = true,
 } = {}) {
   const timerRef = useRef(null);
+  const dragStartProgressRef = useRef(0);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [emblaRef, emblaApi] = useEmblaCarousel(emblaOptions);
 
@@ -64,15 +65,37 @@ export default function useEmblaAutoplay({
       setSelectedIndex(emblaApi.selectedScrollSnap());
       scheduleNext();
     };
+    const onPointerDown = () => {
+      clearTimer();
+      dragStartProgressRef.current = emblaApi.scrollProgress();
+    };
+    const onPointerUp = () => {
+      const endProgress = emblaApi.scrollProgress();
+      const startProgress = dragStartProgressRef.current;
+
+      const delta = endProgress - startProgress;
+      const threshold = 0.02; // very small move means ignore
+
+      if (delta > threshold) {
+        // Dragged towards next slides (right on LTR)
+        emblaApi.scrollNext();
+      } else if (delta < -threshold) {
+        // Dragged towards previous slides (left on LTR)
+        emblaApi.scrollPrev();
+      }
+
+      scheduleNext();
+    };
+
     emblaApi.on("select", onSelect);
-    emblaApi.on("pointerDown", clearTimer);
-    emblaApi.on("pointerUp", scheduleNext);
+    emblaApi.on("pointerDown", onPointerDown);
+    emblaApi.on("pointerUp", onPointerUp);
     scheduleNext();
     return () => {
       clearTimer();
       emblaApi.off("select", onSelect);
-      emblaApi.off("pointerDown", clearTimer);
-      emblaApi.off("pointerUp", scheduleNext);
+      emblaApi.off("pointerDown", onPointerDown);
+      emblaApi.off("pointerUp", onPointerUp);
     };
   }, [emblaApi, scheduleNext, clearTimer]);
 
