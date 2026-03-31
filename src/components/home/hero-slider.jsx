@@ -123,13 +123,13 @@ export function HeroSlider() {
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#e8c4c4]">
             {slide.eyebrow}
           </p>
-          <h1 className="mt-4 overflow-hidden text-ellipsis whitespace-nowrap font-[family-name:var(--font-display)] text-4xl leading-tight tracking-tight text-white sm:text-5xl lg:text-6xl">
+          <h1 className="mt-3 overflow-hidden text-ellipsis whitespace-nowrap font-[family-name:var(--font-display)] text-4xl leading-tight tracking-tight text-white sm:mt-4 sm:text-5xl lg:text-6xl">
             {slide.title}
           </h1>
-          <p className="mt-6 text-sm leading-relaxed text-stone-200 sm:text-base">
+          <p className="mt-3 min-h-[3rem] overflow-hidden text-ellipsis text-sm leading-relaxed text-stone-200 [-webkit-box-orient:vertical] [display:-webkit-box] [-webkit-line-clamp:2] sm:mt-6 sm:min-h-[3.5rem] sm:text-base">
             {slide.description}
           </p>
-          <div className="mt-10 flex flex-wrap gap-4">
+          <div className="mt-6 flex flex-wrap gap-3 sm:mt-10 sm:gap-4">
             <Link
               href={slide.primaryHref}
               className="inline-flex rounded-full bg-white px-6 py-3 text-sm font-semibold text-stone-900 transition-colors hover:bg-stone-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"

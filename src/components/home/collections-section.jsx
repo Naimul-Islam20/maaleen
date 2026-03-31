@@ -37,10 +37,10 @@ export function CollectionsSection() {
       className="border-b border-stone-200 bg-[var(--surface)]"
     >
       <Container className="py-14 sm:py-20">
-        <h2 className="font-[family-name:var(--font-display)] text-2xl text-stone-900 sm:text-3xl">
+        <h2 className="text-center font-[family-name:var(--font-display)] text-2xl text-stone-900 sm:text-3xl">
           Collections
         </h2>
-        <p className="mt-2 max-w-xl text-sm text-stone-600 sm:text-base">
+        <p className="mx-auto mt-2 max-w-xl text-center text-sm text-stone-600 sm:text-base">
           One card per step — on small screens one shows; from tablet up, two
           show side by side while arrows move a single card.
         </p>

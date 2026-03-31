@@ -86,6 +86,43 @@ function SearchIcon({ className }) {
   );
 }
 
+function CloseIcon({ className }) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.75"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+      aria-hidden
+    >
+      <path d="M18 6 6 18" />
+      <path d="m6 6 12 12" />
+    </svg>
+  );
+}
+
+function ChevronDownIcon({ className }) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.75"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+      aria-hidden
+    >
+      <path d="m6 9 6 6 6-6" />
+    </svg>
+  );
+}
+
 /** Active state for main nav links. */
 function navHrefIsActive(href, pathname, searchParams) {
   if (href === "/cart") return pathname === "/cart";
@@ -223,7 +260,12 @@ export function SiteHeader() {
   const [cartMounted, setCartMounted] = useState(false);
   const [logoError, setLogoError] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [selectedCountry, setSelectedCountry] = useState("BD");
+  const [countryOpen, setCountryOpen] = useState(false);
   const wishlistPopoverRef = useRef(null);
+  const searchAreaRef = useRef(null);
+  const mobileSearchRef = useRef(null);
+  const countryPopoverRef = useRef(null);
 
   useEffect(() => {
     if (!wishlistOpen) return;
@@ -243,6 +285,41 @@ export function SiteHeader() {
     };
   }, [wishlistOpen]);
 
+  useEffect(() => {
+    if (!searchOpen) return;
+    function onClick(event) {
+      if (searchAreaRef.current?.contains(event.target)) return;
+      if (mobileSearchRef.current?.contains(event.target)) return;
+      setSearchOpen(false);
+    }
+    function onKey(event) {
+      if (event.key === "Escape") setSearchOpen(false);
+    }
+    document.addEventListener("mousedown", onClick);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("mousedown", onClick);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [searchOpen]);
+
+  useEffect(() => {
+    if (!countryOpen) return;
+    function onClick(event) {
+      if (countryPopoverRef.current?.contains(event.target)) return;
+      setCountryOpen(false);
+    }
+    function onKey(event) {
+      if (event.key === "Escape") setCountryOpen(false);
+    }
+    document.addEventListener("mousedown", onClick);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("mousedown", onClick);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [countryOpen]);
+
   const wishlistPreview = wishItems ?? [];
 
   const openCart = () => {
@@ -252,39 +329,127 @@ export function SiteHeader() {
   const closeCart = () => {
     setCartMounted(false);
   };
+  const noticeItems = [
+    "New arrivals every Friday",
+    "Free shipping over BDT 3000",
+    "Cash on Delivery available nationwide",
+    "Flat 10% off on first order with code WELCOME10",
+    "Exchange within 7 days (T&C apply)",
+    "International shipping now open for Australia",
+  ];
+  const noticeText = `Notice: ${noticeItems.join("  |  ")}`;
+
+  const toggleSearch = () => {
+    setSearchOpen((open) => {
+      const nextOpen = !open;
+      if (nextOpen) {
+        setCountryOpen(false);
+      }
+      return nextOpen;
+    });
+  };
 
   return (
     <>
-      <header className="sticky top-0 z-40 border-b border-white/20 bg-[var(--accent)] backdrop-blur-md">
+      <header className="sticky top-0 z-40 bg-[var(--accent)] backdrop-blur-md">
         <Container>
           <div className="relative flex min-h-20 items-center justify-end sm:min-h-24">
-            <div className="absolute left-0 top-1/2 z-20 -translate-y-1/2">
+            <div
+              className="absolute left-0 top-1/2 z-40 -translate-y-1/2"
+              ref={searchAreaRef}
+            >
               <div className="flex items-center gap-2">
                 <button
                   type="button"
-                  onClick={() => setSearchOpen((open) => !open)}
+                  onClick={toggleSearch}
                   className="inline-flex min-h-10 min-w-10 items-center justify-center rounded-full border border-white/30 bg-white/10 text-white transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
-                  aria-label="Search"
+                  aria-label={searchOpen ? "Close search" : "Search"}
                   aria-expanded={searchOpen}
                 >
-                  <SearchIcon className="h-5 w-5" />
+                  {searchOpen ? (
+                    <CloseIcon className="h-5 w-5" />
+                  ) : (
+                    <SearchIcon className="h-5 w-5" />
+                  )}
                 </button>
+                <div
+                  className={searchOpen ? "relative hidden" : "relative"}
+                  ref={countryPopoverRef}
+                >
+                  <button
+                    type="button"
+                    onClick={() => setCountryOpen((open) => !open)}
+                    aria-label="Select country"
+                    aria-expanded={countryOpen}
+                    className="inline-flex h-10 items-center gap-1.5 rounded-full border border-[#E2C7AE] bg-[#FFE6CF] px-2.5 text-xs font-semibold text-stone-900 transition-colors hover:bg-[#F9DABF] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                  >
+                    <span>{selectedCountry === "BD" ? "🇧🇩 BD" : "🇦🇺 AU"}</span>
+                    <ChevronDownIcon className="h-3.5 w-3.5" />
+                  </button>
+                  {countryOpen ? (
+                    <div className="absolute left-0 top-full z-40 mt-2 w-44 rounded-xl border border-[#E2C7AE] bg-[#FFE6CF] p-1.5 shadow-lg ring-1 ring-black/10">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setSelectedCountry("BD");
+                          setCountryOpen(false);
+                        }}
+                        className={`flex w-full items-center rounded-lg px-3 py-2 text-left text-sm text-stone-900 transition-colors hover:bg-[#F3D3B8] ${
+                          selectedCountry === "BD" ? "bg-[#F3D3B8]" : ""
+                        }`}
+                      >
+                        🇧🇩 Bangladesh
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setSelectedCountry("AU");
+                          setCountryOpen(false);
+                        }}
+                        className={`mt-1 flex w-full items-center rounded-lg px-3 py-2 text-left text-sm text-stone-900 transition-colors hover:bg-[#F3D3B8] ${
+                          selectedCountry === "AU" ? "bg-[#F3D3B8]" : ""
+                        }`}
+                      >
+                        🇦🇺 Australia
+                      </button>
+                    </div>
+                  ) : null}
+                </div>
                 {searchOpen ? (
-                  <form
+                  <motion.form
                     action="/shop"
                     method="get"
                     role="search"
                     aria-label="Search products"
-                    className="block"
+                    className="absolute left-12 top-1/2 z-50 hidden -translate-y-1/2 sm:block"
+                    initial={{
+                      opacity: 0,
+                      x: -18,
+                      clipPath: "inset(0 100% 0 0 round 9999px)",
+                    }}
+                    animate={{
+                      opacity: 1,
+                      x: 0,
+                      clipPath: "inset(0 0% 0 0 round 9999px)",
+                    }}
+                    transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
                   >
-                    <input
-                      type="search"
-                      name="q"
-                      placeholder="Search"
-                      className="h-9 w-28 rounded-full border border-white/35 bg-white/10 px-3 text-xs text-white placeholder:text-white/70 backdrop-blur-sm outline-none transition-colors focus:border-white sm:w-44 sm:text-sm"
-                      autoFocus
-                    />
-                  </form>
+                    <div className="relative">
+                      <input
+                        type="search"
+                        name="q"
+                        placeholder="Search products"
+                        className="h-10 w-[300px] rounded-full border border-white/35 bg-white/10 px-4 pr-20 text-sm text-white placeholder:text-white/70 backdrop-blur-sm outline-none transition-colors focus:border-white lg:w-[420px]"
+                        autoFocus
+                      />
+                      <button
+                        type="submit"
+                        className="absolute right-1 top-1/2 -translate-y-1/2 rounded-full border border-white/30 bg-white/15 px-3 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-white/25 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                      >
+                        Search
+                      </button>
+                    </div>
+                  </motion.form>
                 ) : null}
               </div>
             </div>
@@ -432,6 +597,38 @@ export function SiteHeader() {
                 <span className="hidden sm:inline">Login</span>
               </Link>
             </div>
+            <AnimatePresence>
+              {searchOpen ? (
+                <motion.form
+                  ref={mobileSearchRef}
+                  action="/shop"
+                  method="get"
+                  role="search"
+                  aria-label="Search products"
+                  initial={{ opacity: 0, y: -12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -12 }}
+                  transition={{ duration: 0.2, ease: "easeOut" }}
+                  className="absolute inset-x-0 top-0 bottom-0 z-30 flex items-center bg-[var(--accent)] pl-12 pr-0 sm:hidden"
+                >
+                  <div className="relative w-full">
+                    <input
+                      type="search"
+                      name="q"
+                      placeholder="Search products"
+                      autoFocus
+                      className="h-11 w-full rounded-full border border-white/35 bg-white/10 px-4 pr-24 text-sm text-white placeholder:text-white/70 backdrop-blur-sm outline-none transition-colors focus:border-white"
+                    />
+                    <button
+                      type="submit"
+                      className="absolute right-1 top-1/2 -translate-y-1/2 rounded-full border border-white/30 bg-white/15 px-3 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-white/25 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                    >
+                      Search
+                    </button>
+                  </div>
+                </motion.form>
+              ) : null}
+            </AnimatePresence>
           </div>
 
           <nav
@@ -443,7 +640,39 @@ export function SiteHeader() {
             </Suspense>
           </nav>
         </Container>
+        <div className="relative w-full border-t border-stone-200 bg-white py-2">
+          <div className="ticker overflow-hidden">
+            <div className="ticker-track flex min-w-max items-center">
+              <p className="shrink-0 whitespace-nowrap pr-10 text-[11px] font-medium tracking-wide text-stone-700 sm:text-xs">
+                {noticeText}
+              </p>
+              <p
+                aria-hidden
+                className="shrink-0 whitespace-nowrap pr-10 text-[11px] font-medium tracking-wide text-stone-700 sm:text-xs"
+              >
+                {noticeText}
+              </p>
+            </div>
+          </div>
+        </div>
       </header>
+      <style jsx>{`
+        .ticker-track {
+          animation: header-ticker 28s linear infinite;
+          will-change: transform;
+        }
+        .ticker:hover .ticker-track {
+          animation-play-state: paused;
+        }
+        @keyframes header-ticker {
+          from {
+            transform: translateX(0);
+          }
+          to {
+            transform: translateX(-50%);
+          }
+        }
+      `}</style>
       <AnimatePresence>
         {cartMounted && (
           <div className="fixed inset-0 z-50">
