@@ -13,6 +13,7 @@ export function ProductDetail({ product, related, breadcrumbs = null }) {
   const [imageIndex, setImageIndex] = useState(0);
   const [imageModalOpen, setImageModalOpen] = useState(false);
   const [imageModalZoomed, setImageModalZoomed] = useState(false);
+  const [imageModalZoomScale, setImageModalZoomScale] = useState(2.5);
   const [imageModalPan, setImageModalPan] = useState({ x: 0, y: 0 });
   const [imageModalDragging, setImageModalDragging] = useState(false);
   const [size, setSize] = useState("");
@@ -74,7 +75,7 @@ export function ProductDetail({ product, related, breadcrumbs = null }) {
 
   const clampPan = (x, y) => {
     if (!modalViewportRef.current) return { x, y };
-    const scale = 2.5;
+    const scale = imageModalZoomScale;
     const vw = modalViewportRef.current.clientWidth;
     const vh = modalViewportRef.current.clientHeight;
     const maxX = ((scale - 1) * vw) / 2;
@@ -100,10 +101,14 @@ export function ProductDetail({ product, related, breadcrumbs = null }) {
   };
 
   const onModalImagePointerMove = (event) => {
-    if (!imageModalZoomed || !imageModalDragging || !dragOriginRef.current) return;
+    if (!imageModalZoomed || !imageModalDragging || !dragOriginRef.current)
+      return;
     const x = event.clientX - dragOriginRef.current.startX;
     const y = event.clientY - dragOriginRef.current.startY;
-    if (Math.abs(x - imageModalPan.x) > 1 || Math.abs(y - imageModalPan.y) > 1) {
+    if (
+      Math.abs(x - imageModalPan.x) > 1 ||
+      Math.abs(y - imageModalPan.y) > 1
+    ) {
       movedWhileDragRef.current = true;
     }
     setImageModalPan(clampPan(x, y));
@@ -125,6 +130,14 @@ export function ProductDetail({ product, related, breadcrumbs = null }) {
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
   }, [imageModalOpen, imageSlides.length]);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 639px)");
+    const sync = () => setImageModalZoomScale(mq.matches ? 2.2 : 2.8);
+    sync();
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
+  }, []);
 
   function handleAdd() {
     if (!canAdd) return;
@@ -341,11 +354,14 @@ export function ProductDetail({ product, related, breadcrumbs = null }) {
         </div>
       ) : null}
       {imageModalOpen ? (
-        <div className="fixed inset-0 z-[80] bg-black/90" onClick={closeImageModal}>
+        <div
+          className="fixed inset-0 z-[80] bg-black/90"
+          onClick={closeImageModal}
+        >
           <div className="relative flex h-full w-full items-center justify-center p-4 sm:p-8">
             <div
               ref={modalViewportRef}
-              className="relative h-full w-full max-w-6xl overflow-hidden"
+              className="relative h-[72vh] w-full max-w-6xl overflow-hidden sm:h-full"
               onClick={(event) => event.stopPropagation()}
             >
               <div
@@ -363,7 +379,7 @@ export function ProductDetail({ product, related, breadcrumbs = null }) {
                 onPointerCancel={onModalImagePointerUp}
                 style={{
                   transform: imageModalZoomed
-                    ? `translate(${imageModalPan.x}px, ${imageModalPan.y}px) scale(2.5)`
+                    ? `translate(${imageModalPan.x}px, ${imageModalPan.y}px) scale(${imageModalZoomScale})`
                     : "translate(0px, 0px) scale(1)",
                   transformOrigin: "center center",
                   transition: imageModalDragging
@@ -389,7 +405,10 @@ export function ProductDetail({ product, related, breadcrumbs = null }) {
               <>
                 <button
                   type="button"
-                  onClick={showPrevImage}
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    showPrevImage();
+                  }}
                   aria-label="Previous image"
                   className="absolute left-3 top-1/2 inline-flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/35 bg-black/35 text-2xl text-white transition-colors hover:bg-black/55 sm:left-6"
                 >
@@ -397,7 +416,10 @@ export function ProductDetail({ product, related, breadcrumbs = null }) {
                 </button>
                 <button
                   type="button"
-                  onClick={showNextImage}
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    showNextImage();
+                  }}
                   aria-label="Next image"
                   className="absolute right-3 top-1/2 inline-flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/35 bg-black/35 text-2xl text-white transition-colors hover:bg-black/55 sm:right-6"
                 >
@@ -408,7 +430,10 @@ export function ProductDetail({ product, related, breadcrumbs = null }) {
 
             <button
               type="button"
-              onClick={closeImageModal}
+              onClick={(event) => {
+                event.stopPropagation();
+                closeImageModal();
+              }}
               aria-label="Close image modal"
               className="absolute right-4 top-4 inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/35 bg-black/35 text-lg text-white transition-colors hover:bg-black/55 sm:right-6 sm:top-6"
             >
