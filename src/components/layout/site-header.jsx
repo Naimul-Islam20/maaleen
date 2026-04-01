@@ -258,6 +258,7 @@ export function SiteHeader() {
     removeItem: removeWishlistItem,
   } = useWishlist();
   const [wishlistOpen, setWishlistOpen] = useState(false);
+  const [wishlistFromBottom, setWishlistFromBottom] = useState(true);
   const [cartMounted, setCartMounted] = useState(false);
   const [cartFromBottom, setCartFromBottom] = useState(true);
   const [logoError, setLogoError] = useState(false);
@@ -324,6 +325,17 @@ export function SiteHeader() {
 
   const wishlistPreview = wishItems ?? [];
 
+  const openWishlist = () => {
+    if (typeof window !== "undefined") {
+      setWishlistFromBottom(window.matchMedia("(max-width: 639px)").matches);
+    }
+    setWishlistOpen(true);
+  };
+
+  const closeWishlist = () => {
+    setWishlistOpen(false);
+  };
+
   const openCart = () => {
     if (typeof window !== "undefined") {
       setCartFromBottom(window.matchMedia("(max-width: 639px)").matches);
@@ -334,6 +346,15 @@ export function SiteHeader() {
   const closeCart = () => {
     setCartMounted(false);
   };
+
+  useEffect(() => {
+    if (!wishlistOpen) return;
+    const mq = window.matchMedia("(max-width: 639px)");
+    const sync = () => setWishlistFromBottom(mq.matches);
+    sync();
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
+  }, [wishlistOpen]);
 
   useEffect(() => {
     if (!cartMounted) return;
@@ -491,7 +512,13 @@ export function SiteHeader() {
               <div className="relative" ref={wishlistPopoverRef}>
                 <button
                   type="button"
-                  onClick={() => setWishlistOpen((open) => !open)}
+                  onClick={() => {
+                    if (wishlistOpen) {
+                      closeWishlist();
+                      return;
+                    }
+                    openWishlist();
+                  }}
                   className="inline-flex min-h-10 min-w-10 items-center justify-center rounded-full border border-transparent text-white transition-colors hover:border-white/30 hover:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
                   aria-label={`Wishlist, ${wishReady ? wishCount : 0} saved`}
                   aria-expanded={wishlistOpen}
@@ -503,8 +530,8 @@ export function SiteHeader() {
                     </span>
                   ) : null}
                 </button>
-                {wishlistOpen ? (
-                  <div className="fixed left-1/2 top-40 z-50 w-[min(18rem,calc(100vw-2rem))] -translate-x-1/2 rounded-xl border border-stone-200 bg-[var(--surface-elevated)] p-4 text-sm shadow-lg ring-1 ring-black/5 sm:absolute sm:right-0 sm:left-auto sm:top-full sm:mt-2 sm:w-72 sm:max-w-none sm:translate-x-0">
+                {wishlistOpen && !wishlistFromBottom ? (
+                  <div className="absolute right-0 top-full z-50 mt-2 w-72 max-w-none rounded-xl border border-stone-200 bg-[var(--surface-elevated)] p-4 text-sm shadow-lg ring-1 ring-black/5">
                     <div className="flex items-baseline justify-between gap-2">
                       <p className="text-xs font-semibold uppercase tracking-wide text-stone-500">
                         Wishlist
@@ -521,13 +548,11 @@ export function SiteHeader() {
                         No products in your wishlist yet.
                       </p>
                     ) : (
-                      <div
-                        className={`mt-3 pr-1 ${wishCount >= 4 ? "h-[260px]" : ""}`}
-                      >
+                      <div className="mt-3 min-h-0 flex-1 pr-1">
                         <ul
                           className={`space-y-3 ${
-                            wishCount >= 4 ? "h-full" : ""
-                          } ${wishCount > 4 ? "overflow-y-auto" : ""}`}
+                            wishCount > 4 ? "h-[260px] overflow-y-auto" : ""
+                          }`}
                         >
                           {wishlistPreview.map((item) => (
                             <li
@@ -537,7 +562,7 @@ export function SiteHeader() {
                               <Link
                                 href={`/shop/${item.slug}`}
                                 className="flex min-w-0 flex-1 items-center gap-3"
-                                onClick={() => setWishlistOpen(false)}
+                                onClick={closeWishlist}
                               >
                                 <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-md bg-stone-200">
                                   <ImageWithFallback
@@ -583,7 +608,7 @@ export function SiteHeader() {
                     <Link
                       href="/wishlist"
                       className="mt-4 inline-flex w-full items-center justify-center rounded-full bg-stone-900 px-4 py-2 text-sm font-semibold text-white hover:bg-stone-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
-                      onClick={() => setWishlistOpen(false)}
+                      onClick={closeWishlist}
                     >
                       View my wishlist
                     </Link>
@@ -670,6 +695,106 @@ export function SiteHeader() {
           </div>
         </div>
       </header>
+      <AnimatePresence>
+        {wishlistOpen && wishlistFromBottom && (
+          <div className="fixed inset-0 z-50">
+            <motion.button
+              type="button"
+              aria-label="Close wishlist"
+              onClick={closeWishlist}
+              className="absolute inset-0 bg-black/40"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.18 }}
+            />
+            <motion.aside
+              initial={{ y: "100%", x: 0 }}
+              animate={{ x: 0, y: 0 }}
+              exit={{ y: "100%", x: 0 }}
+              transition={{ duration: 0.26, ease: "easeInOut" }}
+              className="fixed bottom-0 left-0 right-0 z-50 flex h-[58vh] max-h-[calc(100dvh-9rem)] min-h-[24rem] flex-col rounded-t-2xl bg-[var(--surface-elevated)] shadow-[0_-12px_40px_rgba(0,0,0,0.15)] ring-1 ring-black/10"
+            >
+              <div className="flex shrink-0 items-baseline justify-between gap-2 border-b border-stone-200 px-5 py-4">
+                <p className="text-xs font-semibold uppercase tracking-wide text-stone-500">
+                  Wishlist
+                </p>
+                <p className="text-xs text-stone-600">
+                  <span className="font-semibold text-stone-900">
+                    Total products
+                  </span>{" "}
+                  {wishCount}
+                </p>
+              </div>
+              {wishCount === 0 ? (
+                <div className="flex min-h-0 flex-1 flex-col px-5 py-4">
+                  <p className="mt-2 text-xs text-stone-500">
+                    No products in your wishlist yet.
+                  </p>
+                </div>
+              ) : (
+                <div className="min-h-0 flex-1 px-5 py-3">
+                  <ul
+                    className={`space-y-3 ${
+                      wishCount > 4
+                        ? "maaleen-wishlist-scroll max-h-[17.75rem] overflow-y-scroll pr-1"
+                        : ""
+                    }`}
+                  >
+                    {wishlistPreview.map((item) => (
+                      <li key={item.productId} className="flex items-center gap-3">
+                        <Link
+                          href={`/shop/${item.slug}`}
+                          className="flex min-w-0 flex-1 items-center gap-3"
+                          onClick={closeWishlist}
+                        >
+                          <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-md bg-stone-200">
+                            <ImageWithFallback
+                              src={item.image}
+                              alt=""
+                              useNative
+                              imageClassName="object-cover"
+                              fallbackClassName="flex h-full w-full items-center justify-center bg-stone-200 text-stone-500"
+                              fallbackLabelClassName="text-[9px] font-semibold uppercase tracking-[0.14em]"
+                            />
+                          </div>
+                          <div className="min-w-0">
+                            <div className="flex h-12 flex-col justify-between">
+                              <div className="truncate text-sm font-medium text-stone-900">
+                                {item.name}
+                              </div>
+                              <div className="text-sm text-stone-700">
+                                {formatPrice(item.price, item.currency)}
+                              </div>
+                            </div>
+                          </div>
+                        </Link>
+                        <button
+                          type="button"
+                          aria-label="Remove from wishlist"
+                          onClick={() => removeWishlistItem(item.productId)}
+                          className="ml-1 inline-flex h-7 w-7 items-center justify-center text-stone-400 hover:text-stone-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
+                        >
+                          <span aria-hidden className="text-base leading-none">
+                            ×
+                          </span>
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+              <Link
+                href="/wishlist"
+                className="mx-5 mb-3 mt-0.5 inline-flex w-auto shrink-0 items-center justify-center rounded-full bg-stone-900 px-4 py-2 text-sm font-semibold text-white hover:bg-stone-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
+                onClick={closeWishlist}
+              >
+                View my wishlist
+              </Link>
+            </motion.aside>
+          </div>
+        )}
+      </AnimatePresence>
       <AnimatePresence>
         {cartMounted && (
           <div className="fixed inset-0 z-50">

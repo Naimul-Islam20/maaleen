@@ -16,9 +16,11 @@ export function ProductDetail({ product, related, breadcrumbs = null }) {
   const [imageModalZoomScale, setImageModalZoomScale] = useState(2.5);
   const [imageModalPan, setImageModalPan] = useState({ x: 0, y: 0 });
   const [imageModalDragging, setImageModalDragging] = useState(false);
+  const [imageModalFailed, setImageModalFailed] = useState(false);
   const [size, setSize] = useState("");
   const [color, setColor] = useState("");
   const modalViewportRef = useRef(null);
+  const modalImageRef = useRef(null);
   const dragOriginRef = useRef(null);
   const movedWhileDragRef = useRef(false);
   const { addItem } = useCart();
@@ -74,12 +76,12 @@ export function ProductDetail({ product, related, breadcrumbs = null }) {
   };
 
   const clampPan = (x, y) => {
-    if (!modalViewportRef.current) return { x, y };
+    if (!modalImageRef.current) return { x, y };
     const scale = imageModalZoomScale;
-    const vw = modalViewportRef.current.clientWidth;
-    const vh = modalViewportRef.current.clientHeight;
-    const maxX = ((scale - 1) * vw) / 2;
-    const maxY = ((scale - 1) * vh) / 2;
+    const iw = modalImageRef.current.clientWidth;
+    const ih = modalImageRef.current.clientHeight;
+    const maxX = ((scale - 1) * iw) / 2;
+    const maxY = ((scale - 1) * ih) / 2;
     return {
       x: Math.min(maxX, Math.max(-maxX, x)),
       y: Math.min(maxY, Math.max(-maxY, y)),
@@ -138,6 +140,10 @@ export function ProductDetail({ product, related, breadcrumbs = null }) {
     mq.addEventListener("change", sync);
     return () => mq.removeEventListener("change", sync);
   }, []);
+
+  useEffect(() => {
+    setImageModalFailed(false);
+  }, [main, imageModalOpen]);
 
   function handleAdd() {
     if (!canAdd) return;
@@ -361,11 +367,11 @@ export function ProductDetail({ product, related, breadcrumbs = null }) {
           <div className="relative flex h-full w-full items-center justify-center p-4 sm:p-8">
             <div
               ref={modalViewportRef}
-              className="relative h-[72vh] w-full max-w-6xl overflow-hidden sm:h-full"
+              className="relative w-full overflow-hidden sm:h-[82vh] sm:w-auto sm:max-w-[92vw]"
               onClick={(event) => event.stopPropagation()}
             >
               <div
-                className={`relative flex h-full w-full items-center justify-center ${
+                className={`relative flex w-full items-center justify-center sm:h-full sm:w-auto ${
                   imageModalZoomed
                     ? imageModalDragging
                       ? "cursor-grabbing"
@@ -378,26 +384,37 @@ export function ProductDetail({ product, related, breadcrumbs = null }) {
                 onPointerUp={onModalImagePointerUp}
                 onPointerCancel={onModalImagePointerUp}
                 style={{
-                  transform: imageModalZoomed
-                    ? `translate(${imageModalPan.x}px, ${imageModalPan.y}px) scale(${imageModalZoomScale})`
-                    : "translate(0px, 0px) scale(1)",
-                  transformOrigin: "center center",
-                  transition: imageModalDragging
-                    ? "none"
-                    : "transform 180ms ease-out",
                   touchAction: imageModalZoomed ? "none" : "auto",
                 }}
               >
-                <ImageWithFallback
-                  src={main}
-                  alt={`${product.name} — full view ${imageIndex + 1}`}
-                  useNative
-                  imageClassName="object-contain"
-                  fallbackClassName="flex h-full w-full flex-col items-center justify-center gap-2 bg-black/40 text-stone-300"
-                  fallbackLabelClassName="font-[family-name:var(--font-display)] text-2xl tracking-[0.18em] sm:text-4xl"
-                  fallbackSubLabel="image coming soon"
-                  fallbackSubLabelClassName="text-xs font-medium uppercase tracking-[0.2em] text-stone-400"
-                />
+                {main && !imageModalFailed ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    ref={modalImageRef}
+                    src={main}
+                    alt={`${product.name} — full view ${imageIndex + 1}`}
+                    onError={() => setImageModalFailed(true)}
+                    className="block w-full h-auto object-contain select-none sm:h-full sm:w-auto sm:max-w-full"
+                    style={{
+                      transform: imageModalZoomed
+                        ? `translate(${imageModalPan.x}px, ${imageModalPan.y}px) scale(${imageModalZoomScale})`
+                        : "translate(0px, 0px) scale(1)",
+                      transformOrigin: "center center",
+                      transition: imageModalDragging
+                        ? "none"
+                        : "transform 180ms ease-out",
+                    }}
+                  />
+                ) : (
+                  <div className="flex h-full w-full flex-col items-center justify-center gap-2 bg-black/40 text-stone-300">
+                    <span className="font-[family-name:var(--font-display)] text-2xl tracking-[0.18em] sm:text-4xl">
+                      MAALEEN
+                    </span>
+                    <span className="text-xs font-medium uppercase tracking-[0.2em] text-stone-400">
+                      image coming soon
+                    </span>
+                  </div>
+                )}
               </div>
             </div>
 

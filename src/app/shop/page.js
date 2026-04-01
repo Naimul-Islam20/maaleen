@@ -13,15 +13,71 @@ export const metadata = {
 
 function CatalogFallback() {
   return (
-    <div className="animate-pulse space-y-4 rounded-xl border border-stone-200 bg-stone-100/60 p-6">
-      <div className="h-10 rounded-lg bg-stone-200" />
-      <div className="h-8 max-w-md rounded bg-stone-200" />
-      <div className="grid grid-cols-2 gap-4 pt-6 sm:grid-cols-4">
-        {[1, 2, 3, 4].map((i) => (
-          <div key={i} className="aspect-[4/5] rounded-lg bg-stone-200" />
+    <div className="animate-pulse">
+      <ul className="grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-2 sm:gap-x-6 sm:gap-y-10 lg:grid-cols-3 xl:grid-cols-4">
+        {Array.from({ length: 8 }).map((_, i) => (
+          <li key={i}>
+            <div className="relative">
+              <div className="aspect-[4/5] rounded-lg bg-stone-200" />
+              <div className="absolute right-2 top-2 h-9 w-9 rounded-full bg-stone-100" />
+            </div>
+            <div className="mt-3 space-y-2">
+              <div className="h-4 w-3/4 rounded bg-stone-200" />
+              <div className="h-4 w-1/2 rounded bg-stone-200" />
+            </div>
+          </li>
         ))}
+      </ul>
+    </div>
+  );
+}
+
+function IntroFallback() {
+  return (
+    <div className="animate-pulse text-center" aria-hidden>
+      <div className="mx-auto h-3 w-28 rounded bg-stone-200" />
+      <div className="mx-auto mt-3 h-9 w-40 rounded bg-stone-200 sm:h-10" />
+      <div className="mt-5 flex justify-center">
+        <div className="h-4 w-48 rounded bg-stone-200" />
       </div>
     </div>
+  );
+}
+
+function DividerFallback() {
+  return (
+    <div
+      aria-hidden
+      className="mt-8 w-screen max-w-none border-b border-stone-200 sm:mt-10 ml-[calc(50%-50vw)]"
+    />
+  );
+}
+
+function ShopPageSkeleton() {
+  return (
+    <>
+      <IntroFallback />
+      <DividerFallback />
+      <div className="mt-10">
+        <CatalogFallback />
+      </div>
+    </>
+  );
+}
+
+function ShopContent({ products }) {
+  return (
+    <>
+      <Suspense fallback={<IntroFallback />}>
+        <ProductShopIntro />
+      </Suspense>
+      <DividerFallback />
+      <div className="mt-10">
+        <Suspense fallback={<CatalogFallback />}>
+          <ProductsCatalog products={products} />
+        </Suspense>
+      </div>
+    </>
   );
 }
 
@@ -39,26 +95,9 @@ export default async function ShopPage({ searchParams }) {
 
   return (
     <Container className="py-10 sm:py-14">
-      <Suspense
-        fallback={
-          <div className="space-y-4" aria-hidden>
-            <div className="h-5 max-w-xs animate-pulse rounded bg-stone-200" />
-            <div className="h-9 max-w-sm animate-pulse rounded bg-stone-200 sm:h-10" />
-            <div className="h-4 max-w-md animate-pulse rounded bg-stone-200" />
-          </div>
-        }
-      >
-        <ProductShopIntro />
+      <Suspense fallback={<ShopPageSkeleton />}>
+        <ShopContent products={products} />
       </Suspense>
-      <div
-        aria-hidden
-        className="mt-8 w-screen max-w-none border-b border-stone-200 sm:mt-10 ml-[calc(50%-50vw)]"
-      />
-      <div className="mt-10">
-        <Suspense fallback={<CatalogFallback />}>
-          <ProductsCatalog products={products} />
-        </Suspense>
-      </div>
     </Container>
   );
 }
