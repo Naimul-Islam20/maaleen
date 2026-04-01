@@ -76,6 +76,16 @@ body {
     flex: 0 0 72cqi; /* 72% of container — center is big, sides peek */
     margin-inline-end: 1rem; /* gap between slides */
   }
+
+  .maaleen-products-embla-two-up-mobile .maaleen-products-embla-slide {
+    flex-basis: calc((100cqi - 1rem) / 2);
+    margin-inline-end: 1rem;
+  }
+
+  .maaleen-products-embla-two-up-mobile
+    .maaleen-products-embla-slide:last-child {
+    margin-inline-end: 0;
+  }
 }
 
 @media (min-width: 640px) {

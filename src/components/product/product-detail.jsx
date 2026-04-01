@@ -6,7 +6,7 @@ import { useCart } from "@/contexts/cart-context";
 import { useToast } from "@/contexts/toast-context";
 import { useWishlist } from "@/contexts/wishlist-context";
 import { formatPrice } from "@/lib/format";
-import { ProductCard } from "./product-card";
+import { ProductsSliderSection } from "@/components/home/products-slider-section";
 import { ImageWithFallback } from "@/components/ui/image-with-fallback";
 
 export function ProductDetail({ product, related, breadcrumbs = null }) {
@@ -214,21 +214,20 @@ export function ProductDetail({ product, related, breadcrumbs = null }) {
         </div>
         </div>
 
-        {related.length > 0 ? (
-          <section className="col-span-full mt-3 border-t border-stone-200 pt-4 sm:mt-10 sm:pt-12 lg:col-span-2">
-            <h2 className="text-center font-[family-name:var(--font-display)] text-2xl text-stone-900 sm:text-left">
-              You may also like
-            </h2>
-            <ul className="mt-5 grid grid-cols-2 gap-4 sm:mt-8 sm:grid-cols-2 sm:gap-8 lg:grid-cols-4">
-              {related.map((p) => (
-                <li key={p.id}>
-                  <ProductCard product={p} />
-                </li>
-              ))}
-            </ul>
-          </section>
-        ) : null}
       </div>
+      {related.length > 0 ? (
+        <div className="mt-3">
+          <ProductsSliderSection
+            products={related}
+            title="You may also like"
+            ctaLabel="See all"
+            ctaHref="/shop"
+            sectionClassName="border-t border-stone-200 bg-transparent"
+            useDesktopCarouselOnMobile
+            mobileTwoUpNoLoop
+          />
+        </div>
+      ) : null}
     </div>
   );
 }

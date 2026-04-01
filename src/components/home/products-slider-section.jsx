@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import useEmblaAutoplay from "@/hooks/useEmblaAutoplay";
 import { Container } from "@/components/layout/container";
@@ -12,6 +12,8 @@ export function ProductsSliderSection({
   ctaLabel = "See all",
   ctaHref = "/shop",
   sectionClassName = "border-t border-stone-200 bg-[var(--surface)]",
+  useDesktopCarouselOnMobile = false,
+  mobileTwoUpNoLoop = false,
 }) {
   const MOBILE_SIDE_OFFSET = "100%";
   const [activeIndex, setActiveIndex] = useState(0);
@@ -22,16 +24,42 @@ export function ProductsSliderSection({
 
   const total = products.length;
   const hasProducts = total > 0;
-  const hasLoop = total > 1;
-  const { emblaRef, scrollPrev, scrollNext } = useEmblaAutoplay({
+  const hasLoop = mobileTwoUpNoLoop ? false : total > 1;
+  const hasNav = mobileTwoUpNoLoop ? total > 2 : total > 1;
+  const [canScrollPrev, setCanScrollPrev] = useState(false);
+  const [canScrollNext, setCanScrollNext] = useState(false);
+  const { emblaRef, emblaApi, scrollPrev, scrollNext } = useEmblaAutoplay({
     slideCount: products.length,
     autoplay: false,
     emblaOptions: {
       align: "start",
-      dragFree: true,
+      dragFree: !mobileTwoUpNoLoop,
+      containScroll: mobileTwoUpNoLoop ? "trimSnaps" : undefined,
       loop: hasLoop,
     },
   });
+
+  useEffect(() => {
+    if (!emblaApi) return;
+    const sync = () => {
+      setCanScrollPrev(emblaApi.canScrollPrev());
+      setCanScrollNext(emblaApi.canScrollNext());
+    };
+    sync();
+    emblaApi.on("select", sync);
+    emblaApi.on("reInit", sync);
+    return () => {
+      emblaApi.off("select", sync);
+      emblaApi.off("reInit", sync);
+    };
+  }, [emblaApi]);
+
+  const desktopPrevDisabled = useDesktopCarouselOnMobile
+    ? !canScrollPrev
+    : !hasNav;
+  const desktopNextDisabled = useDesktopCarouselOnMobile
+    ? !canScrollNext
+    : !hasNav;
 
   const prevIndex = useMemo(() => {
     if (!hasLoop) return 0;
@@ -143,7 +171,21 @@ export function ProductsSliderSection({
 
   const onTouchMove = (event) => {
     const x = event.touches[0]?.clientX;
+    if (dragStartXRef.current == null) return;
+    const delta = x - dragStartXRef.current;
+    const moved = maybeSlideByDelta(delta);
+    if (moved) {
+      dragStartXRef.current = x ?? null;
+      dragDeltaXRef.current = 0;
+      return;
+    }
     trackDrag(x);
+  };
+
+  const onTouchCancel = () => {
+    dragStartXRef.current = null;
+    dragDeltaXRef.current = 0;
+    gestureHandledRef.current = false;
   };
 
   const preventNativeDrag = (event) => {
@@ -167,7 +209,9 @@ export function ProductsSliderSection({
           </Link>
         </div>
 
-        <div className="mt-10 min-w-0 sm:hidden">
+        <div
+          className={`mt-10 min-w-0 ${useDesktopCarouselOnMobile ? "hidden" : "sm:hidden"}`}
+        >
           <div
             className="relative overflow-hidden py-1"
             onPointerDown={onPointerDown}
@@ -177,6 +221,7 @@ export function ProductsSliderSection({
             onTouchStart={onTouchStart}
             onTouchMove={onTouchMove}
             onTouchEnd={onTouchEnd}
+            onTouchCancel={onTouchCancel}
             onDragStartCapture={preventNativeDrag}
             style={{ touchAction: "pan-y" }}
           >
@@ -220,8 +265,8 @@ export function ProductsSliderSection({
               type="button"
               aria-label="Previous products"
               onClick={goPrev}
-              className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-full border border-stone-300 bg-[var(--surface-elevated)] text-stone-800 shadow-sm transition-colors hover:border-stone-400 hover:bg-stone-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
-              disabled={!hasLoop}
+              className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-full border border-stone-300 bg-[var(--surface-elevated)] text-stone-800 shadow-sm transition-colors hover:border-stone-400 hover:bg-stone-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)] disabled:cursor-not-allowed disabled:border-stone-200 disabled:bg-stone-100 disabled:text-stone-400"
+              disabled={!hasNav}
             >
               <span aria-hidden className="text-xl leading-none">
                 ‹
@@ -231,8 +276,8 @@ export function ProductsSliderSection({
               type="button"
               aria-label="Next products"
               onClick={goNext}
-              className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-full border border-stone-300 bg-[var(--surface-elevated)] text-stone-800 shadow-sm transition-colors hover:border-stone-400 hover:bg-stone-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
-              disabled={!hasLoop}
+              className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-full border border-stone-300 bg-[var(--surface-elevated)] text-stone-800 shadow-sm transition-colors hover:border-stone-400 hover:bg-stone-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)] disabled:cursor-not-allowed disabled:border-stone-200 disabled:bg-stone-100 disabled:text-stone-400"
+              disabled={!hasNav}
             >
               <span aria-hidden className="text-xl leading-none">
                 ›
@@ -241,10 +286,16 @@ export function ProductsSliderSection({
           </div>
         </div>
 
-        <div className="mt-10 hidden min-w-0 sm:block">
+        <div
+          className={`mt-10 min-w-0 ${
+            useDesktopCarouselOnMobile ? "block" : "hidden sm:block"
+          }`}
+        >
           <div
             ref={emblaRef}
-            className="maaleen-products-embla overflow-hidden py-1"
+            className={`maaleen-products-embla overflow-hidden py-1 ${
+              mobileTwoUpNoLoop ? "maaleen-products-embla-two-up-mobile" : ""
+            }`}
           >
             <div className="flex">
               {products.map((p) => (
@@ -263,8 +314,8 @@ export function ProductsSliderSection({
               type="button"
               aria-label="Previous products"
               onClick={scrollPrev}
-              className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-full border border-stone-300 bg-[var(--surface-elevated)] text-stone-800 shadow-sm transition-colors hover:border-stone-400 hover:bg-stone-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
-              disabled={!hasLoop}
+              className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-full border border-stone-300 bg-[var(--surface-elevated)] text-stone-800 shadow-sm transition-colors hover:border-stone-400 hover:bg-stone-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)] disabled:cursor-not-allowed disabled:border-stone-200 disabled:bg-stone-100 disabled:text-stone-400"
+              disabled={desktopPrevDisabled}
             >
               <span aria-hidden className="text-xl leading-none">
                 ‹
@@ -274,8 +325,8 @@ export function ProductsSliderSection({
               type="button"
               aria-label="Next products"
               onClick={scrollNext}
-              className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-full border border-stone-300 bg-[var(--surface-elevated)] text-stone-800 shadow-sm transition-colors hover:border-stone-400 hover:bg-stone-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
-              disabled={!hasLoop}
+              className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-full border border-stone-300 bg-[var(--surface-elevated)] text-stone-800 shadow-sm transition-colors hover:border-stone-400 hover:bg-stone-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)] disabled:cursor-not-allowed disabled:border-stone-200 disabled:bg-stone-100 disabled:text-stone-400"
+              disabled={desktopNextDisabled}
             >
               <span aria-hidden className="text-xl leading-none">
                 ›
