@@ -14,6 +14,10 @@ export function ProductsSliderSection({
   sectionClassName = "border-t border-stone-200 bg-[var(--surface)]",
   useDesktopCarouselOnMobile = false,
   mobileTwoUpNoLoop = false,
+  showCta = true,
+  centerTitleOnMobile = false,
+  compactMobileSpacing = false,
+  useParentContainer = false,
 }) {
   const MOBILE_SIDE_OFFSET = "100%";
   const [activeIndex, setActiveIndex] = useState(0);
@@ -194,23 +198,40 @@ export function ProductsSliderSection({
 
   if (!hasProducts) return null;
 
+  const contentClass = compactMobileSpacing
+    ? "pb-8 pt-5 sm:py-20"
+    : "py-14 sm:py-20";
+  const Wrapper = useParentContainer ? "div" : Container;
+
   return (
     <section className={sectionClassName}>
-      <Container className="py-14 sm:py-20">
-        <div className="flex items-end justify-between gap-4">
-          <h2 className="font-[family-name:var(--font-display)] text-2xl text-stone-900 sm:text-3xl">
+      <Wrapper className={contentClass}>
+        <div
+          className={`flex items-end gap-4 ${
+            showCta ? "justify-between" : "justify-center sm:justify-start"
+          }`}
+        >
+          <h2
+            className={`font-[family-name:var(--font-display)] text-2xl text-stone-900 sm:text-3xl ${
+              centerTitleOnMobile ? "text-center sm:text-left" : ""
+            }`}
+          >
             {title}
           </h2>
-          <Link
-            href={ctaHref}
-            className="text-sm font-medium text-[var(--accent)] hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
-          >
-            {ctaLabel}
-          </Link>
+          {showCta ? (
+            <Link
+              href={ctaHref}
+              className="text-sm font-medium text-[var(--accent)] hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
+            >
+              {ctaLabel}
+            </Link>
+          ) : null}
         </div>
 
         <div
-          className={`mt-10 min-w-0 ${useDesktopCarouselOnMobile ? "hidden" : "sm:hidden"}`}
+          className={`${
+            compactMobileSpacing ? "mt-5" : "mt-10"
+          } min-w-0 ${useDesktopCarouselOnMobile ? "hidden" : "sm:hidden"}`}
         >
           <div
             className="relative overflow-hidden py-1"
@@ -260,7 +281,11 @@ export function ProductsSliderSection({
             })}
           </div>
 
-          <div className="mt-8 flex flex-wrap items-center justify-center gap-3 sm:mt-10">
+          <div
+            className={`${
+              compactMobileSpacing ? "mt-5" : "mt-8"
+            } flex flex-wrap items-center justify-center gap-3 sm:mt-10`}
+          >
             <button
               type="button"
               aria-label="Previous products"
@@ -287,7 +312,9 @@ export function ProductsSliderSection({
         </div>
 
         <div
-          className={`mt-10 min-w-0 ${
+          className={`${
+            compactMobileSpacing ? "mt-5" : "mt-10"
+          } min-w-0 ${
             useDesktopCarouselOnMobile ? "block" : "hidden sm:block"
           }`}
         >
@@ -309,7 +336,11 @@ export function ProductsSliderSection({
             </div>
           </div>
 
-          <div className="mt-8 flex flex-wrap items-center justify-center gap-3 sm:mt-10">
+          <div
+            className={`${
+              compactMobileSpacing ? "mt-5" : "mt-8"
+            } flex flex-wrap items-center justify-center gap-3 sm:mt-10`}
+          >
             <button
               type="button"
               aria-label="Previous products"
@@ -334,7 +365,7 @@ export function ProductsSliderSection({
             </button>
           </div>
         </div>
-      </Container>
+      </Wrapper>
     </section>
   );
 }
