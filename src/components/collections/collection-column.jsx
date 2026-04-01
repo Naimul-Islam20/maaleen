@@ -1,5 +1,7 @@
-import Image from "next/image";
+"use client";
+
 import Link from "next/link";
+import { ImageWithFallback } from "@/components/ui/image-with-fallback";
 
 export function CollectionColumn({
   item,
@@ -8,14 +10,17 @@ export function CollectionColumn({
 }) {
   return (
     <div className="group relative flex min-h-[22rem] flex-col items-center justify-center overflow-hidden rounded-xl sm:min-h-[26rem] lg:min-h-[28rem]">
-      <Image
-        src={item.image}
-        alt=""
-        fill
-        className="object-cover transition-[filter] duration-300 ease-out group-hover:brightness-105 motion-reduce:transition-none"
-        sizes={sizes}
-        priority={priority}
-      />
+      <ImageWithFallback
+          src={item.image}
+          alt=""
+          imageClassName="object-cover transition-[filter] duration-300 ease-out group-hover:brightness-105 motion-reduce:transition-none"
+          sizes={sizes}
+          priority={priority}
+          fallbackClassName="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-stone-300 text-stone-600"
+          fallbackLabelClassName="font-[family-name:var(--font-display)] text-3xl tracking-[0.18em] sm:text-4xl"
+          fallbackSubLabel="image coming soon"
+          fallbackSubLabelClassName="text-[10px] font-medium uppercase tracking-[0.22em] text-stone-500 sm:text-xs"
+        />
       <div
         className="absolute inset-0 bg-gradient-to-t from-stone-950/85 via-stone-950/45 to-stone-950/25"
         aria-hidden

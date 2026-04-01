@@ -28,22 +28,23 @@ export default async function ProductPage({ params }) {
 
   const related = getRelatedProducts(slug, 4);
 
+  const breadcrumbItems = [
+    { href: "/", label: "Home" },
+    { href: "/shop", label: "Shop" },
+    {
+      href: `/shop/${product.slug}`,
+      label: product.name,
+      current: true,
+    },
+  ];
+
   return (
-    <Container className="py-10 sm:py-14">
-      <Breadcrumbs
-        items={[
-          { href: "/", label: "Home" },
-          { href: "/shop", label: "Shop" },
-          {
-            href: `/shop/${product.slug}`,
-            label: product.name,
-            current: true,
-          },
-        ]}
+    <Container className="pb-10 pt-0 sm:py-14">
+      <ProductDetail
+        product={product}
+        related={related}
+        breadcrumbs={<Breadcrumbs items={breadcrumbItems} />}
       />
-      <div className="mt-8">
-        <ProductDetail product={product} related={related} />
-      </div>
     </Container>
   );
 }

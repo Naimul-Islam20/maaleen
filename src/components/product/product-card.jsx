@@ -1,8 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
+import { ImageWithFallback } from "@/components/ui/image-with-fallback";
 import { formatPrice } from "@/lib/format";
 import { useWishlist } from "@/contexts/wishlist-context";
 
@@ -26,17 +25,11 @@ function HeartIcon({ filled, className }) {
 
 export function ProductCard({ product }) {
   const image = product.images?.[0];
-  const [imageFailed, setImageFailed] = useState(false);
   const onSale =
     product.compareAtPrice != null && product.compareAtPrice > product.price;
   const isNew = product.tags?.includes("new");
   const { toggleItem, isWishlisted, ready } = useWishlist();
   const wishlisted = ready && isWishlisted(product.id);
-  const showImage = Boolean(image) && !imageFailed;
-
-  useEffect(() => {
-    setImageFailed(false);
-  }, [image]);
 
   return (
     <article className="group relative">
@@ -45,26 +38,16 @@ export function ProductCard({ product }) {
         className="block focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
       >
         <div className="relative aspect-[4/5] overflow-hidden rounded-lg bg-stone-200">
-          {showImage ? (
-            <Image
+          <ImageWithFallback
               src={image}
               alt={`${product.name}${product.colors?.[0] ? ` — ${product.colors[0].name}` : ""}`}
-              fill
-              draggable={false}
-              onError={() => setImageFailed(true)}
-              className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03] motion-reduce:transition-none motion-reduce:group-hover:scale-100"
+              imageClassName="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.03] motion-reduce:transition-none motion-reduce:group-hover:scale-100"
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+              fallbackClassName="flex h-full w-full flex-col items-center justify-center gap-1 bg-stone-200 text-stone-500"
+              fallbackLabelClassName="font-[family-name:var(--font-display)] text-xl tracking-[0.18em] sm:text-2xl lg:text-4xl"
+              fallbackSubLabel="image coming soon"
+              fallbackSubLabelClassName="text-[10px] font-medium uppercase tracking-[0.22em] text-stone-400 sm:text-xs"
             />
-          ) : (
-            <div className="flex h-full w-full flex-col items-center justify-center gap-1 bg-stone-200 text-stone-500">
-              <span className="font-[family-name:var(--font-display)] text-xl tracking-[0.18em] sm:text-2xl lg:text-4xl">
-                MAALEEN
-              </span>
-              <span className="text-[10px] font-medium uppercase tracking-[0.22em] text-stone-400 sm:text-xs">
-                image coming soon
-              </span>
-            </div>
-          )}
           <div className="pointer-events-none absolute left-2 top-2 flex flex-wrap gap-1">
             {onSale ? (
               <span className="rounded bg-[var(--accent)] px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-white">

@@ -8,6 +8,7 @@ import Image from "next/image";
 import { useCart } from "@/contexts/cart-context";
 import { useWishlist } from "@/contexts/wishlist-context";
 import { Container } from "@/components/layout/container";
+import { ImageWithFallback } from "@/components/ui/image-with-fallback";
 import { getShopEdit } from "@/data/shop-edits";
 import { formatPrice } from "@/lib/format";
 
@@ -258,6 +259,7 @@ export function SiteHeader() {
   } = useWishlist();
   const [wishlistOpen, setWishlistOpen] = useState(false);
   const [cartMounted, setCartMounted] = useState(false);
+  const [cartFromBottom, setCartFromBottom] = useState(true);
   const [logoError, setLogoError] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [selectedCountry, setSelectedCountry] = useState("BD");
@@ -323,12 +325,24 @@ export function SiteHeader() {
   const wishlistPreview = wishItems ?? [];
 
   const openCart = () => {
+    if (typeof window !== "undefined") {
+      setCartFromBottom(window.matchMedia("(max-width: 639px)").matches);
+    }
     setCartMounted(true);
   };
 
   const closeCart = () => {
     setCartMounted(false);
   };
+
+  useEffect(() => {
+    if (!cartMounted) return;
+    const mq = window.matchMedia("(max-width: 639px)");
+    const sync = () => setCartFromBottom(mq.matches);
+    sync();
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
+  }, [cartMounted]);
   const noticeItems = [
     "New arrivals every Friday",
     "Free shipping over BDT 3000",
@@ -490,7 +504,7 @@ export function SiteHeader() {
                   ) : null}
                 </button>
                 {wishlistOpen ? (
-                  <div className="absolute right-0 z-30 mt-2 w-72 rounded-xl border border-stone-200 bg-[var(--surface-elevated)] p-4 text-sm shadow-lg ring-1 ring-black/5">
+                  <div className="fixed left-1/2 top-40 z-50 w-[min(18rem,calc(100vw-2rem))] -translate-x-1/2 rounded-xl border border-stone-200 bg-[var(--surface-elevated)] p-4 text-sm shadow-lg ring-1 ring-black/5 sm:absolute sm:right-0 sm:left-auto sm:top-full sm:mt-2 sm:w-72 sm:max-w-none sm:translate-x-0">
                     <div className="flex items-baseline justify-between gap-2">
                       <p className="text-xs font-semibold uppercase tracking-wide text-stone-500">
                         Wishlist
@@ -525,15 +539,15 @@ export function SiteHeader() {
                                 className="flex min-w-0 flex-1 items-center gap-3"
                                 onClick={() => setWishlistOpen(false)}
                               >
-                                <div className="h-14 w-14 shrink-0 overflow-hidden rounded-md bg-stone-200">
-                                  {item.image ? (
-                                    // eslint-disable-next-line @next/next/no-img-element
-                                    <img
-                                      src={item.image}
-                                      alt=""
-                                      className="h-full w-full object-cover"
-                                    />
-                                  ) : null}
+                                <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-md bg-stone-200">
+                                  <ImageWithFallback
+                                    src={item.image}
+                                    alt=""
+                                    useNative
+                                    imageClassName="object-cover"
+                                    fallbackClassName="flex h-full w-full items-center justify-center bg-stone-200 text-stone-500"
+                                    fallbackLabelClassName="text-[9px] font-semibold uppercase tracking-[0.14em]"
+                                  />
                                 </div>
                                 <div className="min-w-0">
                                   <div className="flex h-12 flex-col justify-between">
@@ -641,8 +655,8 @@ export function SiteHeader() {
           </nav>
         </Container>
         <div className="relative w-full border-t border-stone-200 bg-white py-2">
-          <div className="ticker overflow-hidden">
-            <div className="ticker-track flex min-w-max items-center">
+          <div className="maaleen-header-ticker overflow-hidden">
+            <div className="maaleen-header-ticker-track flex min-w-max items-center">
               <p className="shrink-0 whitespace-nowrap pr-10 text-[11px] font-medium tracking-wide text-stone-700 sm:text-xs">
                 {noticeText}
               </p>
@@ -656,23 +670,6 @@ export function SiteHeader() {
           </div>
         </div>
       </header>
-      <style jsx>{`
-        .ticker-track {
-          animation: header-ticker 28s linear infinite;
-          will-change: transform;
-        }
-        .ticker:hover .ticker-track {
-          animation-play-state: paused;
-        }
-        @keyframes header-ticker {
-          from {
-            transform: translateX(0);
-          }
-          to {
-            transform: translateX(-50%);
-          }
-        }
-      `}</style>
       <AnimatePresence>
         {cartMounted && (
           <div className="fixed inset-0 z-50">
@@ -687,13 +684,19 @@ export function SiteHeader() {
               transition={{ duration: 0.18 }}
             />
             <motion.aside
-              initial={{ x: "100%" }}
-              animate={{ x: 0 }}
-              exit={{ x: "100%" }}
+              initial={
+                cartFromBottom ? { y: "100%", x: 0 } : { x: "100%", y: 0 }
+              }
+              animate={{ x: 0, y: 0 }}
+              exit={cartFromBottom ? { y: "100%", x: 0 } : { x: "100%", y: 0 }}
               transition={{ duration: 0.26, ease: "easeInOut" }}
-              className="absolute right-0 top-0 h-full w-full max-w-sm bg-[var(--surface-elevated)] shadow-xl ring-1 ring-black/10 flex flex-col"
+              className={
+                cartFromBottom
+                  ? "fixed bottom-0 left-0 right-0 z-50 flex h-[84vh] max-h-[calc(100dvh-2.5rem)] flex-col rounded-t-2xl bg-[var(--surface-elevated)] shadow-[0_-12px_40px_rgba(0,0,0,0.15)] ring-1 ring-black/10"
+                  : "absolute right-0 top-0 z-50 flex h-full w-full max-w-sm flex-col bg-[var(--surface-elevated)] shadow-xl ring-1 ring-black/10"
+              }
             >
-              <div className="flex items-center justify-between border-b border-stone-200 px-5 py-4">
+              <div className="flex shrink-0 items-center justify-between border-b border-stone-200 px-5 py-4">
                 <h2 className="text-sm font-semibold uppercase tracking-wide text-stone-700">
                   Your bag
                 </h2>
@@ -707,8 +710,8 @@ export function SiteHeader() {
                   </span>
                 </button>
               </div>
-              <div className="flex h-[calc(100%-4.5rem)] flex-col">
-                <div className="flex-1 overflow-y-auto px-5 py-4">
+              <div className="flex min-h-0 flex-1 flex-col">
+                <div className="min-h-0 flex-1 overflow-y-auto px-5 py-4">
                   {!ready ? (
                     <p className="text-sm text-stone-500">Loading…</p>
                   ) : cartItems.length === 0 ? (
@@ -727,14 +730,14 @@ export function SiteHeader() {
                             className="relative h-20 w-16 shrink-0 overflow-hidden rounded-md bg-stone-200"
                             onClick={closeCart}
                           >
-                            {line.image ? (
-                              // eslint-disable-next-line @next/next/no-img-element
-                              <img
-                                src={line.image}
-                                alt=""
-                                className="h-full w-full object-cover"
-                              />
-                            ) : null}
+                            <ImageWithFallback
+                              src={line.image}
+                              alt=""
+                              useNative
+                              imageClassName="object-cover"
+                              fallbackClassName="flex h-full w-full items-center justify-center bg-stone-200 text-stone-500"
+                              fallbackLabelClassName="text-[9px] font-semibold uppercase tracking-[0.14em]"
+                            />
                           </Link>
                           <div className="min-w-0 flex-1">
                             <div className="flex items-start justify-between gap-2">
@@ -810,7 +813,7 @@ export function SiteHeader() {
                     </ul>
                   )}
                 </div>
-                <div className="border-t border-stone-200 px-5 py-4">
+                <div className="shrink-0 border-t border-stone-200 px-5 py-4">
                   {ready && cartItems.length > 0 ? (
                     <>
                       <div className="flex items-center justify-between text-sm text-stone-700">

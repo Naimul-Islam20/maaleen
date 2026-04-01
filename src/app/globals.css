@@ -28,7 +28,7 @@
 /* Desktop (1024px+) */
 @media (min-width: 1024px) {
   .maaleen-container {
-    max-width: 72rem;
+    max-width: 86rem;
     padding-inline: 2rem;
   }
 }
@@ -109,5 +109,30 @@ body {
 @media (min-width: 768px) {
   .maaleen-collections-embla-slide {
     flex-basis: calc((100cqi - 1.5rem) / 2);
+  }
+}
+
+/* Site header notice ticker — global CSS avoids styled-jsx hydration mismatches on <header>. */
+@keyframes maaleen-header-ticker {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.maaleen-header-ticker-track {
+  animation: maaleen-header-ticker 28s linear infinite;
+  will-change: transform;
+}
+
+.maaleen-header-ticker:hover .maaleen-header-ticker-track {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .maaleen-header-ticker-track {
+    animation: none;
   }
 }

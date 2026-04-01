@@ -31,8 +31,12 @@ export default function RootLayout({ children }) {
     <html
       lang="en"
       className={`${cormorant.variable} ${dmSans.variable} h-full antialiased`}
+      suppressHydrationWarning
     >
-      <body className="flex min-h-full flex-col bg-[var(--surface)] text-stone-900">
+      <body
+        className="flex min-h-full flex-col bg-[var(--surface)] text-stone-900"
+        suppressHydrationWarning
+      >
         <Providers>
           <SiteHeader />
           <main className="flex-1">{children}</main>

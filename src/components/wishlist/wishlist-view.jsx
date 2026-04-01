@@ -1,8 +1,8 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { Breadcrumbs } from "@/components/ui/breadcrumbs";
+import { ImageWithFallback } from "@/components/ui/image-with-fallback";
 import { useWishlist } from "@/contexts/wishlist-context";
 import { formatPrice } from "@/lib/format";
 
@@ -41,15 +41,16 @@ export function WishlistView() {
                 href={`/shop/${item.slug}`}
                 className="relative h-28 w-20 shrink-0 overflow-hidden rounded-lg bg-stone-200 sm:h-32 sm:w-24"
               >
-                {item.image ? (
-                  <Image
+                <ImageWithFallback
                     src={item.image}
                     alt=""
-                    fill
-                    className="object-cover"
+                    imageClassName="object-cover"
                     sizes="96px"
+                    fallbackClassName="flex h-full w-full flex-col items-center justify-center gap-1 bg-stone-200 text-stone-500"
+                    fallbackLabelClassName="font-[family-name:var(--font-display)] text-[11px] tracking-[0.16em] sm:text-xs"
+                    fallbackSubLabel="no image"
+                    fallbackSubLabelClassName="text-[8px] font-medium uppercase tracking-[0.18em] text-stone-400"
                   />
-                ) : null}
               </Link>
               <div className="min-w-0 flex-1">
                 <Link

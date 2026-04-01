@@ -13,20 +13,28 @@ export default function CollectionsPage() {
   return (
     <div className="border-b border-stone-200 bg-[var(--surface)]">
       <Container className="py-10 sm:py-14 lg:py-16">
-        <Breadcrumbs
-          items={[
-            { href: "/", label: "Home" },
-            { href: "/collections", label: "Collections", current: true },
-          ]}
+        <div className="text-center">
+          <p className="text-xs font-medium uppercase tracking-[0.2em] text-stone-500">
+            See What&apos;s New
+          </p>
+          <h1 className="mt-3 font-[family-name:var(--font-display)] text-3xl tracking-tight text-stone-900 sm:text-4xl">
+            Collection
+          </h1>
+          <div className="mt-5 flex justify-center">
+            <Breadcrumbs
+              items={[
+                { href: "/", label: "Home" },
+                { href: "/collections", label: "Collections", current: true },
+              ]}
+            />
+          </div>
+        </div>
+        <div
+          aria-hidden
+          className="mt-6 w-screen max-w-none border-b border-stone-200 sm:mt-10 ml-[calc(50%-50vw)]"
         />
-        <h1 className="mt-6 font-[family-name:var(--font-display)] text-3xl tracking-tight text-stone-900 sm:text-4xl">
-          Collections
-        </h1>
-        <p className="mt-3 max-w-2xl text-sm leading-relaxed text-stone-600 sm:text-base">
-          The same edits as on the home carousel — every pairing in one place.
-        </p>
 
-        <div className="mt-10 space-y-10 sm:mt-12 sm:space-y-12 lg:space-y-14">
+        <div className="mt-8 space-y-4 sm:mt-12 sm:space-y-12 lg:space-y-14">
           {HOME_COLLECTION_SLIDES.map((slide, slideIdx) => (
             <div
               key={slide.id}

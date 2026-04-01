@@ -7,8 +7,9 @@ import { useToast } from "@/contexts/toast-context";
 import { useWishlist } from "@/contexts/wishlist-context";
 import { formatPrice } from "@/lib/format";
 import { ProductCard } from "./product-card";
+import { ImageWithFallback } from "@/components/ui/image-with-fallback";
 
-export function ProductDetail({ product, related }) {
+export function ProductDetail({ product, related, breadcrumbs = null }) {
   const [imageIndex, setImageIndex] = useState(0);
   const [size, setSize] = useState("");
   const [color, setColor] = useState("");
@@ -40,110 +41,119 @@ export function ProductDetail({ product, related }) {
   }
 
   return (
-    <div className="grid gap-10 lg:grid-cols-2 lg:gap-12">
-      <div className="space-y-3">
-        <div className="relative aspect-[3/2] w-full overflow-hidden rounded-xl bg-stone-200 sm:aspect-[4/4]">
-          {main ? (
-            <Image
-              src={main}
-              alt={`${product.name} — view ${imageIndex + 1}`}
-              fill
-              className="object-cover"
-              sizes="(max-width: 1024px) 100vw, 50vw"
-              priority
-            />
+    <div>
+      {breadcrumbs ? (
+        <div className="mb-8 hidden lg:block">{breadcrumbs}</div>
+      ) : null}
+
+      <div className="grid gap-3 sm:gap-6 lg:grid-cols-2 lg:gap-12">
+        <div className="space-y-1 max-lg:-mx-3 max-lg:w-[calc(100%+1.5rem)] sm:max-lg:-mx-6 sm:max-lg:w-[calc(100%+3rem)] lg:mx-0 lg:w-full">
+          <div className="relative aspect-[4/4] w-full overflow-hidden rounded-none bg-stone-200 sm:aspect-[3/2] lg:rounded-xl">
+            <ImageWithFallback
+                src={main}
+                alt={`${product.name} — view ${imageIndex + 1}`}
+                imageClassName="object-cover"
+                sizes="(max-width: 1024px) 100vw, 50vw"
+                priority
+                fallbackLabelClassName="font-[family-name:var(--font-display)] text-xl tracking-[0.18em] sm:text-2xl lg:text-4xl"
+                fallbackSubLabel="image coming soon"
+                fallbackSubLabelClassName="text-[10px] font-medium uppercase tracking-[0.22em] text-stone-400 sm:text-xs"
+              />
+          </div>
+          {images.length > 1 ? (
+            <ul className="flex gap-2 overflow-x-auto px-3 pb-1 pt-3 sm:px-0 lg:px-0 lg:pt-0">
+              {images.map((src, i) => (
+                <li key={src}>
+                  <button
+                    type="button"
+                    onClick={() => setImageIndex(i)}
+                    className={`relative block h-20 w-16 shrink-0 overflow-hidden rounded-md border-2 transition-colors ${
+                      i === imageIndex
+                        ? "border-[var(--accent)]"
+                        : "border-transparent ring-1 ring-stone-200"
+                    }`}
+                  >
+                    <ImageWithFallback
+                        src={src}
+                        alt=""
+                        imageClassName="object-cover"
+                        sizes="112px"
+                        fallbackClassName="flex h-full w-full items-center justify-center bg-stone-200 text-stone-500"
+                        fallbackLabelClassName="text-[8px] font-semibold uppercase tracking-[0.14em]"
+                      />
+                  </button>
+                </li>
+              ))}
+            </ul>
           ) : null}
         </div>
-        {images.length > 1 ? (
-          <ul className="flex gap-2 overflow-x-auto pb-1">
-            {images.map((src, i) => (
-              <li key={src}>
-                <button
-                  type="button"
-                  onClick={() => setImageIndex(i)}
-                  className={`relative block h-20 w-16 shrink-0 overflow-hidden rounded-md border-2 transition-colors ${
-                    i === imageIndex
-                      ? "border-[var(--accent)]"
-                      : "border-transparent ring-1 ring-stone-200"
-                  }`}
-                >
-                  <Image
-                    src={src}
-                    alt=""
-                    fill
-                    className="object-cover"
-                    sizes="112px"
-                  />
-                </button>
-              </li>
-            ))}
-          </ul>
-        ) : null}
-      </div>
 
-      <div>
-        <div className="flex flex-wrap items-start justify-between gap-3">
-          <h1 className="font-[family-name:var(--font-display)] text-3xl tracking-tight text-stone-900 sm:text-4xl">
-            {product.name}
-          </h1>
-          <button
-            type="button"
-            aria-label={
-              wishReady && isWishlisted(product.id)
-                ? "Remove from wishlist"
-                : "Add to wishlist"
-            }
-            aria-pressed={wishReady && isWishlisted(product.id)}
-            onClick={() =>
-              toggleItem({
-                productId: product.id,
-                slug: product.slug,
-                name: product.name,
-                price: product.price,
-                currency: product.currency,
-                image: main,
-              })
-            }
-            className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-stone-200 bg-[var(--surface-elevated)] text-stone-700 transition-colors hover:border-stone-300 hover:text-[var(--accent)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill={
+        <div className="pt-0">
+          {breadcrumbs ? (
+            <div className="mb-2 lg:hidden sm:mb-3">{breadcrumbs}</div>
+          ) : null}
+          <div className="flex flex-wrap items-start justify-between gap-3">
+            <h1 className="font-[family-name:var(--font-display)] text-3xl tracking-tight text-stone-900 sm:text-4xl">
+              {product.name}
+            </h1>
+            <button
+              type="button"
+              aria-label={
                 wishReady && isWishlisted(product.id)
-                  ? "currentColor"
-                  : "none"
+                  ? "Remove from wishlist"
+                  : "Add to wishlist"
               }
-              stroke="currentColor"
-              strokeWidth="1.75"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className={
-                wishReady && isWishlisted(product.id)
-                  ? "h-5 w-5 text-[var(--accent)]"
-                  : "h-5 w-5"
+              aria-pressed={wishReady && isWishlisted(product.id)}
+              onClick={() =>
+                toggleItem({
+                  productId: product.id,
+                  slug: product.slug,
+                  name: product.name,
+                  price: product.price,
+                  currency: product.currency,
+                  image: main,
+                })
               }
-              aria-hidden
+              className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-stone-200 bg-[var(--surface-elevated)] text-stone-700 transition-colors hover:border-stone-300 hover:text-[var(--accent)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
             >
-              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
-            </svg>
-          </button>
-        </div>
-        <div className="mt-3 flex flex-wrap items-baseline gap-2">
-          <span className="text-xl text-stone-900">
-            {formatPrice(product.price, product.currency)}
-          </span>
-          {onSale ? (
-            <span className="text-lg text-stone-400 line-through">
-              {formatPrice(product.compareAtPrice, product.currency)}
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill={
+                  wishReady && isWishlisted(product.id)
+                    ? "currentColor"
+                    : "none"
+                }
+                stroke="currentColor"
+                strokeWidth="1.75"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className={
+                  wishReady && isWishlisted(product.id)
+                    ? "h-5 w-5 text-[var(--accent)]"
+                    : "h-5 w-5"
+                }
+                aria-hidden
+              >
+                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+              </svg>
+            </button>
+          </div>
+          <div className="mt-3 flex flex-wrap items-baseline gap-2">
+            <span className="text-xl text-stone-900">
+              {formatPrice(product.price, product.currency)}
             </span>
-          ) : null}
-        </div>
-        <p className="mt-6 text-sm leading-relaxed text-stone-600">
-          {product.description}
-        </p>
+            {onSale ? (
+              <span className="text-lg text-stone-400 line-through">
+                {formatPrice(product.compareAtPrice, product.currency)}
+              </span>
+            ) : null}
+          </div>
+          <p className="mt-6 text-sm leading-relaxed text-stone-600">
+            {product.description}
+          </p>
 
-        <div className="mt-8 space-y-6">
+          <div className="mt-8 space-y-6">
           <fieldset>
             <legend className="text-xs font-semibold uppercase tracking-wider text-stone-500">
               Size
@@ -193,12 +203,6 @@ export function ProductDetail({ product, related }) {
             </div>
           </fieldset>
 
-          {!canAdd ? (
-            <p className="text-sm text-stone-500">
-              Select a size and color to add this piece to your bag.
-            </p>
-          ) : null}
-
           <button
             type="button"
             disabled={!canAdd}
@@ -208,22 +212,23 @@ export function ProductDetail({ product, related }) {
             Add to bag
           </button>
         </div>
-      </div>
+        </div>
 
-      {related.length > 0 ? (
-        <section className="border-t border-stone-200 pt-12 lg:col-span-2">
-          <h2 className="font-[family-name:var(--font-display)] text-2xl text-stone-900">
-            You may also like
-          </h2>
-          <ul className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-2 sm:gap-8 lg:grid-cols-4">
-            {related.map((p) => (
-              <li key={p.id}>
-                <ProductCard product={p} />
-              </li>
-            ))}
-          </ul>
-        </section>
-      ) : null}
+        {related.length > 0 ? (
+          <section className="col-span-full mt-3 border-t border-stone-200 pt-4 sm:mt-10 sm:pt-12 lg:col-span-2">
+            <h2 className="text-center font-[family-name:var(--font-display)] text-2xl text-stone-900 sm:text-left">
+              You may also like
+            </h2>
+            <ul className="mt-5 grid grid-cols-2 gap-4 sm:mt-8 sm:grid-cols-2 sm:gap-8 lg:grid-cols-4">
+              {related.map((p) => (
+                <li key={p.id}>
+                  <ProductCard product={p} />
+                </li>
+              ))}
+            </ul>
+          </section>
+        ) : null}
+      </div>
     </div>
   );
 }
