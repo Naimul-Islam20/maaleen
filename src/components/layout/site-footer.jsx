@@ -62,6 +62,29 @@ function FloatingBackToTop() {
   );
 }
 
+function FooterLogo() {
+  const [error, setError] = useState(false);
+  
+  if (error) {
+    return (
+      <span className="text-xl sm:text-2xl font-[family-name:var(--font-display)] tracking-tight">
+        Maaleen
+      </span>
+    );
+  }
+
+  return (
+    <Image
+      src="/Maaleen-Logo-1.png"
+      alt="Maaleen"
+      width={320}
+      height={100}
+      className="h-16 w-auto object-contain brightness-0 invert sm:h-20"
+      onError={() => setError(true)}
+    />
+  );
+}
+
 export function SiteFooter() {
   return (
     <>
@@ -99,19 +122,17 @@ export function SiteFooter() {
         <Container className="pt-6 pb-2 sm:pt-12 sm:pb-4">
           <div className="grid grid-cols-2 gap-x-8 gap-y-8 lg:grid-cols-[4.5fr_2.5fr_2.5fr_2.5fr]">
             {/* Brand & Join */}
-            <div className="col-span-2 flex flex-col lg:col-span-1">
+            <div className="col-span-2 flex flex-col items-center lg:items-start lg:col-span-1">
               <Link href="/" className="inline-block">
-                <span className="font-[family-name:var(--font-display)] text-3xl leading-none tracking-tight text-white sm:text-4xl">
-                  Maaleen
-                </span>
+                <FooterLogo />
               </Link>
-              <p className="mt-8 max-w-md text-justify text-base leading-relaxed text-white/70">
+              <p className="mt-4 max-w-md text-center lg:text-justify text-base leading-relaxed text-white/70">
                 Curated dresses and wardrobe pieces with calm, modern tailoring. 
                 Maaleen blends tradition with contemporary silhouettes for the discerning woman.
               </p>
               
-              <div className="mt-6 flex flex-col">
-                <h3 className="text-xs font-semibold uppercase tracking-[0.2em] text-white">
+              <div className="mt-6 flex flex-col w-full items-center lg:items-start transition-all">
+                <h3 className="text-xs font-semibold uppercase tracking-[0.2em] text-white text-center lg:text-left">
                   Join the Maaleen Community
                 </h3>
                 <form 

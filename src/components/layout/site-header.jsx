@@ -199,14 +199,6 @@ function MainNavLinks() {
   return (
     <>
       <Link
-        href="/shop"
-        className={navLinkClass(
-          navHrefIsActive("/shop", pathname, searchParams),
-        )}
-      >
-        Shop
-      </Link>
-      <Link
         href="/collections"
         className={navLinkClass(
           navHrefIsActive("/collections", pathname, searchParams),
@@ -215,12 +207,12 @@ function MainNavLinks() {
         Collections
       </Link>
       <Link
-        href="/cart"
+        href="/shop"
         className={navLinkClass(
-          navHrefIsActive("/cart", pathname, searchParams),
+          navHrefIsActive("/shop", pathname, searchParams),
         )}
       >
-        Cart
+        Shop
       </Link>
     </>
   );

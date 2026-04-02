@@ -166,8 +166,21 @@ export function ProductDetail({ product, related, breadcrumbs = null }) {
 
   function handleBuyNow() {
     if (!canAdd) return;
-    handleAdd();
-    router.push("/cart");
+    
+    const colorObj = product.colors?.find((c) => c.name === color);
+    addItem({
+      productId: product.id,
+      slug: product.slug,
+      name: product.name,
+      price: product.price,
+      currency: product.currency,
+      image: main,
+      size,
+      color,
+      quantity: 1,
+    });
+    
+    router.push("/checkout");
   }
 
   return (

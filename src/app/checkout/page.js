@@ -256,8 +256,8 @@ export default function CheckoutPage() {
           onSubmit={handleSubmit}
           className="grid gap-4 sm:gap-6 md:gap-8 lg:grid-cols-[1fr_400px] xl:grid-cols-[1fr_470px] lg:pl-4"
         >
-          {/* Left Column */}
-          <div className="space-y-4 sm:space-y-5 md:space-y-6">
+          {/* Left Column - Form */}
+          <div className="space-y-4 sm:space-y-5 md:space-y-6 order-2 lg:order-1">
             {/* Phone Number & Sign In */}
             <div className="bg-white rounded-lg px-4 sm:px-5 md:px-6 pt-3 sm:pt-4 space-y-3 sm:space-y-4 pb-6 border border-stone-200">
               <div className="flex items-center justify-between">
@@ -521,7 +521,7 @@ export default function CheckoutPage() {
           </div>
 
           {/* Right Column - Order Summary */}
-          <div className="space-y-4 sm:space-y-5 md:space-y-6 lg:border-l lg:border-stone-200 lg:pl-6 xl:pl-8">
+          <div className="space-y-4 sm:space-y-5 md:space-y-6 lg:border-l lg:border-stone-200 lg:pl-6 xl:pl-8 order-1 lg:order-2">
             <div className="bg-white rounded-lg p-4 sm:p-5 md:p-6 space-y-4 sm:space-y-5 md:space-y-6 lg:sticky lg:top-50 border border-stone-200 shadow-sm">
               {/* Shopping Cart */}
               <div className="space-y-3 sm:space-y-4">

@@ -28,8 +28,20 @@ export function ProductsSliderSection({
 
   const total = products.length;
   const hasProducts = total > 0;
-  const hasLoop = mobileTwoUpNoLoop ? false : total > 1;
-  const hasNav = mobileTwoUpNoLoop ? total > 2 : total > 1;
+  
+  const [isDesktop, setIsDesktop] = useState(false);
+  useEffect(() => {
+    const handleResize = () => setIsDesktop(window.innerWidth >= 1024);
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // Only allow sliding/dragging if products don't fit on screen (more than 4 on desktop, more than 1 on mobile)
+  const shouldSlide = isDesktop ? total > 4 : total > 1;
+
+  const hasLoop = mobileTwoUpNoLoop ? false : shouldSlide;
+  const hasNav = mobileTwoUpNoLoop ? total > 2 : shouldSlide;
   const [canScrollPrev, setCanScrollPrev] = useState(false);
   const [canScrollNext, setCanScrollNext] = useState(false);
   const { emblaRef, emblaApi, scrollPrev, scrollNext } = useEmblaAutoplay({
@@ -37,9 +49,10 @@ export function ProductsSliderSection({
     autoplay: false,
     emblaOptions: {
       align: "start",
-      dragFree: !mobileTwoUpNoLoop,
-      containScroll: mobileTwoUpNoLoop ? "trimSnaps" : undefined,
+      dragFree: false,
+      containScroll: "trimSnaps",
       loop: hasLoop,
+      watchDrag: shouldSlide
     },
   });
 
@@ -100,7 +113,7 @@ export function ProductsSliderSection({
   const SWIPE_THRESHOLD = 20;
 
   const maybeSlideByDelta = (delta) => {
-    if (!hasLoop) return;
+    if (!shouldSlide) return;
     if (gestureHandledRef.current) return false;
     if (delta <= -SWIPE_THRESHOLD) {
       goNext();
@@ -122,7 +135,7 @@ export function ProductsSliderSection({
   };
 
   const finishDrag = (pointX) => {
-    if (dragStartXRef.current == null || !hasLoop) return;
+    if (dragStartXRef.current == null || !shouldSlide) return;
     const endX = pointX ?? dragStartXRef.current;
     const delta = dragDeltaXRef.current || endX - dragStartXRef.current;
     maybeSlideByDelta(delta);
