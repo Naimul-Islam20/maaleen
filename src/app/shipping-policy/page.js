@@ -8,14 +8,14 @@ export default function ShippingPolicyPage() {
           <h1 className="font-[family-name:var(--font-display)] text-3xl sm:text-4xl font-semibold tracking-tight text-stone-900">
             Shipping Policy
           </h1>
-          <p className="mt-4 text-sm sm:text-base leading-relaxed text-stone-700">
+          <p className="mt-4 text-justify text-sm sm:text-base leading-relaxed text-stone-700">
             At MAALEEN, we value your time and trust. Our goal is to ensure that your
             orders are processed efficiently and delivered safely. This Shipping Policy
             outlines our shipping methods, delivery timelines, and related terms so you
             know exactly what to expect when shopping with us.
           </p>
 
-          <section className="mt-8 space-y-4 text-sm sm:text-base leading-relaxed text-stone-700">
+          <section className="mt-8 space-y-4 text-justify text-sm sm:text-base leading-relaxed text-stone-700">
             <h2 className="text-lg sm:text-xl font-semibold text-stone-900">
               Shipping Options and Delivery Times
             </h2>

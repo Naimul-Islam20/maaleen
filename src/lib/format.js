@@ -8,3 +8,4 @@ export function formatPrice(amount, currency = "BDT") {
     maximumFractionDigits: 0,
   }).format(amount);
 }
+export const currency = formatPrice;

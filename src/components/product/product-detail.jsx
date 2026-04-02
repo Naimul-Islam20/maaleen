@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import { useCart } from "@/contexts/cart-context";
 import { useToast } from "@/contexts/toast-context";
 import { useWishlist } from "@/contexts/wishlist-context";
@@ -26,6 +27,7 @@ export function ProductDetail({ product, related, breadcrumbs = null }) {
   const { addItem } = useCart();
   const { showToast } = useToast();
   const { toggleItem, isWishlisted, ready: wishReady } = useWishlist();
+  const router = useRouter();
 
   const images = product.images ?? [];
   const main = images[imageIndex] ?? images[0];
@@ -160,6 +162,12 @@ export function ProductDetail({ product, related, breadcrumbs = null }) {
       quantity: 1,
     });
     showToast(`${product.name} added to your bag`);
+  }
+
+  function handleBuyNow() {
+    if (!canAdd) return;
+    handleAdd();
+    router.push("/cart");
   }
 
   return (
@@ -333,14 +341,24 @@ export function ProductDetail({ product, related, breadcrumbs = null }) {
               </div>
             </fieldset>
 
-            <button
-              type="button"
-              disabled={!canAdd}
-              onClick={handleAdd}
-              className="w-full rounded-full bg-stone-900 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-stone-800 disabled:cursor-not-allowed disabled:opacity-40 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)] sm:w-auto sm:min-w-[200px] sm:px-10"
-            >
-              Add to bag
-            </button>
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+              <button
+                type="button"
+                disabled={!canAdd}
+                onClick={handleAdd}
+                className="w-full rounded-full border border-stone-200 bg-white py-3.5 text-sm font-semibold text-stone-900 transition-colors hover:bg-stone-50 disabled:cursor-not-allowed disabled:opacity-40 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)] sm:w-auto sm:min-w-[180px] sm:px-8"
+              >
+                Add to bag
+              </button>
+              <button
+                type="button"
+                disabled={!canAdd}
+                onClick={handleBuyNow}
+                className="w-full rounded-full bg-[var(--accent)] py-3.5 text-sm font-semibold text-white transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)] sm:w-auto sm:min-w-[180px] sm:px-8"
+              >
+                Buy Now
+              </button>
+            </div>
           </div>
         </div>
       </div>

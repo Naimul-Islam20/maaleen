@@ -8,7 +8,7 @@ export default function ContactPage() {
         <h1 className="font-[family-name:var(--font-display)] text-3xl sm:text-4xl font-semibold tracking-tight text-stone-900">
           Contact Us
         </h1>
-        <p className="mt-4 text-sm sm:text-base leading-relaxed text-stone-700">
+        <p className="mt-4 text-justify text-sm sm:text-base leading-relaxed text-stone-700">
           Have a question about your order, sizing, or our products? Reach out to us
           using the form or contact details below and our team will get back to you
           as soon as possible.

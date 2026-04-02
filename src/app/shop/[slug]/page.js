@@ -39,7 +39,7 @@ export default async function ProductPage({ params }) {
   ];
 
   return (
-    <Container className="pb-10 pt-0 sm:py-14">
+    <Container className="pb-0 pt-0 sm:pt-14">
       <ProductDetail
         product={product}
         related={related}

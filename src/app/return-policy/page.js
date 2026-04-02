@@ -9,7 +9,7 @@ export default function ReturnPolicyPage() {
             Exchange &amp; Return Policy
           </h1>
 
-          <p className="mt-4 text-sm sm:text-base leading-relaxed text-stone-700">
+          <p className="mt-4 text-justify text-sm sm:text-base leading-relaxed text-stone-700">
             At MAALEEN, customer satisfaction is a priority. We carefully inspect every
             product before dispatch to ensure quality standards are met. However, if you
             encounter any issues with your purchase, we are here to assist you through our
@@ -17,7 +17,7 @@ export default function ReturnPolicyPage() {
             and exchange policy.
           </p>
 
-          <section className="mt-8 space-y-3 text-sm sm:text-base leading-relaxed text-stone-700">
+          <section className="mt-8 space-y-3 text-justify text-sm sm:text-base leading-relaxed text-stone-700">
             <h2 className="text-lg sm:text-xl font-semibold text-stone-900">
               Exchange Eligibility
             </h2>

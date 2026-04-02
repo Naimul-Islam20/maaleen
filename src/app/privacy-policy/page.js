@@ -10,19 +10,19 @@ export default function PrivacyPolicyPage() {
           </h1>
           <p className="mt-1 text-xs text-stone-500">Effective Date: 01/01/26</p>
 
-          <p className="mt-4 text-sm sm:text-base leading-relaxed text-stone-700">
+          <p className="mt-4 text-justify text-sm sm:text-base leading-relaxed text-stone-700">
             Welcome to MAALEEN. We are committed to respecting and protecting the privacy
             of our customers, visitors, and users. This Privacy Policy explains how
             MAALEEN (“we,” “us,” or “our”) collects, uses, stores, and safeguards personal
             information obtained through our website, digital platforms, and offline
             interactions.
           </p>
-          <p className="mt-3 text-sm sm:text-base leading-relaxed text-stone-700">
+          <p className="mt-3 text-justify text-sm sm:text-base leading-relaxed text-stone-700">
             By accessing or using our services, you agree to the terms outlined in this
             Privacy Policy.
           </p>
 
-          <section className="mt-8 space-y-3 text-sm sm:text-base leading-relaxed text-stone-700">
+          <section className="mt-8 space-y-3 text-justify text-sm sm:text-base leading-relaxed text-stone-700">
             <h2 className="text-lg sm:text-xl font-semibold text-stone-900">
               Information We Collect
             </h2>

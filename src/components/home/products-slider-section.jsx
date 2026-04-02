@@ -199,7 +199,7 @@ export function ProductsSliderSection({
   if (!hasProducts) return null;
 
   const contentClass = compactMobileSpacing
-    ? "pb-8 pt-5 sm:py-20"
+    ? "py-6 sm:py-10"
     : "py-14 sm:py-20";
   const Wrapper = useParentContainer ? "div" : Container;
 

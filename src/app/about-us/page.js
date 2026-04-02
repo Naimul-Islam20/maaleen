@@ -4,7 +4,7 @@ export default function AboutUsPage() {
       <h1 className="font-[family-name:var(--font-display)] text-3xl sm:text-4xl font-semibold tracking-tight text-stone-900">
         Welcome to MAALEEN
       </h1>
-      <div className="mt-4 space-y-4 text-sm sm:text-base leading-relaxed text-stone-700">
+      <div className="mt-4 space-y-4 text-justify text-sm sm:text-base leading-relaxed text-stone-700">
         <p>
           Welcome to MAALEEN, a contemporary clothing brand defined by refined
           aesthetics, purposeful design, and uncompromising craftsmanship. Every
@@ -25,14 +25,14 @@ export default function AboutUsPage() {
           <h2 className="text-lg sm:text-xl font-semibold text-stone-900">
             Our Vision
           </h2>
-          <p className="mt-3 text-sm sm:text-base leading-relaxed text-stone-700">
+          <p className="mt-3 text-justify text-sm sm:text-base leading-relaxed text-stone-700">
             MAALEEN envisions a future where fashion is meaningful, mindful, and
             enduring. We strive to create garments that transcend fleeting
             trends and instead offer lasting relevance. Our vision is to empower
             individuals through clothing that feels personal, expressive, and
             effortlessly refined.
           </p>
-          <p className="mt-3 text-sm sm:text-base leading-relaxed text-stone-700">
+          <p className="mt-3 text-justify text-sm sm:text-base leading-relaxed text-stone-700">
             We believe true style is not loud—it is intentional. Through clean
             lines, balanced silhouettes, and thoughtful details, MAALEEN
             provides a canvas for self-expression without excess.
@@ -43,14 +43,14 @@ export default function AboutUsPage() {
           <h2 className="text-lg sm:text-xl font-semibold text-stone-900">
             Our Craft
           </h2>
-          <p className="mt-3 text-sm sm:text-base leading-relaxed text-stone-700">
+          <p className="mt-3 text-justify text-sm sm:text-base leading-relaxed text-stone-700">
             Craftsmanship is at the heart of MAALEEN. Each garment is the result
             of careful design, premium material selection, and precise
             construction. We blend traditional tailoring techniques with modern
             design innovation to ensure every piece meets the highest standards
             of quality and comfort.
           </p>
-          <p className="mt-3 text-sm sm:text-base leading-relaxed text-stone-700">
+          <p className="mt-3 text-justify text-sm sm:text-base leading-relaxed text-stone-700">
             From fabric sourcing to final finishing, every step is guided by
             attention to detail. The result is clothing that feels as good as it
             looks—durable, refined, and meticulously made.
@@ -61,13 +61,13 @@ export default function AboutUsPage() {
           <h2 className="text-lg sm:text-xl font-semibold text-stone-900">
             Sustainability Commitment
           </h2>
-          <p className="mt-3 text-sm sm:text-base leading-relaxed text-stone-700">
+          <p className="mt-3 text-justify text-sm sm:text-base leading-relaxed text-stone-700">
             MAALEEN is committed to responsible and sustainable fashion. We are
             conscious of our impact and continuously work to reduce our
             environmental footprint through mindful sourcing, efficient
             production methods, and long-lasting designs.
           </p>
-          <p className="mt-3 text-sm sm:text-base leading-relaxed text-stone-700">
+          <p className="mt-3 text-justify text-sm sm:text-base leading-relaxed text-stone-700">
             By prioritizing quality over quantity and longevity over trends, we
             aim to contribute to a more thoughtful fashion ecosystem—one that
             respects both people and the planet.

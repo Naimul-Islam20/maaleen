@@ -33,7 +33,7 @@ function FaqItem({ question, children }) {
             transition={{ duration: 0.24, ease: "easeInOut" }}
             className="overflow-hidden"
           >
-            <div className="pt-2 text-sm text-stone-700">{children}</div>
+            <div className="pt-2 text-sm text-stone-700 text-justify">{children}</div>
           </motion.div>
         )}
       </AnimatePresence>
@@ -49,7 +49,7 @@ export default function FaqsPage() {
           <h1 className="font-[family-name:var(--font-display)] text-3xl sm:text-4xl font-semibold tracking-tight text-stone-900">
             Welcome to the MAALEEN FAQs
           </h1>
-          <p className="mt-4 text-sm sm:text-base leading-relaxed text-stone-700">
+          <p className="mt-4 text-sm sm:text-base leading-relaxed text-stone-700 text-justify">
             Welcome to the MAALEEN FAQs page. Here you will find answers to the
             most frequently asked questions about our brand, products, ordering
             process, and customer support. If you need additional information or
@@ -57,7 +57,7 @@ export default function FaqsPage() {
             directly. We are always happy to assist.
           </p>
 
-          <div className="mt-8 space-y-8 text-sm sm:text-base leading-relaxed text-stone-800">
+          <div className="mt-8 space-y-8 text-sm sm:text-base leading-relaxed text-stone-800 text-justify">
             <section>
               <h2 className="text-lg sm:text-xl font-semibold text-stone-900">
                 General Questions
@@ -155,7 +155,7 @@ export default function FaqsPage() {
             </section>
           </div>
 
-          <p className="mt-8 text-sm sm:text-base leading-relaxed text-stone-700">
+          <p className="mt-8 text-sm sm:text-base leading-relaxed text-stone-700 text-justify">
             We hope this FAQs page has been helpful. If you have any additional
             questions or need further clarification, please do not hesitate to
             reach out. Your satisfaction is important to us.
