@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useCart } from "@/contexts/cart-context";
 import { currency } from "@/lib/format";
+import { Container } from "@/components/layout/container";
 import SuccessPopup from "@/components/checkout/success-popup";
 import { ImageWithFallback } from "@/components/ui/image-with-fallback";
 
@@ -251,10 +252,10 @@ export default function CheckoutPage() {
       {submitted && <SuccessPopup orderId={orderId} total={finalTotal} />}
       
 
-      <div className="container-page max-w-6xl mx-auto px-4 lg:px-0">
+      <Container className="max-w-none">
         <form
           onSubmit={handleSubmit}
-          className="grid gap-4 sm:gap-6 md:gap-8 lg:grid-cols-[1fr_400px] xl:grid-cols-[1fr_470px] lg:pl-4"
+          className="grid gap-4 sm:gap-6 md:gap-8 lg:grid-cols-[1fr_400px] xl:grid-cols-[1fr_420px] lg:pl-0"
         >
           {/* Left Column - Form */}
           <div className="space-y-4 sm:space-y-5 md:space-y-6 order-2 lg:order-1">
@@ -615,7 +616,7 @@ export default function CheckoutPage() {
             </div>
           </div>
         </form>
-      </div>
+      </Container>
     </div>
   );
 }

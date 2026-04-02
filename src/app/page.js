@@ -2,13 +2,11 @@ import { CollectionsSection } from "@/components/home/collections-section";
 import { HeroSlider } from "@/components/home/hero-slider";
 import { ProductsSliderSection } from "@/components/home/products-slider-section";
 import {
-  getFeaturedProducts,
   getNewArrivals,
   getProducts,
 } from "@/lib/products";
 
 export default function HomePage() {
-  const featured = getFeaturedProducts().slice(0, 4);
   const newArrivals = getNewArrivals(4);
   const sliderProducts = getProducts().slice(0, 12);
 
@@ -22,12 +20,6 @@ export default function HomePage() {
 
       <ProductsSliderSection products={sliderProducts} />
 
-      <ProductsSliderSection
-        products={featured}
-        title="Featured"
-        ctaLabel="See all"
-        ctaHref="/shop"
-      />
 
       <ProductsSliderSection
         products={newArrivals}

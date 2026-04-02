@@ -52,7 +52,7 @@ function FloatingBackToTop() {
   return (
     <button
       onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-      className="fixed bottom-8 right-8 z-50 flex h-12 w-12 items-center justify-center rounded-full bg-white text-[var(--accent)] shadow-xl transition-all duration-300 hover:scale-110 active:scale-95"
+      className="fixed bottom-[calc(5rem+env(safe-area-inset-bottom))] right-6 sm:bottom-8 sm:right-8 z-40 flex h-12 w-12 items-center justify-center rounded-full bg-white text-[var(--accent)] shadow-xl transition-all duration-300 hover:scale-110 active:scale-95"
       aria-label="Back to top"
     >
       <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">

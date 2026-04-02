@@ -34,7 +34,7 @@ export default function RootLayout({ children }) {
       suppressHydrationWarning
     >
       <body
-        className="flex min-h-full flex-col bg-[var(--surface)] text-stone-900"
+        className="flex min-h-full flex-col bg-[var(--surface)] text-stone-900 pb-[calc(4rem+env(safe-area-inset-bottom))] sm:pb-0"
         suppressHydrationWarning
       >
         <Providers>

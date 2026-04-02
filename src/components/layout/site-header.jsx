@@ -87,6 +87,26 @@ function SearchIcon({ className }) {
   );
 }
 
+function MenuIcon({ className = "h-6 w-6" }) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.75"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+      aria-hidden
+    >
+      <line x1="3" y1="12" x2="21" y2="12" />
+      <line x1="3" y1="6" x2="21" y2="6" />
+      <line x1="3" y1="18" x2="21" y2="18" />
+    </svg>
+  );
+}
+
 function CloseIcon({ className }) {
   return (
     <svg
@@ -255,6 +275,7 @@ export function SiteHeader() {
   const [cartFromBottom, setCartFromBottom] = useState(true);
   const [logoError, setLogoError] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   const [selectedCountry, setSelectedCountry] = useState("BD");
   const [countryOpen, setCountryOpen] = useState(false);
   const wishlistPopoverRef = useRef(null);
@@ -477,31 +498,25 @@ export function SiteHeader() {
                       </button>
                     </div>
                   </motion.form>
-                ) : null}
+                  ) : null}
+                </div>
               </div>
-            </div>
             <Link
               href="/"
               className="absolute left-1/2 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2"
             >
-              {logoError ? (
-                <span className="font-[family-name:var(--font-display)] text-xl tracking-tight text-white sm:text-2xl">
-                  Maaleen
-                </span>
-              ) : (
-                <Image
-                  src="/Maaleen-Logo-1.png"
-                  alt="Maaleen"
-                  width={340}
-                  height={100}
-                  priority
-                  className="h-20 w-auto object-contain sm:h-24"
-                  onError={() => setLogoError(true)}
-                />
-              )}
+              <Image
+                src="/Maaleen-Logo-1.png"
+                alt="Maaleen"
+                width={340}
+                height={100}
+                priority
+                className="h-20 w-auto object-contain sm:h-24"
+                onError={() => setLogoError(true)}
+              />
             </Link>
             <div className="relative z-20 flex items-center gap-1 sm:gap-2">
-              <div className="relative" ref={wishlistPopoverRef}>
+              <div className="relative hidden sm:block" ref={wishlistPopoverRef}>
                 <button
                   type="button"
                   onClick={() => {
@@ -610,7 +625,7 @@ export function SiteHeader() {
               <button
                 type="button"
                 onClick={openCart}
-                className="relative inline-flex min-h-10 min-w-10 items-center justify-center rounded-full border border-transparent text-white transition-colors hover:border-white/30 hover:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                className="relative hidden sm:inline-flex min-h-10 min-w-10 items-center justify-center rounded-full border border-transparent text-white transition-colors hover:border-white/30 hover:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
                 aria-label={`Shopping bag, ${ready ? totalItems : 0} items`}
               >
                 <BagIcon className="h-5 w-5" />
@@ -622,11 +637,20 @@ export function SiteHeader() {
               </button>
               <Link
                 href="/login"
-                className="inline-flex min-h-10 items-center justify-center gap-1.5 rounded-full border border-white/35 bg-white/10 px-3 text-xs font-semibold text-white transition-colors hover:border-white/55 hover:bg-white/15 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:gap-2 sm:px-4 sm:text-sm"
+                className="hidden sm:inline-flex min-h-10 items-center justify-center gap-1.5 rounded-full border border-white/35 bg-white/10 px-3 text-xs font-semibold text-white transition-colors hover:border-white/55 hover:bg-white/15 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:gap-2 sm:px-4 sm:text-sm"
               >
                 <UserIcon className="h-4 w-4" />
-                <span className="hidden sm:inline">Login</span>
+                <span>Login</span>
               </Link>
+              <button
+                type="button"
+                onClick={() => setMenuOpen(!menuOpen)}
+                className="inline-flex sm:hidden min-h-10 min-w-10 items-center justify-center rounded-full border border-white/35 bg-white/10 text-white transition-colors hover:bg-white/15 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                aria-label="Toggle menu"
+                aria-expanded={menuOpen}
+              >
+                {menuOpen ? <CloseIcon className="h-5 w-5" /> : <MenuIcon className="h-5 w-5" />}
+              </button>
             </div>
             <AnimatePresence>
               {searchOpen ? (
@@ -662,10 +686,10 @@ export function SiteHeader() {
             </AnimatePresence>
           </div>
 
-          <nav
-            className="flex flex-wrap items-center justify-center gap-x-8 gap-y-2 border-t border-white/20 py-3 sm:gap-x-12"
-            aria-label="Main"
-          >
+            <nav
+              className="hidden sm:flex flex-wrap items-center justify-center gap-x-8 gap-y-2 border-t border-white/20 py-3 sm:gap-x-12"
+              aria-label="Main"
+            >
             <Suspense fallback={<MainNavFallback />}>
               <MainNavLinks />
             </Suspense>
@@ -705,7 +729,7 @@ export function SiteHeader() {
               animate={{ x: 0, y: 0 }}
               exit={{ y: "100%", x: 0 }}
               transition={{ duration: 0.26, ease: "easeInOut" }}
-              className="fixed bottom-0 left-0 right-0 z-50 flex h-[58vh] max-h-[calc(100dvh-9rem)] min-h-[24rem] flex-col rounded-t-2xl bg-[var(--surface-elevated)] shadow-[0_-12px_40px_rgba(0,0,0,0.15)] ring-1 ring-black/10"
+              className="fixed bottom-[calc(4rem+env(safe-area-inset-bottom))] left-0 right-0 z-50 flex h-[58vh] max-h-[calc(100dvh-9rem)] min-h-[24rem] flex-col rounded-t-2xl bg-[var(--surface-elevated)] shadow-[0_-12px_40px_rgba(0,0,0,0.15)] ring-1 ring-black/10"
             >
               <div className="flex shrink-0 items-baseline justify-between gap-2 border-b border-stone-200 px-5 py-4">
                 <p className="text-xs font-semibold uppercase tracking-wide text-stone-500">
@@ -809,7 +833,7 @@ export function SiteHeader() {
               transition={{ duration: 0.26, ease: "easeInOut" }}
               className={
                 cartFromBottom
-                  ? "fixed bottom-0 left-0 right-0 z-50 flex h-[84vh] max-h-[calc(100dvh-2.5rem)] flex-col rounded-t-2xl bg-[var(--surface-elevated)] shadow-[0_-12px_40px_rgba(0,0,0,0.15)] ring-1 ring-black/10"
+                  ? "fixed bottom-[calc(4rem+env(safe-area-inset-bottom))] left-0 right-0 z-50 flex h-[84vh] max-h-[calc(100dvh-2.5rem)] flex-col rounded-t-2xl bg-[var(--surface-elevated)] shadow-[0_-12px_40px_rgba(0,0,0,0.15)] ring-1 ring-black/10"
                   : "absolute right-0 top-0 z-50 flex h-full w-full max-w-sm flex-col bg-[var(--surface-elevated)] shadow-xl ring-1 ring-black/10"
               }
             >
@@ -872,7 +896,7 @@ export function SiteHeader() {
                               </div>
                               <button
                                 type="button"
-                                onClick={() => removeCartItem(line.lineId)}
+                                onClick={() => removeItem(line.lineId)}
                                 className="ml-2 inline-flex h-9 w-9 items-center justify-center text-stone-400 hover:text-stone-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
                                 aria-label="Remove from bag"
                               >
@@ -964,6 +988,148 @@ export function SiteHeader() {
           </div>
         )}
       </AnimatePresence>
+
+      <AnimatePresence>
+        {menuOpen && (
+          <div className="fixed inset-0 z-[100] sm:hidden">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setMenuOpen(false)}
+              className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+            />
+            <motion.aside
+              initial={{ x: "-100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "-100%" }}
+              transition={{ type: "spring", damping: 25, stiffness: 200 }}
+              className="absolute left-0 top-0 bottom-0 w-[80%] max-w-sm bg-white shadow-2xl"
+            >
+              <div className="flex flex-col h-full bg-[var(--surface-elevated)]">
+                <div className="flex items-center justify-between p-6 border-b border-stone-100 bg-[var(--accent)]">
+                  <span className="font-[family-name:var(--font-display)] text-2xl tracking-tight text-white">
+                    Menu
+                  </span>
+                  <button
+                    onClick={() => setMenuOpen(false)}
+                    className="p-2 -mr-2 text-white/70 hover:text-white"
+                  >
+                    <CloseIcon className="h-6 w-6" />
+                  </button>
+                </div>
+                <nav className="flex-1 overflow-y-auto px-6 py-8">
+                  <ul className="space-y-6">
+                    <li>
+                      <Link
+                        href="/collections"
+                        onClick={() => setMenuOpen(false)}
+                        className="text-xl font-medium text-stone-900 hover:text-[var(--accent)] flex items-center justify-between group"
+                      >
+                        Collections
+                        <span className="text-stone-300 group-hover:text-[var(--accent)] transition-colors">→</span>
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        href="/shop"
+                        onClick={() => setMenuOpen(false)}
+                        className="text-xl font-medium text-stone-900 hover:text-[var(--accent)] flex items-center justify-between group"
+                      >
+                        Shop All
+                        <span className="text-stone-300 group-hover:text-[var(--accent)] transition-colors">→</span>
+                      </Link>
+                    </li>
+                    <li className="pt-6 border-t border-stone-100">
+                      <p className="text-xs font-bold uppercase tracking-[0.2em] text-stone-400 mb-4">Support</p>
+                      <ul className="space-y-4">
+                        <li>
+                          <Link href="/faqs" onClick={() => setMenuOpen(false)} className="text-sm text-stone-600 hover:text-stone-900">FAQs & Help</Link>
+                        </li>
+                        <li>
+                          <Link href="/shipping-policy" onClick={() => setMenuOpen(false)} className="text-sm text-stone-600 hover:text-stone-900">Shipping Policy</Link>
+                        </li>
+                        <li>
+                          <Link href="/contact" onClick={() => setMenuOpen(false)} className="text-sm text-stone-600 hover:text-stone-900">Contact Us</Link>
+                        </li>
+                      </ul>
+                    </li>
+                  </ul>
+                </nav>
+                <div className="p-6 border-t border-stone-100 bg-stone-50">
+                   <p className="text-xs text-stone-400 font-medium tracking-wide">
+                     © {new Date().getFullYear()} Maaleen. 
+                   </p>
+                </div>
+              </div>
+            </motion.aside>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* Mobile Bottom Bar */}
+      <div className="fixed bottom-0 left-0 right-0 z-[60] block bg-white border-t border-stone-200 shadow-[0_-4px_24px_rgba(0,0,0,0.12)] sm:hidden pb-[max(0.75rem,env(safe-area-inset-bottom))]">
+        <div className="flex h-16 items-center justify-around px-4">
+          <button
+            type="button"
+            onClick={() => {
+              if (wishlistOpen) {
+                closeWishlist();
+              } else {
+                if (cartMounted) closeCart();
+                if (menuOpen) setMenuOpen(false);
+                openWishlist();
+              }
+            }}
+            className="flex flex-col items-center gap-1 text-stone-500 transition-colors active:text-[var(--accent)]"
+            aria-label="Wishlist"
+          >
+            <div className="relative">
+              <HeartIcon className="h-6 w-6" />
+              {wishReady && wishCount > 0 && (
+                <span className="absolute -right-1.5 -top-1 px-1 min-w-[16px] h-4 flex items-center justify-center rounded-full bg-[var(--accent)] text-[9px] font-bold text-white leading-none">
+                  {wishCount > 99 ? "99+" : wishCount}
+                </span>
+              )}
+            </div>
+            <span className="text-[10px] font-semibold uppercase tracking-wider">Saved</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => {
+              if (cartMounted) {
+                closeCart();
+              } else {
+                if (wishlistOpen) closeWishlist();
+                if (menuOpen) setMenuOpen(false);
+                openCart();
+              }
+            }}
+            className="flex flex-col items-center gap-1 text-stone-500 transition-colors active:text-[var(--accent)]"
+            aria-label="Cart"
+          >
+            <div className="relative">
+              <BagIcon className="h-6 w-6" />
+              {ready && totalItems > 0 && (
+                <span className="absolute -right-1.5 -top-1 px-1 min-w-[16px] h-4 flex items-center justify-center rounded-full bg-[var(--accent)] text-[9px] font-bold text-white leading-none">
+                  {totalItems > 99 ? "99+" : totalItems}
+                </span>
+              )}
+            </div>
+            <span className="text-[10px] font-semibold uppercase tracking-wider">Bag</span>
+          </button>
+
+          <Link
+            href="/login"
+            className="flex flex-col items-center gap-1 text-stone-500 transition-colors active:text-[var(--accent)]"
+            aria-label="Login"
+          >
+            <UserIcon className="h-6 w-6" />
+            <span className="text-[10px] font-semibold uppercase tracking-wider">Account</span>
+          </Link>
+        </div>
+      </div>
     </>
   );
 }
