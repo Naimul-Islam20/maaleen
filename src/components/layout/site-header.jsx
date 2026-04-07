@@ -1007,13 +1007,20 @@ export function SiteHeader() {
               className="absolute left-0 top-0 bottom-0 w-[80%] max-w-sm bg-white shadow-2xl"
             >
               <div className="flex flex-col h-full bg-[var(--surface-elevated)]">
-                <div className="flex items-center justify-between p-6 border-b border-stone-100 bg-[var(--accent)]">
-                  <span className="font-[family-name:var(--font-display)] text-2xl tracking-tight text-white">
-                    Menu
-                  </span>
+                <div className="relative flex items-center justify-center py-3 px-4 border-b border-stone-100 bg-[var(--accent)]">
+                  <Link href="/" onClick={() => setMenuOpen(false)}>
+                    <Image
+                      src="/Maaleen-Logo-1.png"
+                      alt="Maaleen"
+                      width={200}
+                      height={60}
+                      priority
+                      className="h-12 w-auto object-contain brightness-0 invert"
+                    />
+                  </Link>
                   <button
                     onClick={() => setMenuOpen(false)}
-                    className="p-2 -mr-2 text-white/70 hover:text-white"
+                    className="absolute right-3.5 p-1.5 text-white/70 hover:text-white"
                   >
                     <CloseIcon className="h-6 w-6" />
                   </button>
@@ -1036,23 +1043,9 @@ export function SiteHeader() {
                         onClick={() => setMenuOpen(false)}
                         className="text-xl font-medium text-stone-900 hover:text-[var(--accent)] flex items-center justify-between group"
                       >
-                        Shop All
+                        Shop
                         <span className="text-stone-300 group-hover:text-[var(--accent)] transition-colors">→</span>
                       </Link>
-                    </li>
-                    <li className="pt-6 border-t border-stone-100">
-                      <p className="text-xs font-bold uppercase tracking-[0.2em] text-stone-400 mb-4">Support</p>
-                      <ul className="space-y-4">
-                        <li>
-                          <Link href="/faqs" onClick={() => setMenuOpen(false)} className="text-sm text-stone-600 hover:text-stone-900">FAQs & Help</Link>
-                        </li>
-                        <li>
-                          <Link href="/shipping-policy" onClick={() => setMenuOpen(false)} className="text-sm text-stone-600 hover:text-stone-900">Shipping Policy</Link>
-                        </li>
-                        <li>
-                          <Link href="/contact" onClick={() => setMenuOpen(false)} className="text-sm text-stone-600 hover:text-stone-900">Contact Us</Link>
-                        </li>
-                      </ul>
                     </li>
                   </ul>
                 </nav>
