@@ -48,7 +48,7 @@ export default function SuccessPopup({ orderId, total }) {
 
             <Link
               href="/"
-              className="block w-full rounded-full bg-stone-900 py-4 text-sm font-bold uppercase tracking-widest text-white transition-opacity hover:opacity-90"
+              className="block w-full rounded-full bg-[var(--accent)] py-4 text-sm font-bold uppercase tracking-widest text-white transition-opacity hover:opacity-90"
             >
               Back to Home
             </Link>

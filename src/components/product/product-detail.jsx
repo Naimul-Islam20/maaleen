@@ -265,25 +265,21 @@ export function ProductDetail({ product, related, breadcrumbs = null }) {
                   image: main,
                 })
               }
-              className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-stone-200 bg-[var(--surface-elevated)] text-stone-700 transition-colors hover:border-stone-300 hover:text-[var(--accent)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
+              className="inline-flex h-12 w-12 shrink-0 cursor-pointer items-center justify-center focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
                 fill={
                   wishReady && isWishlisted(product.id)
-                    ? "currentColor"
+                    ? "var(--icon-button-bg)"
                     : "none"
                 }
-                stroke="currentColor"
+                stroke="var(--icon-button-bg)"
                 strokeWidth="1.75"
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                className={
-                  wishReady && isWishlisted(product.id)
-                    ? "h-5 w-5 text-[var(--accent)]"
-                    : "h-5 w-5"
-                }
+                className="h-[1.75rem] w-[1.75rem]"
                 aria-hidden
               >
                 <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />

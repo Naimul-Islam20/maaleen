@@ -303,10 +303,10 @@ export function ProductsSliderSection({
               type="button"
               aria-label="Previous products"
               onClick={goPrev}
-              className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-full border border-stone-300 bg-[var(--surface-elevated)] text-stone-800 shadow-sm transition-colors hover:border-stone-400 hover:bg-stone-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)] disabled:cursor-not-allowed disabled:border-stone-200 disabled:bg-stone-100 disabled:text-stone-400"
+              className="inline-flex min-h-12 min-w-12 items-center justify-center rounded-full border-2 border-[var(--primary)] bg-transparent text-[var(--primary)] transition-all hover:bg-[var(--primary)] hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)] disabled:cursor-not-allowed disabled:opacity-30"
               disabled={!hasNav}
             >
-              <span aria-hidden className="text-xl leading-none">
+              <span aria-hidden className="text-2xl leading-none">
                 ‹
               </span>
             </button>
@@ -314,10 +314,10 @@ export function ProductsSliderSection({
               type="button"
               aria-label="Next products"
               onClick={goNext}
-              className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-full border border-stone-300 bg-[var(--surface-elevated)] text-stone-800 shadow-sm transition-colors hover:border-stone-400 hover:bg-stone-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)] disabled:cursor-not-allowed disabled:border-stone-200 disabled:bg-stone-100 disabled:text-stone-400"
+              className="inline-flex min-h-12 min-w-12 items-center justify-center rounded-full border-2 border-[var(--primary)] bg-transparent text-[var(--primary)] transition-all hover:bg-[var(--primary)] hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white disabled:cursor-not-allowed disabled:opacity-30"
               disabled={!hasNav}
             >
-              <span aria-hidden className="text-xl leading-none">
+              <span aria-hidden className="text-2xl leading-none">
                 ›
               </span>
             </button>
@@ -358,10 +358,10 @@ export function ProductsSliderSection({
               type="button"
               aria-label="Previous products"
               onClick={scrollPrev}
-              className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-full border border-stone-300 bg-[var(--surface-elevated)] text-stone-800 shadow-sm transition-colors hover:border-stone-400 hover:bg-stone-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)] disabled:cursor-not-allowed disabled:border-stone-200 disabled:bg-stone-100 disabled:text-stone-400"
+              className="inline-flex min-h-12 min-w-12 items-center justify-center rounded-full border-2 border-[var(--primary)] bg-transparent text-[var(--primary)] transition-all hover:bg-[var(--primary)] hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)] disabled:cursor-not-allowed disabled:opacity-30"
               disabled={desktopPrevDisabled}
             >
-              <span aria-hidden className="text-xl leading-none">
+              <span aria-hidden className="text-2xl leading-none">
                 ‹
               </span>
             </button>
@@ -369,10 +369,10 @@ export function ProductsSliderSection({
               type="button"
               aria-label="Next products"
               onClick={scrollNext}
-              className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-full border border-stone-300 bg-[var(--surface-elevated)] text-stone-800 shadow-sm transition-colors hover:border-stone-400 hover:bg-stone-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)] disabled:cursor-not-allowed disabled:border-stone-200 disabled:bg-stone-100 disabled:text-stone-400"
+              className="inline-flex min-h-12 min-w-12 items-center justify-center rounded-full border-2 border-[var(--primary)] bg-transparent text-[var(--primary)] transition-all hover:bg-[var(--primary)] hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white disabled:cursor-not-allowed disabled:opacity-30"
               disabled={desktopNextDisabled}
             >
-              <span aria-hidden className="text-xl leading-none">
+              <span aria-hidden className="text-2xl leading-none">
                 ›
               </span>
             </button>

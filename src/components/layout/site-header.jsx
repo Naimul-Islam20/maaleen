@@ -19,7 +19,7 @@ function HeartIcon({ className }) {
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      strokeWidth="1.75"
+      strokeWidth="2.25"
       strokeLinecap="round"
       strokeLinejoin="round"
       className={className}
@@ -37,7 +37,7 @@ function BagIcon({ className }) {
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      strokeWidth="1.75"
+      strokeWidth="2.25"
       strokeLinecap="round"
       strokeLinejoin="round"
       className={className}
@@ -57,14 +57,14 @@ function UserIcon({ className }) {
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      strokeWidth="1.75"
+      strokeWidth="2.25"
       strokeLinecap="round"
       strokeLinejoin="round"
       className={className}
       aria-hidden
     >
-      <circle cx="12" cy="8" r="3.5" />
-      <path d="M5 19.5C5.8 16.5 8.6 15 12 15s6.2 1.5 7 4.5" />
+      <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+      <circle cx="12" cy="7" r="4" />
     </svg>
   );
 }
@@ -75,7 +75,7 @@ function SearchIcon({ className }) {
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      strokeWidth="1.75"
+      strokeWidth="2.25"
       strokeLinecap="round"
       strokeLinejoin="round"
       className={className}
@@ -94,7 +94,7 @@ function MenuIcon({ className = "h-6 w-6" }) {
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      strokeWidth="1.75"
+      strokeWidth="2.25"
       strokeLinecap="round"
       strokeLinejoin="round"
       className={className}
@@ -114,7 +114,7 @@ function CloseIcon({ className }) {
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      strokeWidth="1.75"
+      strokeWidth="2.25"
       strokeLinecap="round"
       strokeLinejoin="round"
       className={className}
@@ -133,7 +133,7 @@ function ChevronDownIcon({ className }) {
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      strokeWidth="1.75"
+      strokeWidth="2.25"
       strokeLinecap="round"
       strokeLinejoin="round"
       className={className}
@@ -410,14 +410,14 @@ export function SiteHeader() {
                 <button
                   type="button"
                   onClick={toggleSearch}
-                  className="inline-flex min-h-10 min-w-10 items-center justify-center rounded-full border border-white/30 bg-white/10 text-white transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                  className="inline-flex min-h-10 min-w-10 items-center justify-center text-[var(--secondary)] transition-colors hover:opacity-80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
                   aria-label={searchOpen ? "Close search" : "Search"}
                   aria-expanded={searchOpen}
                 >
                   {searchOpen ? (
-                    <CloseIcon className="h-5 w-5" />
+                    <CloseIcon className="h-6 w-6" />
                   ) : (
-                    <SearchIcon className="h-5 w-5" />
+                    <SearchIcon className="h-6 w-6" />
                   )}
                 </button>
                 <div
@@ -429,21 +429,21 @@ export function SiteHeader() {
                     onClick={() => setCountryOpen((open) => !open)}
                     aria-label="Select country"
                     aria-expanded={countryOpen}
-                    className="inline-flex h-10 items-center gap-1.5 rounded-full border border-[#E2C7AE] bg-[#FFE6CF] px-2.5 text-xs font-semibold text-stone-900 transition-colors hover:bg-[#F9DABF] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                    className="inline-flex h-9 items-center gap-1.5 rounded-full bg-[var(--secondary)] px-2.5 text-sm font-bold text-white transition-colors hover:bg-[var(--secondary)]/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
                   >
                     <span>{selectedCountry === "BD" ? "🇧🇩 BD" : "🇦🇺 AU"}</span>
-                    <ChevronDownIcon className="h-3.5 w-3.5" />
+                    <ChevronDownIcon className="h-4.5 w-4.5" />
                   </button>
                   {countryOpen ? (
-                    <div className="absolute left-0 top-full z-40 mt-2 w-44 rounded-xl border border-[#E2C7AE] bg-[#FFE6CF] p-1.5 shadow-lg ring-1 ring-black/10">
+                    <div className="absolute left-0 top-full z-40 mt-2 w-44 rounded-xl bg-[var(--secondary)] p-1.5 shadow-xl ring-1 ring-black/10">
                       <button
                         type="button"
                         onClick={() => {
                           setSelectedCountry("BD");
                           setCountryOpen(false);
                         }}
-                        className={`flex w-full items-center rounded-lg px-3 py-2 text-left text-sm text-stone-900 transition-colors hover:bg-[#F3D3B8] ${
-                          selectedCountry === "BD" ? "bg-[#F3D3B8]" : ""
+                        className={`flex w-full items-center rounded-lg px-3 py-2 text-left text-sm font-bold text-white transition-colors hover:bg-white/20 ${
+                          selectedCountry === "BD" ? "bg-white/20" : ""
                         }`}
                       >
                         🇧🇩 Bangladesh
@@ -454,8 +454,8 @@ export function SiteHeader() {
                           setSelectedCountry("AU");
                           setCountryOpen(false);
                         }}
-                        className={`mt-1 flex w-full items-center rounded-lg px-3 py-2 text-left text-sm text-stone-900 transition-colors hover:bg-[#F3D3B8] ${
-                          selectedCountry === "AU" ? "bg-[#F3D3B8]" : ""
+                        className={`mt-1 flex w-full items-center rounded-lg px-3 py-2 text-left text-sm font-bold text-white transition-colors hover:bg-white/20 ${
+                          selectedCountry === "AU" ? "bg-white/20" : ""
                         }`}
                       >
                         🇦🇺 Australia
@@ -487,12 +487,12 @@ export function SiteHeader() {
                         type="search"
                         name="q"
                         placeholder="Search products"
-                        className="h-10 w-[300px] rounded-full border border-white/35 bg-white/10 px-4 pr-20 text-sm text-white placeholder:text-white/70 backdrop-blur-sm outline-none transition-colors focus:border-white lg:w-[420px]"
+                        className="h-11 w-[300px] rounded-full border border-white/35 bg-white/10 px-4 pr-24 text-base text-white placeholder:text-white/70 backdrop-blur-sm outline-none transition-colors focus:border-white lg:w-[420px]"
                         autoFocus
                       />
                       <button
                         type="submit"
-                        className="absolute right-1 top-1/2 -translate-y-1/2 rounded-full border border-white/30 bg-white/15 px-3 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-white/25 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                        className="absolute right-1 top-1/2 -translate-y-1/2 rounded-full border border-white/30 bg-white/15 px-4 py-2 text-sm font-bold text-white transition-colors hover:bg-white/25 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
                       >
                         Search
                       </button>
@@ -526,13 +526,13 @@ export function SiteHeader() {
                     }
                     openWishlist();
                   }}
-                  className="inline-flex min-h-10 min-w-10 items-center justify-center rounded-full border border-transparent text-white transition-colors hover:border-white/30 hover:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                  className="inline-flex min-h-10 min-w-10 items-center justify-center text-[var(--secondary)] transition-colors hover:opacity-80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
                   aria-label={`Wishlist, ${wishReady ? wishCount : 0} saved`}
                   aria-expanded={wishlistOpen}
                 >
-                  <HeartIcon className="h-5 w-5" />
+                  <HeartIcon className="h-6 w-6" />
                   {wishReady && wishCount > 0 ? (
-                    <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-[var(--accent)] px-1 text-[9px] font-semibold text-white">
+                    <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-white px-1 text-[9px] font-semibold text-[var(--primary)]">
                       {wishCount > 99 ? "99+" : wishCount}
                     </span>
                   ) : null}
@@ -614,7 +614,7 @@ export function SiteHeader() {
                     )}
                     <Link
                       href="/wishlist"
-                      className="mt-4 inline-flex w-full items-center justify-center rounded-full bg-stone-900 px-4 py-2 text-sm font-semibold text-white hover:bg-stone-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
+                      className="mt-4 inline-flex w-full items-center justify-center rounded-full bg-[var(--accent)] px-4 py-2 text-sm font-semibold text-white transition-opacity hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
                       onClick={closeWishlist}
                     >
                       View my wishlist
@@ -625,27 +625,27 @@ export function SiteHeader() {
               <button
                 type="button"
                 onClick={openCart}
-                className="relative hidden sm:inline-flex min-h-10 min-w-10 items-center justify-center rounded-full border border-transparent text-white transition-colors hover:border-white/30 hover:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                className="relative hidden sm:inline-flex min-h-10 min-w-10 items-center justify-center text-[var(--secondary)] transition-colors hover:opacity-80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
                 aria-label={`Shopping bag, ${ready ? totalItems : 0} items`}
               >
-                <BagIcon className="h-5 w-5" />
+                <BagIcon className="h-6 w-6" />
                 {ready && totalItems > 0 ? (
-                  <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-[var(--accent)] px-1 text-[9px] font-semibold text-white">
+                  <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-white px-1 text-[9px] font-semibold text-[var(--primary)]">
                     {totalItems > 99 ? "99+" : totalItems}
                   </span>
                 ) : null}
               </button>
               <Link
                 href="/login"
-                className="hidden sm:inline-flex min-h-10 items-center justify-center gap-1.5 rounded-full border border-white/35 bg-white/10 px-3 text-xs font-semibold text-white transition-colors hover:border-white/55 hover:bg-white/15 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:gap-2 sm:px-4 sm:text-sm"
+                className="hidden sm:inline-flex min-h-10 min-w-10 items-center justify-center text-[var(--secondary)] transition-colors hover:opacity-80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                aria-label="Login / Account"
               >
-                <UserIcon className="h-4 w-4" />
-                <span>Login</span>
+                <UserIcon className="h-6 w-6" />
               </Link>
               <button
                 type="button"
                 onClick={() => setMenuOpen(!menuOpen)}
-                className="inline-flex sm:hidden min-h-10 min-w-10 items-center justify-center rounded-full border border-white/35 bg-white/10 text-white transition-colors hover:bg-white/15 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                className="inline-flex sm:hidden min-h-10 min-w-10 items-center justify-center text-[var(--secondary)] transition-colors hover:opacity-80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
                 aria-label="Toggle menu"
                 aria-expanded={menuOpen}
               >
@@ -1081,7 +1081,7 @@ export function SiteHeader() {
                 openWishlist();
               }
             }}
-            className="flex flex-col items-center gap-1 text-stone-500 transition-colors active:text-[var(--accent)]"
+            className="flex flex-col items-center gap-1 text-[var(--secondary)] transition-colors active:text-[var(--accent)]"
             aria-label="Wishlist"
           >
             <div className="relative">
@@ -1092,7 +1092,7 @@ export function SiteHeader() {
                 </span>
               )}
             </div>
-            <span className="text-[10px] font-semibold uppercase tracking-wider">Saved</span>
+            <span className="text-xs font-semibold uppercase tracking-wider">Saved</span>
           </button>
 
           <button
@@ -1106,7 +1106,7 @@ export function SiteHeader() {
                 openCart();
               }
             }}
-            className="flex flex-col items-center gap-1 text-stone-500 transition-colors active:text-[var(--accent)]"
+            className="flex flex-col items-center gap-1 text-[var(--secondary)] transition-colors active:text-[var(--accent)]"
             aria-label="Cart"
           >
             <div className="relative">
@@ -1117,16 +1117,16 @@ export function SiteHeader() {
                 </span>
               )}
             </div>
-            <span className="text-[10px] font-semibold uppercase tracking-wider">Bag</span>
+            <span className="text-xs font-semibold uppercase tracking-wider">Bag</span>
           </button>
 
           <Link
             href="/login"
-            className="flex flex-col items-center gap-1 text-stone-500 transition-colors active:text-[var(--accent)]"
+            className="flex flex-col items-center gap-1 text-[var(--secondary)] transition-colors active:text-[var(--accent)]"
             aria-label="Login"
           >
             <UserIcon className="h-6 w-6" />
-            <span className="text-[10px] font-semibold uppercase tracking-wider">Account</span>
+            <span className="text-xs font-semibold uppercase tracking-wider">Account</span>
           </Link>
         </div>
       </div>

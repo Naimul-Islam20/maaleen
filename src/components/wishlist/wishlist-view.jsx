@@ -77,7 +77,7 @@ export function WishlistView() {
 
       <Link
         href="/shop"
-        className="mt-10 inline-flex rounded-full bg-stone-900 px-6 py-3 text-sm font-semibold text-white hover:bg-stone-800"
+        className="mt-10 inline-flex rounded-full bg-[var(--accent)] px-6 py-3 text-sm font-semibold text-white transition-opacity hover:opacity-90"
       >
         Browse shop
       </Link>

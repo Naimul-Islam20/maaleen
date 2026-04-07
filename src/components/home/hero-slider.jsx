@@ -120,7 +120,7 @@ export function HeroSlider() {
       {/* Content inside site container */}
       <Container className="relative z-10 flex h-full flex-col justify-center py-10 sm:py-14 lg:py-16">
         <div className="max-w-xl">
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#e8c4c4]">
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-white/90">
             {slide.eyebrow}
           </p>
           <h1 className="mt-3 overflow-hidden text-ellipsis whitespace-nowrap font-[family-name:var(--font-display)] text-4xl leading-tight tracking-tight text-white sm:mt-4 sm:text-5xl lg:text-6xl">
@@ -132,7 +132,7 @@ export function HeroSlider() {
           <div className="mt-6 flex flex-wrap gap-3 sm:mt-10 sm:gap-4">
             <Link
               href={slide.primaryHref}
-              className="inline-flex rounded-full bg-white px-6 py-3 text-sm font-semibold text-stone-900 transition-colors hover:bg-stone-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+              className="inline-flex rounded-full bg-[var(--accent)] px-6 py-3 text-sm font-semibold text-white transition-opacity hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
             >
               {slide.primaryLabel}
             </Link>
@@ -172,7 +172,7 @@ export function HeroSlider() {
               type="button"
               aria-label="Previous slide"
               onClick={() => go("prev")}
-              className="inline-flex min-h-10 min-w-10 items-center justify-center rounded-full border border-white/40 bg-white/10 text-white backdrop-blur-sm transition-colors hover:bg-white/20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+              className="inline-flex min-h-10 min-w-10 items-center justify-center rounded-full border border-white/40 bg-[var(--icon-button-bg)] text-white backdrop-blur-sm transition-colors hover:bg-[var(--icon-button-bg)]/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
             >
               <span aria-hidden className="text-lg leading-none">
                 ‹
@@ -182,7 +182,7 @@ export function HeroSlider() {
               type="button"
               aria-label="Next slide"
               onClick={() => go("next")}
-              className="inline-flex min-h-10 min-w-10 items-center justify-center rounded-full border border-white/40 bg-white/10 text-white backdrop-blur-sm transition-colors hover:bg-white/20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+              className="inline-flex min-h-10 min-w-10 items-center justify-center rounded-full border border-white/40 bg-[var(--icon-button-bg)] text-white backdrop-blur-sm transition-colors hover:bg-[var(--icon-button-bg)]/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
             >
               <span aria-hidden className="text-lg leading-none">
                 ›

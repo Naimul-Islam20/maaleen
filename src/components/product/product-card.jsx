@@ -15,7 +15,7 @@ function HeartIcon({ filled, className }) {
       strokeWidth="1.75"
       strokeLinecap="round"
       strokeLinejoin="round"
-      className={className}
+      className={`h-[1.65rem] w-[1.65rem] ${className}`}
       aria-hidden
     >
       <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
@@ -55,9 +55,9 @@ export function ProductCard({ product }) {
               </span>
             ) : null}
             {isNew && !onSale ? (
-              <span className="rounded bg-stone-900/85 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-white backdrop-blur-sm">
-                New
-              </span>
+                <span className="rounded bg-[var(--accent)] px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-white">
+                  New
+                </span>
             ) : null}
           </div>
         </div>
@@ -93,17 +93,31 @@ export function ProductCard({ product }) {
             image,
           })
         }
-        className="absolute right-2 top-2 z-10 inline-flex h-9 w-9 items-center justify-center rounded-full border border-stone-200/80 bg-white/90 text-stone-700 shadow-sm backdrop-blur-sm transition-colors hover:border-stone-300 hover:bg-white hover:text-[var(--accent)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
+        className="absolute right-2 top-2 z-10 inline-flex h-11 w-11 cursor-pointer items-center justify-center rounded-full transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
       >
         <HeartIcon
           filled={wishlisted}
           className={
             wishlisted
-              ? "h-[1.15rem] w-[1.15rem] text-[var(--accent)]"
-              : "h-[1.15rem] w-[1.15rem]"
+              ? "h-[1.4rem] w-[1.4rem] fill-[var(--icon-button-bg)] text-[var(--icon-button-bg)]"
+              : "h-[1.4rem] w-[1.4rem] text-[var(--icon-button-bg)]"
           }
         />
       </button>
     </article>
+  );
+}
+
+export function ProductCardSkeleton() {
+  return (
+    <div className="animate-pulse">
+      <div className="relative aspect-[4/5] rounded-lg bg-stone-200">
+        <div className="absolute right-2 top-2 h-11 w-11 rounded-full bg-stone-100/80" />
+      </div>
+      <div className="mt-3 space-y-1">
+        <div className="h-4 w-3/4 rounded bg-stone-200" />
+        <div className="h-3.5 w-1/4 rounded bg-stone-200" />
+      </div>
+    </div>
   );
 }
