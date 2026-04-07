@@ -66,7 +66,7 @@ export function ProductsCatalog({ products }) {
           </button>
         </div>
       ) : (
-        <ul className="grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-2 sm:gap-x-6 sm:gap-y-10 lg:grid-cols-3 xl:grid-cols-4">
+        <ul className="grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-2 sm:gap-x-6 sm:gap-y-10 lg:grid-cols-3 xl:grid-cols-5">
           {filtered.map((p) => (
             <li key={p.id}>
               <ProductCard product={p} />

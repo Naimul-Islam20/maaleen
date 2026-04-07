@@ -36,7 +36,7 @@ export function CollectionsSection() {
       id="collections"
       className="border-b border-stone-200 bg-[var(--surface)]"
     >
-      <Container className="py-14 sm:py-20">
+      <Container className="py-10 sm:py-14">
         <h2 className="text-center font-[family-name:var(--font-display)] text-2xl text-stone-900 sm:text-3xl">
           Collections
         </h2>

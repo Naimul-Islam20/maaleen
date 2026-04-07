@@ -96,13 +96,13 @@ body {
 
 @media (min-width: 640px) {
   .maaleen-products-embla-slide {
-    flex-basis: calc((100cqi - 1.5rem) / 2);
+    flex-basis: calc((100cqi - 3rem) / 3);
   }
 }
 
 @media (min-width: 1024px) {
   .maaleen-products-embla-slide {
-    flex-basis: calc((100cqi - 4.5rem) / 4);
+    flex-basis: calc((100cqi - 6rem) / 5);
   }
 }
 

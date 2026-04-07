@@ -99,8 +99,8 @@ export function ProductCard({ product }) {
           filled={wishlisted}
           className={
             wishlisted
-              ? "h-[1.4rem] w-[1.4rem] fill-[var(--icon-button-bg)] text-[var(--icon-button-bg)]"
-              : "h-[1.4rem] w-[1.4rem] text-[var(--icon-button-bg)]"
+              ? "h-[1.4rem] w-[1.4rem] fill-[var(--secondary)] text-[var(--secondary)]"
+              : "h-[1.4rem] w-[1.4rem] text-[var(--secondary)]"
           }
         />
       </button>

@@ -38,7 +38,7 @@ export function ProductsSliderSection({
   }, []);
 
   // Only allow sliding/dragging if products don't fit on screen (more than 4 on desktop, more than 1 on mobile)
-  const shouldSlide = isDesktop ? total > 4 : total > 1;
+  const shouldSlide = isDesktop ? total > 5 : total > 1;
 
   const hasLoop = mobileTwoUpNoLoop ? false : shouldSlide;
   const hasNav = mobileTwoUpNoLoop ? total > 2 : shouldSlide;
@@ -213,7 +213,7 @@ export function ProductsSliderSection({
 
   const contentClass = compactMobileSpacing
     ? "py-6 sm:py-10"
-    : "py-14 sm:py-20";
+    : "py-10 sm:py-14";
   const Wrapper = useParentContainer ? "div" : Container;
 
   return (
