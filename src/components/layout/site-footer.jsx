@@ -9,7 +9,7 @@ export function SiteFooter() {
   return (
     <footer className="mt-16 bg-[var(--accent)] pt-16 pb-9 text-[var(--secondary)] sm:pt-16 sm:pb-8">
       <Container>
-        <div className="grid grid-cols-2 gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-3 lg:gap-8">
+        <div className="grid grid-cols-1 gap-x-8 gap-y-12 text-center sm:grid-cols-2 lg:grid-cols-3 lg:gap-8">
           {/* INFORMATION */}
           <div>
             <h3 className="mb-8 text-base font-bold uppercase tracking-[0.2em] text-white">INFORMATION</h3>
@@ -52,8 +52,8 @@ export function SiteFooter() {
           </div>
 
           {/* SERVICE CENTER & FIND US ON */}
-          <div className="col-span-2 lg:col-span-1">
-            <div className="grid grid-cols-2 gap-8 lg:grid-cols-1 lg:gap-12">
+          <div className="col-span-1 sm:col-span-2 lg:col-span-1">
+            <div className="grid grid-cols-1 gap-8 lg:grid-cols-1 lg:gap-12">
               <div>
                 <h3 className="mb-8 text-base font-bold uppercase tracking-[0.2em] text-white">SERVICE CENTER</h3>
                 <div className="space-y-5 text-[15.5px] font-bold">
@@ -75,7 +75,7 @@ export function SiteFooter() {
 
               <div>
                 <h3 className="mb-8 text-base font-bold uppercase tracking-[0.2em] text-white">FIND US ON</h3>
-                <div className="grid grid-cols-2 gap-4 lg:flex lg:flex-row lg:gap-6">
+                <div className="flex items-center justify-center gap-4">
                   <a href="#" className="transition-all hover:opacity-80" style={{ color: "var(--secondary)" }} aria-label="Facebook">
                     <svg className="h-7 w-7" fill="currentColor" viewBox="0 0 24 24"><path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" /></svg>
                   </a>
