@@ -146,11 +146,7 @@ export function HeroSlider() {
         </div>
 
         <div className="mt-14 flex flex-wrap items-center justify-between gap-4 sm:mt-20">
-          <div
-            className="flex gap-2"
-            role="tablist"
-            aria-label="Hero slides"
-          >
+          <div className="flex gap-2" role="tablist" aria-label="Hero slides">
             {SLIDES.map((s, i) => (
               <button
                 key={s.id}

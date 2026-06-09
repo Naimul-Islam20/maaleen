@@ -17,6 +17,7 @@ export function ProductsSliderSection({
   showCta = true,
   centerTitleOnMobile = false,
   compactMobileSpacing = false,
+  reduceBottomSpacing = false,
   useParentContainer = false,
 }) {
   const MOBILE_SIDE_OFFSET = "100%";
@@ -213,7 +214,9 @@ export function ProductsSliderSection({
 
   const contentClass = compactMobileSpacing
     ? "py-6 sm:py-10"
-    : "py-10 sm:py-14";
+    : reduceBottomSpacing
+      ? "pt-10 pb-0 sm:pt-14 sm:pb-2"
+      : "py-10 sm:py-14";
   const Wrapper = useParentContainer ? "div" : Container;
 
   return (

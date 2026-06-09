@@ -68,6 +68,25 @@ function UserIcon({ className }) {
     </svg>
   );
 }
+function HomeIcon({ className }) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2.25"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+      aria-hidden
+    >
+      <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+      <polyline points="9 22 9 12 15 12 15 22" />
+    </svg>
+  );
+}
+
 function SearchIcon({ className }) {
   return (
     <svg
@@ -255,6 +274,7 @@ function MainNavFallback() {
 }
 
 export function SiteHeader() {
+  const pathname = usePathname();
   const {
     totalItems,
     ready,
@@ -281,6 +301,7 @@ export function SiteHeader() {
   const wishlistPopoverRef = useRef(null);
   const searchAreaRef = useRef(null);
   const mobileSearchRef = useRef(null);
+  const mobileSearchTriggerRef = useRef(null);
   const countryPopoverRef = useRef(null);
 
   useEffect(() => {
@@ -306,6 +327,7 @@ export function SiteHeader() {
     function onClick(event) {
       if (searchAreaRef.current?.contains(event.target)) return;
       if (mobileSearchRef.current?.contains(event.target)) return;
+      if (mobileSearchTriggerRef.current?.contains(event.target)) return;
       setSearchOpen(false);
     }
     function onKey(event) {
@@ -392,6 +414,9 @@ export function SiteHeader() {
       const nextOpen = !open;
       if (nextOpen) {
         setCountryOpen(false);
+        if (wishlistOpen) closeWishlist();
+        if (cartMounted) closeCart();
+        if (menuOpen) setMenuOpen(false);
       }
       return nextOpen;
     });
@@ -410,7 +435,7 @@ export function SiteHeader() {
                 <button
                   type="button"
                   onClick={toggleSearch}
-                  className="inline-flex min-h-10 min-w-10 items-center justify-center text-[var(--secondary)] transition-colors hover:opacity-80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                  className="hidden sm:inline-flex min-h-10 min-w-10 items-center justify-center text-[var(--secondary)] transition-colors hover:opacity-80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
                   aria-label={searchOpen ? "Close search" : "Search"}
                   aria-expanded={searchOpen}
                 >
@@ -498,9 +523,9 @@ export function SiteHeader() {
                       </button>
                     </div>
                   </motion.form>
-                  ) : null}
-                </div>
+                ) : null}
               </div>
+            </div>
             <Link
               href="/"
               className="absolute left-1/2 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2"
@@ -516,7 +541,10 @@ export function SiteHeader() {
               />
             </Link>
             <div className="relative z-20 flex items-center gap-1 sm:gap-2">
-              <div className="relative hidden sm:block" ref={wishlistPopoverRef}>
+              <div
+                className="relative hidden sm:block"
+                ref={wishlistPopoverRef}
+              >
                 <button
                   type="button"
                   onClick={() => {
@@ -649,7 +677,11 @@ export function SiteHeader() {
                 aria-label="Toggle menu"
                 aria-expanded={menuOpen}
               >
-                {menuOpen ? <CloseIcon className="h-5 w-5" /> : <MenuIcon className="h-5 w-5" />}
+                {menuOpen ? (
+                  <CloseIcon className="h-5 w-5" />
+                ) : (
+                  <MenuIcon className="h-5 w-5" />
+                )}
               </button>
             </div>
             <AnimatePresence>
@@ -664,9 +696,17 @@ export function SiteHeader() {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -12 }}
                   transition={{ duration: 0.2, ease: "easeOut" }}
-                  className="absolute inset-x-0 top-0 bottom-0 z-30 flex items-center bg-[var(--accent)] pl-12 pr-0 sm:hidden"
+                  className="absolute inset-x-0 top-0 bottom-0 z-30 flex items-center gap-2 bg-[var(--accent)] px-4 sm:hidden"
                 >
-                  <div className="relative w-full">
+                  <button
+                    type="button"
+                    onClick={() => setSearchOpen(false)}
+                    className="inline-flex shrink-0 min-h-10 min-w-10 items-center justify-center text-[var(--secondary)] transition-colors hover:opacity-80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                    aria-label="Close search"
+                  >
+                    <CloseIcon className="h-5 w-5" />
+                  </button>
+                  <div className="relative min-w-0 flex-1">
                     <input
                       type="search"
                       name="q"
@@ -686,10 +726,10 @@ export function SiteHeader() {
             </AnimatePresence>
           </div>
 
-            <nav
-              className="hidden sm:flex flex-wrap items-center justify-center gap-x-8 gap-y-2 border-t border-white/20 py-3 sm:gap-x-12"
-              aria-label="Main"
-            >
+          <nav
+            className="hidden sm:flex flex-wrap items-center justify-center gap-x-8 gap-y-2 border-t border-white/20 py-3 sm:gap-x-12"
+            aria-label="Main"
+          >
             <Suspense fallback={<MainNavFallback />}>
               <MainNavLinks />
             </Suspense>
@@ -758,7 +798,10 @@ export function SiteHeader() {
                     }`}
                   >
                     {wishlistPreview.map((item) => (
-                      <li key={item.productId} className="flex items-center gap-3">
+                      <li
+                        key={item.productId}
+                        className="flex items-center gap-3"
+                      >
                         <Link
                           href={`/shop/${item.slug}`}
                           className="flex min-w-0 flex-1 items-center gap-3"
@@ -833,7 +876,7 @@ export function SiteHeader() {
               transition={{ duration: 0.26, ease: "easeInOut" }}
               className={
                 cartFromBottom
-                  ? "fixed bottom-[calc(4rem+env(safe-area-inset-bottom))] left-0 right-0 z-50 flex h-[84vh] max-h-[calc(100dvh-2.5rem)] flex-col rounded-t-2xl bg-[var(--surface-elevated)] shadow-[0_-12px_40px_rgba(0,0,0,0.15)] ring-1 ring-black/10"
+                  ? "fixed bottom-[calc(4rem+env(safe-area-inset-bottom))] left-0 right-0 z-50 flex h-[68vh] max-h-[calc(100dvh-6rem)] flex-col rounded-t-2xl bg-[var(--surface-elevated)] shadow-[0_-12px_40px_rgba(0,0,0,0.15)] ring-1 ring-black/10"
                   : "absolute right-0 top-0 z-50 flex h-full w-full max-w-sm flex-col bg-[var(--surface-elevated)] shadow-xl ring-1 ring-black/10"
               }
             >
@@ -1034,7 +1077,9 @@ export function SiteHeader() {
                         className="text-xl font-medium text-stone-900 hover:text-[var(--accent)] flex items-center justify-between group"
                       >
                         Collections
-                        <span className="text-stone-300 group-hover:text-[var(--accent)] transition-colors">→</span>
+                        <span className="text-stone-300 group-hover:text-[var(--accent)] transition-colors">
+                          →
+                        </span>
                       </Link>
                     </li>
                     <li>
@@ -1044,15 +1089,17 @@ export function SiteHeader() {
                         className="text-xl font-medium text-stone-900 hover:text-[var(--accent)] flex items-center justify-between group"
                       >
                         Shop
-                        <span className="text-stone-300 group-hover:text-[var(--accent)] transition-colors">→</span>
+                        <span className="text-stone-300 group-hover:text-[var(--accent)] transition-colors">
+                          →
+                        </span>
                       </Link>
                     </li>
                   </ul>
                 </nav>
                 <div className="p-6 border-t border-stone-100 bg-stone-50">
-                   <p className="text-xs text-stone-400 font-medium tracking-wide">
-                     © {new Date().getFullYear()} Maaleen. 
-                   </p>
+                  <p className="text-xs text-stone-400 font-medium tracking-wide">
+                    © {new Date().getFullYear()} Maaleen.
+                  </p>
                 </div>
               </div>
             </motion.aside>
@@ -1062,65 +1109,113 @@ export function SiteHeader() {
 
       {/* Mobile Bottom Bar */}
       <div className="fixed bottom-0 left-0 right-0 z-[60] block bg-white border-t border-stone-200 shadow-[0_-4px_24px_rgba(0,0,0,0.12)] sm:hidden pb-[max(0.75rem,env(safe-area-inset-bottom))]">
-        <div className="flex h-16 items-center justify-around px-4">
-          <button
-            type="button"
-            onClick={() => {
-              if (wishlistOpen) {
-                closeWishlist();
-              } else {
+        <div className="flex h-16 items-center justify-between gap-2 px-3">
+          <div className="flex min-w-0 flex-1 items-center justify-around">
+            <Link
+              href="/"
+              onClick={() => {
+                if (searchOpen) setSearchOpen(false);
+                if (wishlistOpen) closeWishlist();
                 if (cartMounted) closeCart();
                 if (menuOpen) setMenuOpen(false);
-                openWishlist();
-              }
-            }}
-            className="flex flex-col items-center gap-1 text-[var(--secondary)] transition-colors active:text-[var(--accent)]"
-            aria-label="Wishlist"
-          >
-            <div className="relative">
-              <HeartIcon className="h-6 w-6" />
-              {wishReady && wishCount > 0 && (
-                <span className="absolute -right-1.5 -top-1 px-1 min-w-[16px] h-4 flex items-center justify-center rounded-full bg-[var(--accent)] text-[9px] font-bold text-white leading-none">
-                  {wishCount > 99 ? "99+" : wishCount}
-                </span>
-              )}
-            </div>
-            <span className="text-xs font-semibold uppercase tracking-wider">Saved</span>
-          </button>
+              }}
+              className={`flex flex-col items-center gap-0.5 transition-colors active:text-[var(--accent)] ${
+                pathname === "/"
+                  ? "text-[var(--accent)]"
+                  : "text-[var(--primary)]"
+              }`}
+              aria-label="Home"
+              aria-current={pathname === "/" ? "page" : undefined}
+            >
+              <HomeIcon className="h-6 w-6" />
+              <span className="text-[10px] font-semibold uppercase tracking-wide text-[var(--primary)]">
+                Home
+              </span>
+            </Link>
+
+            <button
+              type="button"
+              onClick={() => {
+                if (wishlistOpen) {
+                  closeWishlist();
+                } else {
+                  if (cartMounted) closeCart();
+                  if (menuOpen) setMenuOpen(false);
+                  if (searchOpen) setSearchOpen(false);
+                  openWishlist();
+                }
+              }}
+              className="flex flex-col items-center gap-0.5 text-[var(--primary)] transition-colors active:text-[var(--accent)]"
+              aria-label="Wishlist"
+            >
+              <div className="relative">
+                <HeartIcon className="h-6 w-6" />
+                {wishReady && wishCount > 0 && (
+                  <span className="absolute -right-1.5 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-[var(--accent)] px-1 text-[9px] font-bold leading-none text-white">
+                    {wishCount > 99 ? "99+" : wishCount}
+                  </span>
+                )}
+              </div>
+              <span className="text-[10px] font-semibold uppercase tracking-wide text-[var(--primary)]">
+                Saved
+              </span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => {
+                if (cartMounted) {
+                  closeCart();
+                } else {
+                  if (wishlistOpen) closeWishlist();
+                  if (menuOpen) setMenuOpen(false);
+                  if (searchOpen) setSearchOpen(false);
+                  openCart();
+                }
+              }}
+              className="flex flex-col items-center gap-0.5 text-[var(--primary)] transition-colors active:text-[var(--accent)]"
+              aria-label="Cart"
+            >
+              <div className="relative">
+                <BagIcon className="h-6 w-6" />
+                {ready && totalItems > 0 && (
+                  <span className="absolute -right-1.5 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-[var(--accent)] px-1 text-[9px] font-bold leading-none text-white">
+                    {totalItems > 99 ? "99+" : totalItems}
+                  </span>
+                )}
+              </div>
+              <span className="text-[10px] font-semibold uppercase tracking-wide text-[var(--primary)]">
+                Bag
+              </span>
+            </button>
+
+            <Link
+              href="/login"
+              className="flex flex-col items-center gap-0.5 text-[var(--primary)] transition-colors active:text-[var(--accent)]"
+              aria-label="Login"
+            >
+              <UserIcon className="h-6 w-6" />
+              <span className="text-[10px] font-semibold uppercase tracking-wide text-[var(--primary)]">
+                Account
+              </span>
+            </Link>
+          </div>
 
           <button
             type="button"
-            onClick={() => {
-              if (cartMounted) {
-                closeCart();
-              } else {
-                if (wishlistOpen) closeWishlist();
-                if (menuOpen) setMenuOpen(false);
-                openCart();
-              }
-            }}
-            className="flex flex-col items-center gap-1 text-[var(--secondary)] transition-colors active:text-[var(--accent)]"
-            aria-label="Cart"
+            ref={mobileSearchTriggerRef}
+            onClick={toggleSearch}
+            className={`flex shrink-0 flex-col items-center gap-0.5 transition-colors active:text-[var(--accent)] ${
+              searchOpen ? "text-[var(--accent)]" : "text-[var(--primary)]"
+            }`}
+            aria-label={searchOpen ? "Close search" : "Search"}
+            aria-expanded={searchOpen}
           >
-            <div className="relative">
-              <BagIcon className="h-6 w-6" />
-              {ready && totalItems > 0 && (
-                <span className="absolute -right-1.5 -top-1 px-1 min-w-[16px] h-4 flex items-center justify-center rounded-full bg-[var(--accent)] text-[9px] font-bold text-white leading-none">
-                  {totalItems > 99 ? "99+" : totalItems}
-                </span>
-              )}
-            </div>
-            <span className="text-xs font-semibold uppercase tracking-wider">Bag</span>
+            <SearchIcon className="h-6 w-6" />
+            <span className="text-[10px] font-semibold uppercase tracking-wide text-[var(--primary)]">
+              Search
+            </span>
           </button>
-
-          <Link
-            href="/login"
-            className="flex flex-col items-center gap-1 text-[var(--secondary)] transition-colors active:text-[var(--accent)]"
-            aria-label="Login"
-          >
-            <UserIcon className="h-6 w-6" />
-            <span className="text-xs font-semibold uppercase tracking-wider">Account</span>
-          </Link>
         </div>
       </div>
     </>
