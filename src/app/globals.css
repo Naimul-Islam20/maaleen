@@ -133,8 +133,36 @@ body {
   background-color: var(--accent);
   background-image: url("/Maaleen-bg.png");
   background-repeat: repeat;
-  background-size: 1150px auto;
+  background-size: 780px auto;
   background-position: top center;
+}
+
+@media (min-width: 640px) {
+  .maaleen-brand-bg {
+    background-size: 1150px auto;
+  }
+}
+
+/* Mobile: extend footer brand texture behind the fixed bottom bar */
+@media (max-width: 639px) {
+  .maaleen-footer-mobile-extend {
+    position: relative;
+  }
+
+  .maaleen-footer-mobile-extend::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 100%;
+    height: calc(4rem + env(safe-area-inset-bottom, 0px));
+    background-color: var(--accent);
+    background-image: url("/Maaleen-bg.png");
+    background-repeat: repeat;
+    background-size: 780px auto;
+    background-position: top center;
+    pointer-events: none;
+  }
 }
 
 @keyframes maaleen-header-ticker {

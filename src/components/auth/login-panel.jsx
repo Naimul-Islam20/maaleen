@@ -79,7 +79,7 @@ function LoginPanelContent() {
 
   return (
     <div className="mx-auto w-full max-w-lg">
-      <div className="overflow-hidden rounded-2xl border border-stone-200 bg-white shadow-sm">
+      <div className="overflow-hidden rounded-2xl border border-stone-200 bg-[var(--background)] shadow-sm">
         <div className="maaleen-brand-bg px-6 py-8 text-center text-white sm:px-8">
           <h1 className="font-[family-name:var(--font-display)] text-3xl sm:text-4xl">
             Welcome Back
@@ -98,13 +98,13 @@ function LoginPanelContent() {
         </div>
 
         <div className="p-6 sm:p-8">
-          <div className="grid grid-cols-2 gap-2 rounded-full bg-stone-100 p-1">
+          <div className="grid grid-cols-2 gap-2 rounded-full bg-stone-200/40 p-1">
             <button
               type="button"
               onClick={() => switchMode("phone")}
               className={`rounded-full px-3 py-2.5 text-sm font-semibold transition-colors ${
                 mode === "phone"
-                  ? "bg-white text-[var(--primary)] shadow-sm"
+                  ? "bg-[var(--primary)] text-white shadow-sm"
                   : "text-stone-600 hover:text-stone-900"
               }`}
             >
@@ -115,7 +115,7 @@ function LoginPanelContent() {
               onClick={() => switchMode("email")}
               className={`rounded-full px-3 py-2.5 text-sm font-semibold transition-colors ${
                 mode === "email"
-                  ? "bg-white text-[var(--primary)] shadow-sm"
+                  ? "bg-[var(--primary)] text-white shadow-sm"
                   : "text-stone-600 hover:text-stone-900"
               }`}
             >
@@ -139,7 +139,7 @@ function LoginPanelContent() {
                   >
                     Phone Number
                   </label>
-                  <div className="mt-2 flex overflow-hidden rounded-lg border border-stone-300 focus-within:border-[var(--primary)]">
+                  <div className="mt-2 flex overflow-hidden rounded-lg border border-stone-300 bg-white focus-within:border-[var(--primary)]">
                     <span className="inline-flex items-center bg-stone-50 px-3 text-sm font-medium text-stone-700">
                       +880
                     </span>
@@ -192,7 +192,7 @@ function LoginPanelContent() {
                       setOtp(event.target.value.replace(/\D/g, "").slice(0, 6))
                     }
                     placeholder="6-digit code"
-                    className="mt-2 w-full rounded-lg border border-stone-300 px-3 py-2.5 text-sm tracking-[0.3em] text-stone-900 outline-none transition-colors focus:border-[var(--primary)]"
+                    className="mt-2 w-full rounded-lg border border-stone-300 bg-white px-3 py-2.5 text-sm tracking-[0.3em] text-stone-900 outline-none transition-colors focus:border-[var(--primary)]"
                   />
                 </div>
                 <button
@@ -244,7 +244,7 @@ function LoginPanelContent() {
                   value={email}
                   onChange={(event) => setEmail(event.target.value)}
                   placeholder="you@example.com"
-                  className="mt-2 w-full rounded-lg border border-stone-300 px-3 py-2.5 text-sm text-stone-900 outline-none transition-colors focus:border-[var(--primary)]"
+                  className="mt-2 w-full rounded-lg border border-stone-300 bg-white px-3 py-2.5 text-sm text-stone-900 outline-none transition-colors focus:border-[var(--primary)]"
                 />
               </div>
               <div>
@@ -260,7 +260,7 @@ function LoginPanelContent() {
                   value={password}
                   onChange={(event) => setPassword(event.target.value)}
                   placeholder="••••••••"
-                  className="mt-2 w-full rounded-lg border border-stone-300 px-3 py-2.5 text-sm text-stone-900 outline-none transition-colors focus:border-[var(--primary)]"
+                  className="mt-2 w-full rounded-lg border border-stone-300 bg-white px-3 py-2.5 text-sm text-stone-900 outline-none transition-colors focus:border-[var(--primary)]"
                 />
               </div>
               <label className="flex items-center gap-2 text-sm text-stone-700">
@@ -306,7 +306,7 @@ function LoginPanelContent() {
 
 export function LoginPanel() {
   return (
-    <Suspense fallback={<div className="mx-auto h-96 max-w-lg animate-pulse rounded-2xl bg-stone-200" />}>
+    <Suspense fallback={<div className="mx-auto h-96 max-w-lg animate-pulse rounded-2xl bg-[var(--background)]" />}>
       <LoginPanelContent />
     </Suspense>
   );

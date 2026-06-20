@@ -168,6 +168,11 @@ function CloseIcon({ className }) {
   );
 }
 
+const bottomBarItemActive =
+  "bg-white/22 shadow-[0_2px_10px_rgba(255,255,255,0.22)]";
+const bottomBarItemBase =
+  "flex min-w-0 flex-col items-center justify-center gap-0.5 rounded-full px-1 py-1.5 text-[var(--background)] transition-all";
+
 function ChevronDownIcon({ className }) {
   return (
     <svg
@@ -312,7 +317,7 @@ export function SiteHeader() {
     items: wishItems,
     removeItem: removeWishlistItem,
   } = useWishlist();
-  const { isAuthenticated, ready: authReady } = useAuth();
+  const { user, isAuthenticated, ready: authReady } = useAuth();
   const accountHref = isAuthenticated ? "/account" : "/login";
   const [wishlistOpen, setWishlistOpen] = useState(false);
   const [wishlistFromBottom, setWishlistFromBottom] = useState(true);
@@ -321,6 +326,8 @@ export function SiteHeader() {
   const [logoError, setLogoError] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const bottomBarPanelOpen =
+    wishlistOpen || cartMounted || searchOpen || menuOpen;
   const { countryCode, setCountryCode } = useCountry();
   const [countryOpen, setCountryOpen] = useState(false);
   const wishlistPopoverRef = useRef(null);
@@ -407,6 +414,13 @@ export function SiteHeader() {
     setCartMounted(false);
   };
 
+  const closeBottomBarPanels = () => {
+    if (searchOpen) setSearchOpen(false);
+    if (wishlistOpen) closeWishlist();
+    if (cartMounted) closeCart();
+    if (menuOpen) setMenuOpen(false);
+  };
+
   useEffect(() => {
     if (!wishlistOpen) return;
     const mq = window.matchMedia("(max-width: 639px)");
@@ -479,10 +493,10 @@ export function SiteHeader() {
                     onClick={() => setCountryOpen((open) => !open)}
                     aria-label="Select country"
                     aria-expanded={countryOpen}
-                    className="inline-flex h-9 items-center gap-1.5 rounded-full border border-[var(--background)] bg-[var(--background)] px-2.5 text-sm font-bold text-[var(--primary)] transition-colors hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                    className="inline-flex h-7 items-center gap-1 rounded-full border border-[var(--background)] bg-[var(--background)] px-2 py-0.5 text-xs font-bold text-[var(--primary)] transition-colors hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:h-8 sm:px-2.5 sm:text-sm"
                   >
                     <span>{countryCode === "BD" ? "🇧🇩 BD" : "🇦🇺 AU"}</span>
-                    <ChevronDownIcon className="h-4.5 w-4.5" />
+                    <ChevronDownIcon className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                   </button>
                   {countryOpen ? (
                     <div className="absolute left-0 top-full z-40 mt-2 w-44 rounded-xl border border-[var(--background)] bg-[var(--background)] p-1.5 shadow-xl ring-1 ring-black/10">
@@ -928,15 +942,15 @@ export function SiteHeader() {
                       Your bag is empty.
                     </div>
                   ) : (
-                    <ul className="space-y-4">
+                    <ul className="space-y-4 max-sm:space-y-2.5">
                       {cartItems.map((line) => (
                         <li
                           key={line.lineId}
-                          className="flex gap-3 rounded-lg border border-stone-200 bg-[var(--surface)] p-3"
+                          className="flex gap-3 rounded-lg border border-stone-200 bg-[var(--surface)] p-3 max-sm:gap-2 max-sm:p-2"
                         >
                           <Link
                             href={`/shop/${line.slug}`}
-                            className="relative h-20 w-16 shrink-0 overflow-hidden rounded-md bg-stone-200"
+                            className="relative h-20 w-16 shrink-0 overflow-hidden rounded-md bg-stone-200 max-sm:h-14 max-sm:w-11"
                             onClick={closeCart}
                           >
                             <ImageWithFallback
@@ -953,37 +967,37 @@ export function SiteHeader() {
                               <div className="min-w-0 flex-1">
                                 <Link
                                   href={`/shop/${line.slug}`}
-                                  className="truncate text-sm font-medium text-stone-900 hover:text-[var(--accent)]"
+                                  className="truncate text-sm font-medium text-stone-900 hover:text-[var(--accent)] max-sm:text-xs"
                                   onClick={closeCart}
                                 >
                                   {line.name}
                                 </Link>
-                                <p className="mt-1 text-xs text-stone-500">
+                                <p className="mt-1 text-xs text-stone-500 max-sm:mt-0.5 max-sm:text-[10px]">
                                   {line.color}-{line.size}
                                 </p>
                               </div>
                               <button
                                 type="button"
                                 onClick={() => removeItem(line.lineId)}
-                                className="ml-2 inline-flex h-9 w-9 items-center justify-center text-stone-400 hover:text-stone-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
+                                className="ml-2 inline-flex h-9 w-9 items-center justify-center text-stone-400 hover:text-stone-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)] max-sm:ml-1 max-sm:h-7 max-sm:w-7"
                                 aria-label="Remove from bag"
                               >
                                 <span
                                   aria-hidden
-                                  className="text-xl leading-none font-semibold"
+                                  className="text-xl font-semibold leading-none max-sm:text-base"
                                 >
                                   ×
                                 </span>
                               </button>
                             </div>
-                            <div className="mt-2 flex items-center justify-between gap-3">
-                              <p className="text-sm font-medium text-stone-900">
+                            <div className="mt-2 flex items-center justify-between gap-3 max-sm:mt-1.5 max-sm:gap-2">
+                              <p className="text-sm font-medium text-stone-900 max-sm:text-xs">
                                 {formatPrice(
                                   line.price * line.quantity,
                                   line.currency,
                                 )}
                               </p>
-                              <div className="inline-flex items-center gap-2 rounded-full border border-stone-200 bg-[var(--surface)] px-2 py-1 text-xs text-stone-800">
+                              <div className="inline-flex items-center gap-2 rounded-full border border-stone-200 bg-[var(--surface)] px-2 py-1 text-xs text-stone-800 max-sm:gap-1.5 max-sm:px-1.5 max-sm:py-0.5 max-sm:text-[10px]">
                                 <button
                                   type="button"
                                   onClick={() =>
@@ -992,13 +1006,13 @@ export function SiteHeader() {
                                       line.quantity - 1,
                                     )
                                   }
-                                  className="px-1 text-sm leading-none disabled:text-stone-300"
+                                  className="px-1 text-sm leading-none disabled:text-stone-300 max-sm:text-xs"
                                   disabled={line.quantity <= 1}
                                   aria-label="Decrease quantity"
                                 >
                                   -
                                 </button>
-                                <span className="min-w-[1.25rem] text-center">
+                                <span className="min-w-[1.25rem] text-center max-sm:min-w-[1rem]">
                                   {line.quantity}
                                 </span>
                                 <button
@@ -1009,7 +1023,7 @@ export function SiteHeader() {
                                       line.quantity + 1,
                                     )
                                   }
-                                  className="px-1 text-sm leading-none"
+                                  className="px-1 text-sm leading-none max-sm:text-xs"
                                   aria-label="Increase quantity"
                                 >
                                   +
@@ -1105,21 +1119,30 @@ export function SiteHeader() {
                   </button>
                 </div>
                 <div className="flex gap-3 border-b border-stone-100 px-6 py-5">
-                  {authReady && isAuthenticated ? (
+                  {authReady && isAuthenticated && user ? (
                     <Link
                       href="/account"
                       onClick={() => setMenuOpen(false)}
-                      className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-[var(--primary)] px-4 py-2.5 text-sm font-semibold text-white transition-opacity hover:opacity-90"
+                      className="flex w-full items-center gap-3 rounded-xl transition-colors hover:bg-stone-100/70"
                     >
-                      <UserIcon className="h-4 w-4" />
-                      My Account
+                      <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[var(--primary)] text-white">
+                        <UserIcon className="h-5 w-5" />
+                      </span>
+                      <span className="min-w-0 text-left">
+                        <span className="block truncate text-[15px] font-semibold leading-tight text-stone-900">
+                          {user.name}
+                        </span>
+                        <span className="mt-0.5 block text-xs text-stone-500">
+                          View Profile
+                        </span>
+                      </span>
                     </Link>
                   ) : (
                     <>
                       <Link
                         href="/login"
                         onClick={() => setMenuOpen(false)}
-                        className="inline-flex flex-1 items-center justify-center gap-2 rounded-full border border-[var(--primary)] bg-transparent px-4 py-2.5 text-sm font-semibold text-[var(--primary)] transition-colors hover:bg-[var(--primary)] hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
+                        className="inline-flex flex-1 items-center justify-center gap-2 rounded-full border border-[var(--primary)] bg-transparent px-4 py-2.5 text-xs font-semibold text-[var(--primary)] transition-colors hover:bg-[var(--primary)] hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
                       >
                         <UserIcon className="h-4 w-4" />
                         Login
@@ -1127,7 +1150,7 @@ export function SiteHeader() {
                       <Link
                         href="/signup"
                         onClick={() => setMenuOpen(false)}
-                        className="inline-flex flex-1 items-center justify-center gap-2 rounded-full bg-[var(--primary)] px-4 py-2.5 text-sm font-semibold text-white transition-opacity hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
+                        className="inline-flex flex-1 items-center justify-center gap-2 rounded-full bg-[var(--primary)] px-4 py-2.5 text-xs font-semibold text-white transition-opacity hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
                       >
                         Register
                       </Link>
@@ -1135,14 +1158,24 @@ export function SiteHeader() {
                   )}
                 </div>
                 <nav className="flex-1 overflow-y-auto px-6 py-8">
-                  <ul className="space-y-6">
+                  <ul className="space-y-5">
+                    <li>
+                      <Link
+                        href="/"
+                        onClick={() => setMenuOpen(false)}
+                        className="flex items-center gap-2.5 text-[15px] font-medium text-stone-900 transition-colors hover:text-[var(--accent)]"
+                      >
+                        <HomeIcon className="h-[18px] w-[18px] shrink-0 text-[var(--primary)]" />
+                        Home
+                      </Link>
+                    </li>
                     <li>
                       <Link
                         href="/collections"
                         onClick={() => setMenuOpen(false)}
-                        className="flex items-center gap-3 text-xl font-medium text-stone-900 transition-colors hover:text-[var(--accent)]"
+                        className="flex items-center gap-2.5 text-[15px] font-medium text-stone-900 transition-colors hover:text-[var(--accent)]"
                       >
-                        <CollectionsIcon className="h-5 w-5 shrink-0 text-[var(--primary)]" />
+                        <CollectionsIcon className="h-[18px] w-[18px] shrink-0 text-[var(--primary)]" />
                         Collections
                       </Link>
                     </li>
@@ -1150,9 +1183,9 @@ export function SiteHeader() {
                       <Link
                         href="/shop"
                         onClick={() => setMenuOpen(false)}
-                        className="flex items-center gap-3 text-xl font-medium text-stone-900 transition-colors hover:text-[var(--accent)]"
+                        className="flex items-center gap-2.5 text-[15px] font-medium text-stone-900 transition-colors hover:text-[var(--accent)]"
                       >
-                        <BagIcon className="h-5 w-5 shrink-0 text-[var(--primary)]" />
+                        <BagIcon className="h-[18px] w-[18px] shrink-0 text-[var(--primary)]" />
                         Shop
                       </Link>
                     </li>
@@ -1160,17 +1193,17 @@ export function SiteHeader() {
 
                   <div className="my-6 border-b border-stone-200" />
 
-                  <p className="mb-4 text-xs font-semibold uppercase tracking-[0.2em] text-stone-400">
+                  <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-stone-400">
                     My Account
                   </p>
-                  <ul className="space-y-6">
+                  <ul className="space-y-5">
                     <li>
                       <Link
                         href="/wishlist"
                         onClick={() => setMenuOpen(false)}
-                        className="flex items-center gap-3 text-xl font-medium text-stone-900 transition-colors hover:text-[var(--accent)]"
+                        className="flex items-center gap-2.5 text-[15px] font-medium text-stone-900 transition-colors hover:text-[var(--accent)]"
                       >
-                        <HeartIcon className="h-5 w-5 shrink-0 text-[var(--primary)]" />
+                        <HeartIcon className="h-[18px] w-[18px] shrink-0 text-[var(--primary)]" />
                         My Wishlist
                       </Link>
                     </li>
@@ -1188,27 +1221,22 @@ export function SiteHeader() {
       </AnimatePresence>
 
       {/* Mobile Bottom Bar */}
-      <div className="fixed bottom-0 left-0 right-0 z-[60] block bg-white border-t border-stone-200 shadow-[0_-4px_24px_rgba(0,0,0,0.12)] sm:hidden pb-[max(0.75rem,env(safe-area-inset-bottom))]">
-        <div className="flex h-16 items-center justify-between gap-2 px-3">
-          <div className="flex min-w-0 flex-1 items-center justify-around">
+      <div className="fixed bottom-0 left-0 right-0 z-[60] px-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-2 sm:hidden">
+        <div className="rounded-full border border-white/25 bg-stone-950/78 shadow-[0_8px_32px_rgba(0,0,0,0.38)] backdrop-blur-2xl backdrop-saturate-150">
+          <div className="grid h-14 grid-cols-5 items-center px-1">
             <Link
               href="/"
-              onClick={() => {
-                if (searchOpen) setSearchOpen(false);
-                if (wishlistOpen) closeWishlist();
-                if (cartMounted) closeCart();
-                if (menuOpen) setMenuOpen(false);
-              }}
-              className={`flex flex-col items-center gap-0.5 transition-colors active:text-[var(--accent)] ${
-                pathname === "/"
-                  ? "text-[var(--accent)]"
-                  : "text-[var(--primary)]"
+              onClick={closeBottomBarPanels}
+              className={`${bottomBarItemBase} ${
+                pathname === "/" && !bottomBarPanelOpen
+                  ? bottomBarItemActive
+                  : ""
               }`}
               aria-label="Home"
               aria-current={pathname === "/" ? "page" : undefined}
             >
-              <HomeIcon className="h-6 w-6" />
-              <span className="text-[10px] font-semibold uppercase tracking-wide text-[var(--primary)]">
+              <HomeIcon className="h-5 w-5" />
+              <span className="text-[9px] font-semibold uppercase tracking-wide">
                 Home
               </span>
             </Link>
@@ -1225,18 +1253,21 @@ export function SiteHeader() {
                   openWishlist();
                 }
               }}
-              className="flex flex-col items-center gap-0.5 text-[var(--primary)] transition-colors active:text-[var(--accent)]"
+              className={`${bottomBarItemBase} ${
+                wishlistOpen ? bottomBarItemActive : ""
+              }`}
               aria-label="Wishlist"
+              aria-pressed={wishlistOpen}
             >
               <div className="relative">
-                <HeartIcon className="h-6 w-6" />
+                <HeartIcon className="h-5 w-5" />
                 {wishReady && wishCount > 0 && (
-                  <span className="absolute -right-1.5 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-[var(--accent)] px-1 text-[9px] font-bold leading-none text-white">
+                  <span className="absolute -right-1 -top-1 flex h-3.5 min-w-3.5 items-center justify-center rounded-full bg-[var(--secondary)] px-0.5 text-[8px] font-bold leading-none text-stone-900">
                     {wishCount > 99 ? "99+" : wishCount}
                   </span>
                 )}
               </div>
-              <span className="text-[10px] font-semibold uppercase tracking-wide text-[var(--primary)]">
+              <span className="text-[9px] font-semibold uppercase tracking-wide">
                 Saved
               </span>
             </button>
@@ -1253,53 +1284,58 @@ export function SiteHeader() {
                   openCart();
                 }
               }}
-              className="flex flex-col items-center gap-0.5 text-[var(--primary)] transition-colors active:text-[var(--accent)]"
+              className={`${bottomBarItemBase} ${
+                cartMounted ? bottomBarItemActive : ""
+              }`}
               aria-label="Cart"
+              aria-pressed={cartMounted}
             >
               <div className="relative">
-                <BagIcon className="h-6 w-6" />
+                <BagIcon className="h-5 w-5" />
                 {ready && totalItems > 0 && (
-                  <span className="absolute -right-1.5 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-[var(--accent)] px-1 text-[9px] font-bold leading-none text-white">
+                  <span className="absolute -right-1 -top-1 flex h-3.5 min-w-3.5 items-center justify-center rounded-full bg-[var(--secondary)] px-0.5 text-[8px] font-bold leading-none text-stone-900">
                     {totalItems > 99 ? "99+" : totalItems}
                   </span>
                 )}
               </div>
-              <span className="text-[10px] font-semibold uppercase tracking-wide text-[var(--primary)]">
+              <span className="text-[9px] font-semibold uppercase tracking-wide">
                 Bag
               </span>
             </button>
 
             <Link
               href={accountHref}
-              className={`flex flex-col items-center gap-0.5 transition-colors active:text-[var(--accent)] ${
-                pathname === "/account" || pathname === "/login"
-                  ? "text-[var(--accent)]"
-                  : "text-[var(--primary)]"
+              onClick={closeBottomBarPanels}
+              className={`${bottomBarItemBase} ${
+                (pathname === "/account" || pathname === "/login") &&
+                !bottomBarPanelOpen
+                  ? bottomBarItemActive
+                  : ""
               }`}
               aria-label={isAuthenticated ? "My account" : "Login"}
             >
-              <UserIcon className="h-6 w-6" />
-              <span className="text-[10px] font-semibold uppercase tracking-wide text-[var(--primary)]">
+              <UserIcon className="h-5 w-5" />
+              <span className="text-[9px] font-semibold uppercase tracking-wide">
                 Account
               </span>
             </Link>
-          </div>
 
-          <button
-            type="button"
-            ref={mobileSearchTriggerRef}
-            onClick={toggleSearch}
-            className={`flex shrink-0 flex-col items-center gap-0.5 transition-colors active:text-[var(--accent)] ${
-              searchOpen ? "text-[var(--accent)]" : "text-[var(--primary)]"
-            }`}
-            aria-label={searchOpen ? "Close search" : "Search"}
-            aria-expanded={searchOpen}
-          >
-            <SearchIcon className="h-6 w-6" />
-            <span className="text-[10px] font-semibold uppercase tracking-wide text-[var(--primary)]">
-              Search
-            </span>
-          </button>
+            <button
+              type="button"
+              ref={mobileSearchTriggerRef}
+              onClick={toggleSearch}
+              className={`${bottomBarItemBase} ${
+                searchOpen ? bottomBarItemActive : ""
+              }`}
+              aria-label={searchOpen ? "Close search" : "Search"}
+              aria-expanded={searchOpen}
+            >
+              <SearchIcon className="h-5 w-5" />
+              <span className="text-[9px] font-semibold uppercase tracking-wide">
+                Search
+              </span>
+            </button>
+          </div>
         </div>
       </div>
     </>
