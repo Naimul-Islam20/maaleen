@@ -14,7 +14,7 @@ const MENU_ITEMS = [
 
 function EmptyState() {
   return (
-    <div className="flex flex-col items-center justify-center rounded-lg border border-dashed border-stone-200 bg-white px-6 py-16 text-center">
+    <div className="flex flex-col items-center justify-center rounded-lg border border-dashed border-[var(--secondary)] bg-[var(--background)] px-6 py-16 text-center">
       <p className="text-base font-semibold text-stone-900">No Data</p>
       <p className="mt-2 max-w-md text-sm leading-relaxed text-stone-500">
         Currently, there are no entries to display. Please add data to populate
@@ -55,15 +55,15 @@ function ProfileSection({ user }) {
           <button
             type="button"
             onClick={() => setEditing((value) => !value)}
-            className="text-sm font-medium text-[var(--primary)] underline-offset-2 transition-opacity hover:underline hover:opacity-80"
+            className="text-sm font-medium text-[var(--primary)] underline underline-offset-2 transition-opacity hover:opacity-80"
           >
             {editing ? "Cancel" : "Edit"}
           </button>
         }
       />
-      <div className="overflow-hidden rounded-lg border border-stone-200 bg-white">
+      <div className="overflow-hidden rounded-lg border border-[var(--secondary)] bg-[var(--background)]">
         {editing ? (
-          <form className="divide-y divide-stone-100">
+          <form className="divide-y divide-[var(--secondary)]/40">
             <label className="grid gap-2 px-5 py-4 sm:grid-cols-[140px_1fr] sm:items-center">
               <span className="text-sm font-medium text-stone-500">Name</span>
               <input
@@ -108,7 +108,7 @@ function ProfileSection({ user }) {
             </div>
           </form>
         ) : (
-          <dl className="divide-y divide-stone-100">
+          <dl className="divide-y divide-[var(--secondary)]/40">
             <div className="grid gap-1 px-5 py-4 sm:grid-cols-[140px_1fr]">
               <dt className="text-sm font-medium text-stone-500">Name</dt>
               <dd className="text-sm text-stone-900">{form.name}</dd>
@@ -127,9 +127,9 @@ function ProfileSection({ user }) {
         )}
       </div>
 
-      <div className="mt-4 overflow-hidden rounded-lg border border-stone-200 bg-white">
+      <div className="mt-4 overflow-hidden rounded-lg border border-[var(--secondary)] bg-[var(--background)]">
         {changingPassword ? (
-          <form className="divide-y divide-stone-100">
+          <form className="divide-y divide-[var(--secondary)]/40">
             <label className="grid gap-2 px-5 py-4 sm:grid-cols-[140px_1fr] sm:items-center">
               <span className="text-sm font-medium text-stone-500">Current Password</span>
               <input
@@ -204,7 +204,7 @@ function ProfileSection({ user }) {
                 <button
                   type="button"
                   onClick={() => setChangingPassword(true)}
-                  className="shrink-0 text-sm font-medium text-[var(--primary)] underline-offset-2 transition-opacity hover:underline hover:opacity-80"
+                  className="shrink-0 text-sm font-medium text-[var(--primary)] underline underline-offset-2 transition-opacity hover:opacity-80"
                 >
                   Change pass
                 </button>
@@ -250,7 +250,7 @@ function AddressesSection() {
           {addresses.map((item) => (
             <li
               key={item.id}
-              className="rounded-lg border border-stone-200 bg-white p-5"
+              className="rounded-lg border border-[var(--secondary)] bg-[var(--background)] p-5"
             >
               <div className="flex flex-wrap items-start justify-between gap-2">
                 <div>
@@ -356,7 +356,7 @@ export function AccountDashboard() {
         <button
           type="button"
           onClick={handleSignOut}
-          className="text-sm font-medium text-[var(--primary)] underline-offset-2 transition-opacity hover:underline hover:opacity-80"
+          className="text-sm font-medium text-[var(--primary)] underline underline-offset-2 transition-opacity hover:opacity-80"
         >
           Sign Out
         </button>
