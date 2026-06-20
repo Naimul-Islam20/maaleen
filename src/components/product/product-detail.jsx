@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useCart } from "@/contexts/cart-context";
@@ -8,6 +9,8 @@ import { useToast } from "@/contexts/toast-context";
 import { useWishlist } from "@/contexts/wishlist-context";
 import { formatPrice } from "@/lib/format";
 import { ProductsSliderSection } from "@/components/home/products-slider-section";
+import { ProductInfoSections } from "@/components/product/product-info-sections";
+import { ProductSizeOptions } from "@/components/product/product-size-options";
 import { ImageWithFallback } from "@/components/ui/image-with-fallback";
 
 export function ProductDetail({ product, related, breadcrumbs = null }) {
@@ -296,30 +299,28 @@ export function ProductDetail({ product, related, breadcrumbs = null }) {
               </span>
             ) : null}
           </div>
-          <p className="mt-6 text-sm leading-relaxed text-stone-600">
-            {product.description}
-          </p>
-
           <div className="mt-8 space-y-6">
             <fieldset>
-              <legend className="text-xs font-semibold uppercase tracking-wider text-stone-500">
-                Size
-              </legend>
-              <div className="mt-2 flex flex-wrap gap-2">
-                {(product.sizes ?? []).map((s) => (
-                  <button
-                    key={s}
-                    type="button"
-                    onClick={() => setSize(s)}
-                    className={`min-h-10 min-w-10 rounded-lg border px-3 py-2 text-sm font-medium transition-colors ${
-                      size === s
-                        ? "border-stone-900 bg-stone-900 text-white"
-                        : "border-stone-200 bg-[var(--surface-elevated)] text-stone-800 hover:border-stone-400"
-                    }`}
-                  >
-                    {s}
-                  </button>
-                ))}
+              <legend className="sr-only">Size</legend>
+              <div className="flex items-center justify-between gap-3">
+                <p className="text-xs font-semibold uppercase tracking-wider text-stone-500">
+                  Size
+                </p>
+                <Link
+                  href="/size-guide"
+                  className="text-sm font-medium text-[var(--primary)] underline underline-offset-2 transition-opacity hover:opacity-80"
+                >
+                  Size Guide
+                </Link>
+              </div>
+              <div className="mt-2">
+                <ProductSizeOptions
+                  product={product}
+                  selectedSize={size}
+                  onSelectSize={setSize}
+                  interactive
+                  showLegend={false}
+                />
               </div>
             </fieldset>
 
@@ -368,6 +369,8 @@ export function ProductDetail({ product, related, breadcrumbs = null }) {
                 Buy Now
               </button>
             </div>
+
+            <ProductInfoSections product={product} />
           </div>
         </div>
       </div>

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { ImageWithFallback } from "@/components/ui/image-with-fallback";
 import { formatPrice } from "@/lib/format";
+import { ProductSizeOptions } from "@/components/product/product-size-options";
 import { useWishlist } from "@/contexts/wishlist-context";
 
 function HeartIcon({ filled, className }) {
@@ -65,6 +66,7 @@ export function ProductCard({ product }) {
           <h2 className="font-medium text-stone-900 transition-colors group-hover:text-[var(--accent)]">
             {product.name}
           </h2>
+          <ProductSizeOptions product={product} showLegend={false} compact />
           <div className="flex flex-wrap items-baseline gap-2">
             <span className="text-sm text-stone-800">
               {formatPrice(product.price, product.currency)}
@@ -116,6 +118,7 @@ export function ProductCardSkeleton() {
       </div>
       <div className="mt-3 space-y-1">
         <div className="h-4 w-3/4 rounded bg-stone-200" />
+        <div className="h-3 w-1/2 rounded bg-stone-200" />
         <div className="h-3.5 w-1/4 rounded bg-stone-200" />
       </div>
     </div>

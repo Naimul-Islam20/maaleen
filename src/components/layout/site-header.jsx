@@ -5,7 +5,9 @@ import { usePathname, useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
+import { useAuth } from "@/contexts/auth-context";
 import { useCart } from "@/contexts/cart-context";
+import { useCountry } from "@/contexts/country-context";
 import { useWishlist } from "@/contexts/wishlist-context";
 import { Container } from "@/components/layout/container";
 import { ImageWithFallback } from "@/components/ui/image-with-fallback";
@@ -83,6 +85,27 @@ function HomeIcon({ className }) {
     >
       <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
       <polyline points="9 22 9 12 15 12 15 22" />
+    </svg>
+  );
+}
+
+function CollectionsIcon({ className }) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2.25"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+      aria-hidden
+    >
+      <rect x="3" y="3" width="7" height="7" rx="1" />
+      <rect x="14" y="3" width="7" height="7" rx="1" />
+      <rect x="3" y="14" width="7" height="7" rx="1" />
+      <rect x="14" y="14" width="7" height="7" rx="1" />
     </svg>
   );
 }
@@ -289,6 +312,8 @@ export function SiteHeader() {
     items: wishItems,
     removeItem: removeWishlistItem,
   } = useWishlist();
+  const { isAuthenticated, ready: authReady } = useAuth();
+  const accountHref = isAuthenticated ? "/account" : "/login";
   const [wishlistOpen, setWishlistOpen] = useState(false);
   const [wishlistFromBottom, setWishlistFromBottom] = useState(true);
   const [cartMounted, setCartMounted] = useState(false);
@@ -296,7 +321,7 @@ export function SiteHeader() {
   const [logoError, setLogoError] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [selectedCountry, setSelectedCountry] = useState("BD");
+  const { countryCode, setCountryCode } = useCountry();
   const [countryOpen, setCountryOpen] = useState(false);
   const wishlistPopoverRef = useRef(null);
   const searchAreaRef = useRef(null);
@@ -424,7 +449,7 @@ export function SiteHeader() {
 
   return (
     <>
-      <header className="sticky top-0 z-40 bg-[var(--accent)] backdrop-blur-md">
+      <header className="maaleen-brand-bg sticky top-0 z-40">
         <Container>
           <div className="relative flex min-h-20 items-center justify-end sm:min-h-24">
             <div
@@ -454,21 +479,21 @@ export function SiteHeader() {
                     onClick={() => setCountryOpen((open) => !open)}
                     aria-label="Select country"
                     aria-expanded={countryOpen}
-                    className="inline-flex h-9 items-center gap-1.5 rounded-full bg-[var(--secondary)] px-2.5 text-sm font-bold text-white transition-colors hover:bg-[var(--secondary)]/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                    className="inline-flex h-9 items-center gap-1.5 rounded-full border border-[var(--background)] bg-[var(--background)] px-2.5 text-sm font-bold text-[var(--primary)] transition-colors hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
                   >
-                    <span>{selectedCountry === "BD" ? "🇧🇩 BD" : "🇦🇺 AU"}</span>
+                    <span>{countryCode === "BD" ? "🇧🇩 BD" : "🇦🇺 AU"}</span>
                     <ChevronDownIcon className="h-4.5 w-4.5" />
                   </button>
                   {countryOpen ? (
-                    <div className="absolute left-0 top-full z-40 mt-2 w-44 rounded-xl bg-[var(--secondary)] p-1.5 shadow-xl ring-1 ring-black/10">
+                    <div className="absolute left-0 top-full z-40 mt-2 w-44 rounded-xl border border-[var(--background)] bg-[var(--background)] p-1.5 shadow-xl ring-1 ring-black/10">
                       <button
                         type="button"
                         onClick={() => {
-                          setSelectedCountry("BD");
+                          setCountryCode("BD");
                           setCountryOpen(false);
                         }}
-                        className={`flex w-full items-center rounded-lg px-3 py-2 text-left text-sm font-bold text-white transition-colors hover:bg-white/20 ${
-                          selectedCountry === "BD" ? "bg-white/20" : ""
+                        className={`flex w-full items-center rounded-lg px-3 py-2 text-left text-sm font-bold text-[var(--primary)] transition-colors hover:bg-stone-900/5 ${
+                          countryCode === "BD" ? "bg-stone-900/10" : ""
                         }`}
                       >
                         🇧🇩 Bangladesh
@@ -476,11 +501,11 @@ export function SiteHeader() {
                       <button
                         type="button"
                         onClick={() => {
-                          setSelectedCountry("AU");
+                          setCountryCode("AU");
                           setCountryOpen(false);
                         }}
-                        className={`mt-1 flex w-full items-center rounded-lg px-3 py-2 text-left text-sm font-bold text-white transition-colors hover:bg-white/20 ${
-                          selectedCountry === "AU" ? "bg-white/20" : ""
+                        className={`mt-1 flex w-full items-center rounded-lg px-3 py-2 text-left text-sm font-bold text-[var(--primary)] transition-colors hover:bg-stone-900/5 ${
+                          countryCode === "AU" ? "bg-stone-900/10" : ""
                         }`}
                       >
                         🇦🇺 Australia
@@ -664,9 +689,9 @@ export function SiteHeader() {
                 ) : null}
               </button>
               <Link
-                href="/login"
+                href={accountHref}
                 className="hidden sm:inline-flex min-h-10 min-w-10 items-center justify-center text-[var(--secondary)] transition-colors hover:opacity-80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
-                aria-label="Login / Account"
+                aria-label={isAuthenticated ? "My account" : "Login / Account"}
               >
                 <UserIcon className="h-6 w-6" />
               </Link>
@@ -696,7 +721,7 @@ export function SiteHeader() {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -12 }}
                   transition={{ duration: 0.2, ease: "easeOut" }}
-                  className="absolute inset-x-0 top-0 bottom-0 z-30 flex items-center gap-2 bg-[var(--accent)] px-4 sm:hidden"
+                  className="maaleen-brand-bg absolute inset-x-0 top-0 bottom-0 z-30 flex items-center gap-2 px-4 sm:hidden"
                 >
                   <button
                     type="button"
@@ -1047,18 +1072,29 @@ export function SiteHeader() {
               animate={{ x: 0 }}
               exit={{ x: "-100%" }}
               transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="absolute left-0 top-0 bottom-0 w-[80%] max-w-sm bg-white shadow-2xl"
+              className="absolute left-0 top-0 bottom-0 w-[80%] max-w-sm bg-[var(--background)] shadow-2xl"
             >
-              <div className="flex flex-col h-full bg-[var(--surface-elevated)]">
-                <div className="relative flex items-center justify-center py-3 px-4 border-b border-stone-100 bg-[var(--accent)]">
-                  <Link href="/" onClick={() => setMenuOpen(false)}>
-                    <Image
-                      src="/Maaleen-Logo-1.png"
-                      alt="Maaleen"
-                      width={200}
-                      height={60}
-                      priority
-                      className="h-12 w-auto object-contain brightness-0 invert"
+              <div className="flex flex-col h-full bg-[var(--background)]">
+                <div className="maaleen-brand-bg relative flex items-center justify-center border-b border-stone-100 px-4 py-3">
+                  <Link
+                    href="/"
+                    onClick={() => setMenuOpen(false)}
+                    className="inline-flex h-12 w-44 max-w-[70%] items-center justify-center"
+                    aria-label="Maaleen"
+                  >
+                    <span
+                      className="block h-12 w-full max-w-[11rem] bg-[var(--secondary)]"
+                      style={{
+                        WebkitMaskImage: "url(/Maaleen-Logo-1.png)",
+                        maskImage: "url(/Maaleen-Logo-1.png)",
+                        WebkitMaskSize: "contain",
+                        maskSize: "contain",
+                        WebkitMaskRepeat: "no-repeat",
+                        maskRepeat: "no-repeat",
+                        WebkitMaskPosition: "center",
+                        maskPosition: "center",
+                      }}
+                      aria-hidden
                     />
                   </Link>
                   <button
@@ -1068,35 +1104,79 @@ export function SiteHeader() {
                     <CloseIcon className="h-6 w-6" />
                   </button>
                 </div>
+                <div className="flex gap-3 border-b border-stone-100 px-6 py-5">
+                  {authReady && isAuthenticated ? (
+                    <Link
+                      href="/account"
+                      onClick={() => setMenuOpen(false)}
+                      className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-[var(--primary)] px-4 py-2.5 text-sm font-semibold text-white transition-opacity hover:opacity-90"
+                    >
+                      <UserIcon className="h-4 w-4" />
+                      My Account
+                    </Link>
+                  ) : (
+                    <>
+                      <Link
+                        href="/login"
+                        onClick={() => setMenuOpen(false)}
+                        className="inline-flex flex-1 items-center justify-center gap-2 rounded-full border border-[var(--primary)] bg-transparent px-4 py-2.5 text-sm font-semibold text-[var(--primary)] transition-colors hover:bg-[var(--primary)] hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
+                      >
+                        <UserIcon className="h-4 w-4" />
+                        Login
+                      </Link>
+                      <Link
+                        href="/signup"
+                        onClick={() => setMenuOpen(false)}
+                        className="inline-flex flex-1 items-center justify-center gap-2 rounded-full bg-[var(--primary)] px-4 py-2.5 text-sm font-semibold text-white transition-opacity hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
+                      >
+                        Register
+                      </Link>
+                    </>
+                  )}
+                </div>
                 <nav className="flex-1 overflow-y-auto px-6 py-8">
                   <ul className="space-y-6">
                     <li>
                       <Link
                         href="/collections"
                         onClick={() => setMenuOpen(false)}
-                        className="text-xl font-medium text-stone-900 hover:text-[var(--accent)] flex items-center justify-between group"
+                        className="flex items-center gap-3 text-xl font-medium text-stone-900 transition-colors hover:text-[var(--accent)]"
                       >
+                        <CollectionsIcon className="h-5 w-5 shrink-0 text-[var(--primary)]" />
                         Collections
-                        <span className="text-stone-300 group-hover:text-[var(--accent)] transition-colors">
-                          →
-                        </span>
                       </Link>
                     </li>
                     <li>
                       <Link
                         href="/shop"
                         onClick={() => setMenuOpen(false)}
-                        className="text-xl font-medium text-stone-900 hover:text-[var(--accent)] flex items-center justify-between group"
+                        className="flex items-center gap-3 text-xl font-medium text-stone-900 transition-colors hover:text-[var(--accent)]"
                       >
+                        <BagIcon className="h-5 w-5 shrink-0 text-[var(--primary)]" />
                         Shop
-                        <span className="text-stone-300 group-hover:text-[var(--accent)] transition-colors">
-                          →
-                        </span>
+                      </Link>
+                    </li>
+                  </ul>
+
+                  <div className="my-6 border-b border-stone-200" />
+
+                  <p className="mb-4 text-xs font-semibold uppercase tracking-[0.2em] text-stone-400">
+                    My Account
+                  </p>
+                  <ul className="space-y-6">
+                    <li>
+                      <Link
+                        href="/wishlist"
+                        onClick={() => setMenuOpen(false)}
+                        className="flex items-center gap-3 text-xl font-medium text-stone-900 transition-colors hover:text-[var(--accent)]"
+                      >
+                        <HeartIcon className="h-5 w-5 shrink-0 text-[var(--primary)]" />
+                        My Wishlist
                       </Link>
                     </li>
                   </ul>
                 </nav>
-                <div className="p-6 border-t border-stone-100 bg-stone-50">
+                <div className="border-t border-stone-100 bg-[var(--background)] p-6">
                   <p className="text-xs text-stone-400 font-medium tracking-wide">
                     © {new Date().getFullYear()} Maaleen.
                   </p>
@@ -1190,9 +1270,13 @@ export function SiteHeader() {
             </button>
 
             <Link
-              href="/login"
-              className="flex flex-col items-center gap-0.5 text-[var(--primary)] transition-colors active:text-[var(--accent)]"
-              aria-label="Login"
+              href={accountHref}
+              className={`flex flex-col items-center gap-0.5 transition-colors active:text-[var(--accent)] ${
+                pathname === "/account" || pathname === "/login"
+                  ? "text-[var(--accent)]"
+                  : "text-[var(--primary)]"
+              }`}
+              aria-label={isAuthenticated ? "My account" : "Login"}
             >
               <UserIcon className="h-6 w-6" />
               <span className="text-[10px] font-semibold uppercase tracking-wide text-[var(--primary)]">

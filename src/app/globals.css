@@ -128,7 +128,15 @@ body {
   }
 }
 
-/* Site header notice ticker — global CSS avoids styled-jsx hydration mismatches on <header>. */
+/* Header & footer brand texture */
+.maaleen-brand-bg {
+  background-color: var(--accent);
+  background-image: url("/Maaleen-bg.png");
+  background-repeat: repeat;
+  background-size: 1150px auto;
+  background-position: top center;
+}
+
 @keyframes maaleen-header-ticker {
   from {
     transform: translateX(0);

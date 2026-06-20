@@ -71,7 +71,7 @@ export function CollectionsSection() {
               type="button"
               aria-label="Previous collections"
               onClick={scrollPrev}
-              className="inline-flex min-h-12 min-w-12 items-center justify-center rounded-full border-2 border-[var(--primary)] bg-transparent text-[var(--primary)] transition-all hover:bg-[var(--primary)] hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
+              className="inline-flex min-h-12 min-w-12 items-center justify-center rounded-full border border-[var(--primary)] bg-transparent text-[var(--primary)] transition-all hover:bg-[var(--primary)] hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
             >
               <span aria-hidden className="text-2xl leading-none">
                 ‹
@@ -81,7 +81,7 @@ export function CollectionsSection() {
               type="button"
               aria-label="Next collections"
               onClick={scrollNext}
-              className="inline-flex min-h-12 min-w-12 items-center justify-center rounded-full border-2 border-[var(--primary)] bg-transparent text-[var(--primary)] transition-all hover:bg-[var(--primary)] hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+              className="inline-flex min-h-12 min-w-12 items-center justify-center rounded-full border border-[var(--primary)] bg-transparent text-[var(--primary)] transition-all hover:bg-[var(--primary)] hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
             >
               <span aria-hidden className="text-2xl leading-none">
                 ›

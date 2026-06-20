@@ -7,11 +7,11 @@ import { Container } from "@/components/layout/container";
 
 export function SiteFooter() {
   return (
-    <footer className="mt-16 bg-[var(--accent)] pt-16 pb-9 text-[var(--secondary)] sm:pt-16 sm:pb-8">
+    <footer className="maaleen-brand-bg mt-16 pt-16 pb-9 text-[var(--secondary)] sm:pt-16 sm:pb-8">
       <Container>
-        <div className="grid grid-cols-1 gap-x-8 gap-y-12 text-center sm:grid-cols-2 lg:grid-cols-3 lg:gap-8">
+        <div className="grid grid-cols-1 gap-x-8 gap-y-12 text-center max-sm:gap-y-0 sm:grid-cols-2 lg:grid-cols-3 lg:gap-8">
           {/* INFORMATION */}
-          <div>
+          <div className="max-sm:border-b max-sm:border-white/10 max-sm:pb-12">
             <h3 className="mb-8 text-base font-bold uppercase tracking-[0.2em] text-white">INFORMATION</h3>
             <ul className="space-y-3">
               {[
@@ -33,7 +33,7 @@ export function SiteFooter() {
           </div>
 
           {/* COMPANY */}
-          <div>
+          <div className="max-sm:border-b max-sm:border-white/10 max-sm:pt-12 max-sm:pb-12">
             <h3 className="mb-8 text-base font-bold uppercase tracking-[0.2em] text-white">COMPANY</h3>
             <ul className="space-y-3">
               {[
@@ -52,9 +52,9 @@ export function SiteFooter() {
           </div>
 
           {/* SERVICE CENTER & FIND US ON */}
-          <div className="col-span-1 sm:col-span-2 lg:col-span-1">
-            <div className="grid grid-cols-1 gap-8 lg:grid-cols-1 lg:gap-12">
-              <div>
+          <div className="col-span-1 max-sm:pt-12 sm:col-span-2 lg:col-span-1">
+            <div className="grid grid-cols-1 gap-8 max-sm:gap-y-0 lg:grid-cols-1 lg:gap-12">
+              <div className="max-sm:border-b max-sm:border-white/10 max-sm:pb-12">
                 <h3 className="mb-8 text-base font-bold uppercase tracking-[0.2em] text-white">SERVICE CENTER</h3>
                 <div className="space-y-5 text-[15.5px] font-bold">
                   <div>
@@ -73,7 +73,7 @@ export function SiteFooter() {
                 </div>
               </div>
 
-              <div>
+              <div className="max-sm:pt-12 max-sm:pb-12">
                 <h3 className="mb-8 text-base font-bold uppercase tracking-[0.2em] text-white">FIND US ON</h3>
                 <div className="flex items-center justify-center gap-4">
                   <a href="#" className="transition-all hover:opacity-80" style={{ color: "var(--secondary)" }} aria-label="Facebook">
@@ -97,7 +97,7 @@ export function SiteFooter() {
         </div>
 
         {/* Bottom Bar */}
-        <div className="mt-10 border-t border-white/10 pt-6 text-center text-base opacity-70">
+        <div className="border-t border-white/10 pt-6 text-center text-base opacity-70 max-sm:mt-0 sm:mt-10">
           <p>© {new Date().getFullYear()} Maaleen. All rights reserved.</p>
         </div>
       </Container>

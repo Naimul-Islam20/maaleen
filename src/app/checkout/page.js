@@ -4,28 +4,44 @@ import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useCart } from "@/contexts/cart-context";
+import { useCountry } from "@/contexts/country-context";
 import { currency } from "@/lib/format";
+import { COUNTRY_CITIES } from "@/lib/country-config";
 import { Container } from "@/components/layout/container";
 import SuccessPopup from "@/components/checkout/success-popup";
 import { ImageWithFallback } from "@/components/ui/image-with-fallback";
 
-const shippingOptions = [
-  {
-    id: "inside-chattagram",
-    label: "Inside Chattagram City",
-    cost: 70,
-  },
-  {
-    id: "inside-dhaka",
-    label: "Inside Dhaka City",
-    cost: 70,
-  },
-  {
-    id: "outside-dhaka-ctg",
-    label: "Outside Dhaka & Chittagong City",
-    cost: 130,
-  },
-];
+const shippingOptionsByCountry = {
+  BD: [
+    {
+      id: "inside-chattagram",
+      label: "Inside Chattagram City",
+      cost: 70,
+    },
+    {
+      id: "inside-dhaka",
+      label: "Inside Dhaka City",
+      cost: 70,
+    },
+    {
+      id: "outside-dhaka-ctg",
+      label: "Outside Dhaka & Chittagong City",
+      cost: 130,
+    },
+  ],
+  AU: [
+    {
+      id: "standard-au",
+      label: "Standard Shipping",
+      cost: 15,
+    },
+    {
+      id: "express-au",
+      label: "Express Shipping",
+      cost: 25,
+    },
+  ],
+};
 
 const paymentMethods = [
   {
@@ -40,6 +56,7 @@ const paymentMethods = [
 
 export default function CheckoutPage() {
   const { items: cartItems, subtotal, clearCart, updateQuantity } = useCart();
+  const { country, countryCode } = useCountry();
   const [submitted, setSubmitted] = useState(false);
   const [orderId, setOrderId] = useState("");
   const [error, setError] = useState("");
@@ -69,8 +86,6 @@ export default function CheckoutPage() {
     billingAddress: "same",
   });
   const [errors, setErrors] = useState({});
-  const [countryOpen, setCountryOpen] = useState(false);
-  const countryRef = useRef(null);
   const [shippingUpdating, setShippingUpdating] = useState(false);
   const [displayTotal, setDisplayTotal] = useState(0);
   const [finalTotal, setFinalTotal] = useState(0);
@@ -80,11 +95,18 @@ export default function CheckoutPage() {
 
   const hasItems = detailedItems.length > 0;
 
+  const shippingOptions = useMemo(
+    () => shippingOptionsByCountry[countryCode] ?? shippingOptionsByCountry.BD,
+    [countryCode],
+  );
+
+  const cities = COUNTRY_CITIES[countryCode] ?? [];
+
   const selectedShipping = useMemo(
     () =>
       shippingOptions.find((option) => option.id === form.shippingMethod) ??
-      shippingOptions[1],
-    [form.shippingMethod]
+      shippingOptions[0],
+    [form.shippingMethod, shippingOptions],
   );
 
   const totalWithShipping = useMemo(
@@ -107,20 +129,14 @@ export default function CheckoutPage() {
     return () => list.removeEventListener("scroll", updateHint);
   }, [detailedItems.length]);
 
-  // Handle click outside for country dropdown
   useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (countryRef.current && !countryRef.current.contains(event.target)) {
-        setCountryOpen(false);
-      }
-    };
-    if (countryOpen) {
-      document.addEventListener("mousedown", handleClickOutside);
-    } else {
-      document.removeEventListener("mousedown", handleClickOutside);
-    }
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [countryOpen]);
+    const options = shippingOptionsByCountry[countryCode] ?? shippingOptionsByCountry.BD;
+    setForm((prev) => ({
+      ...prev,
+      city: "",
+      shippingMethod: options[0]?.id ?? prev.shippingMethod,
+    }));
+  }, [countryCode]);
 
   useEffect(() => {
     if (firstShippingRender.current) {
@@ -145,8 +161,17 @@ export default function CheckoutPage() {
         : event.target.value;
     setForm((prev) => ({ ...prev, [field]: value }));
     setError("");
-    // Clear field error when user types
     setFieldErrors((prev) => ({ ...prev, [field]: "" }));
+  };
+
+  const handlePhoneChange = (field) => (event) => {
+    const value = event.target.value.replace(/\D/g, "").slice(0, country.phoneMaxLength);
+    setForm((prev) => ({ ...prev, [field]: value }));
+    setError("");
+    setFieldErrors((prev) => ({ ...prev, [field]: "" }));
+    if (field === "phone") {
+      setErrors((prev) => ({ ...prev, phone: false }));
+    }
   };
 
   const scrollToTop = () => {
@@ -272,17 +297,12 @@ export default function CheckoutPage() {
                   Sign in
                 </Link>
               </div>
-              <input
-                  placeholder="Phone number"
-                  className={`input-field text-sm sm:text-base border bg-white px-3 py-3 rounded-md w-full transition-colors focus:outline-none ${
-                    errors.phone ? "border-[#8b3a3a] ring-1 ring-[#8b3a3a]" : "border-stone-200 focus:border-[#8b3a3a] focus:ring-1 focus:ring-[#8b3a3a]"
-                  }`}
-                  value={form.phone}
-                  onChange={(e) => {
-                    setForm(prev => ({...prev, phone: e.target.value}));
-                    if(errors.phone) setErrors(prev => ({...prev, phone: false}));
-                  }}
-                />
+              <PhoneField
+                country={country}
+                value={form.phone}
+                onChange={handlePhoneChange("phone")}
+                hasError={errors.phone}
+              />
                 {errors.phone && (
                   <p className="text-[10px] sm:text-xs text-[#8b3a3a] mt-1 font-medium">Please enter your phone number to continue</p>
                 )}
@@ -293,27 +313,12 @@ export default function CheckoutPage() {
               <h2 className="text-lg sm:text-xl font-bold font-[family-name:var(--font-cormorant)] text-stone-900">Delivery</h2>
 
               <div className="grid gap-3 sm:gap-4">
-                <div className="relative" ref={countryRef}>
-                  <div 
-                    onClick={() => setCountryOpen(!countryOpen)}
-                    className="input-field text-xs sm:text-sm w-full border border-stone-200 bg-white px-3 py-2 rounded-md flex items-center justify-between cursor-pointer select-none"
-                  >
-                    <span>Bangladesh</span>
-                    <svg className={`w-4 h-4 text-stone-400 transition-transform duration-200 ${countryOpen ? 'rotate-180 text-[#8b3a3a]' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
-                    </svg>
-                  </div>
-                  {countryOpen && (
-                    <div className="absolute left-0 right-0 top-full mt-1 bg-white border border-stone-200 rounded-md shadow-lg z-50 overflow-hidden">
-                      <div 
-                        onClick={() => setCountryOpen(false)}
-                        className="px-3 py-2 text-xs sm:text-sm bg-white hover:bg-[#8b3a3a] hover:text-white text-stone-700 cursor-pointer transition-colors"
-                      >
-                        Bangladesh
-                      </div>
-                    </div>
-                  )}
-                </div>
+                <input
+                  type="text"
+                  readOnly
+                  value={country.label}
+                  className="w-full cursor-not-allowed rounded-md border border-stone-200 bg-stone-50 px-3 py-2 text-xs sm:text-sm text-stone-700"
+                />
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                   <Input
@@ -337,12 +342,27 @@ export default function CheckoutPage() {
                 />
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-                  <Input
-                    value={form.city}
-                    onChange={handleChange("city")}
-                    placeholder="City"
-                    error={fieldErrors.city}
-                  />
+                  <div className="space-y-1.5 sm:space-y-2">
+                    <select
+                      value={form.city}
+                      onChange={handleChange("city")}
+                      className={`w-full rounded-md border bg-white px-3 py-2 text-sm text-stone-900 focus:border-[#8b3a3a] focus:ring-1 focus:ring-[#8b3a3a] focus:outline-none transition-colors ${
+                        fieldErrors.city ? "border-[#8b3a3a]" : "border-stone-200"
+                      }`}
+                    >
+                      <option value="">Select City</option>
+                      {cities.map((city) => (
+                        <option key={city} value={city}>
+                          {city}
+                        </option>
+                      ))}
+                    </select>
+                    {fieldErrors.city ? (
+                      <p className="text-[11px] font-semibold uppercase tracking-wider text-red-600">
+                        {fieldErrors.city}
+                      </p>
+                    ) : null}
+                  </div>
                   <Input
                     value={form.postalCode}
                     onChange={handleChange("postalCode")}
@@ -350,13 +370,17 @@ export default function CheckoutPage() {
                   />
                 </div>
 
-                <Input
-                  type="tel"
+                <PhoneField
+                  country={country}
                   value={form.deliveryPhone}
-                  onChange={handleChange("deliveryPhone")}
-                  placeholder="Phone number"
-                  error={fieldErrors.deliveryPhone}
+                  onChange={handlePhoneChange("deliveryPhone")}
+                  hasError={Boolean(fieldErrors.deliveryPhone)}
                 />
+                {fieldErrors.deliveryPhone ? (
+                  <p className="text-[11px] font-semibold uppercase tracking-wider text-red-600">
+                    {fieldErrors.deliveryPhone}
+                  </p>
+                ) : null}
               </div>
 
               <label className="flex items-center gap-2 text-xs sm:text-sm cursor-pointer mt-4">
@@ -617,6 +641,31 @@ export default function CheckoutPage() {
           </div>
         </form>
       </Container>
+    </div>
+  );
+}
+
+function PhoneField({ country, value, onChange, hasError = false }) {
+  return (
+    <div
+      className={`flex overflow-hidden rounded-md border bg-white transition-colors focus-within:border-[#8b3a3a] focus-within:ring-1 focus-within:ring-[#8b3a3a] ${
+        hasError ? "border-[#8b3a3a] ring-1 ring-[#8b3a3a]" : "border-stone-200"
+      }`}
+    >
+      <span className="inline-flex items-center border-r border-stone-200 bg-stone-50 px-3 text-xs sm:text-sm text-stone-600">
+        {country.label}
+      </span>
+      <span className="inline-flex items-center border-r border-stone-200 bg-stone-50 px-3 text-xs sm:text-sm text-stone-600">
+        {country.dialCode}
+      </span>
+      <input
+        type="tel"
+        inputMode="numeric"
+        placeholder="Phone Number"
+        value={value}
+        onChange={onChange}
+        className="min-w-0 flex-1 px-3 py-2.5 text-sm sm:text-base text-stone-900 outline-none"
+      />
     </div>
   );
 }

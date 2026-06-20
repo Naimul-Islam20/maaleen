@@ -9,7 +9,7 @@ export default function HomePage() {
 
   return (
     <div>
-      <section className="border-b border-stone-200">
+      <section>
         <HeroSlider />
       </section>
 
