@@ -1,9 +1,14 @@
 "use client";
 
 import { useMemo } from "react";
+import Link from "next/link";
 import { CollectionColumn } from "@/components/collections/collection-column";
+import { CollectionsMobileSlider } from "@/components/collections/collections-mobile-slider";
 import { Container } from "@/components/layout/container";
-import { HOME_COLLECTION_SLIDES } from "@/data/home-collection-slides";
+import {
+  HOME_COLLECTION_ITEMS,
+  HOME_COLLECTION_SLIDES,
+} from "@/data/home-collection-slides";
 import useEmblaAutoplay from "@/hooks/useEmblaAutoplay";
 
 const SLIDES = HOME_COLLECTION_SLIDES;
@@ -37,15 +42,23 @@ export function CollectionsSection() {
       className="border-b border-stone-200 bg-[var(--surface)]"
     >
       <Container className="py-10 sm:py-14">
-        <h2 className="text-center font-[family-name:var(--font-display)] text-2xl text-stone-900 sm:text-3xl">
-          Collections
-        </h2>
-        <p className="mx-auto mt-2 max-w-xl text-center text-sm text-stone-600 sm:text-base">
-          One card per step — on small screens one shows; from tablet up, two
-          show side by side while arrows move a single card.
-        </p>
+        <div className="flex items-end justify-between gap-4">
+          <h2 className="font-[family-name:var(--font-display)] text-2xl text-stone-900 sm:text-3xl">
+            Collections
+          </h2>
+          <Link
+            href="/collections"
+            className="shrink-0 text-sm font-medium text-[var(--accent)] hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
+          >
+            See all
+          </Link>
+        </div>
 
-        <div className="mt-10 min-w-0">
+        {/* Mobile + tablet: same center/peek carousel as New arrivals */}
+        <CollectionsMobileSlider items={HOME_COLLECTION_ITEMS} />
+
+        {/* Desktop: two-up Embla carousel */}
+        <div className="mt-10 hidden min-w-0 lg:block">
           <div
             ref={emblaRef}
             className="maaleen-collections-embla overflow-hidden py-1"
@@ -59,7 +72,7 @@ export function CollectionsSection() {
                   <CollectionColumn
                     item={p.item}
                     priority={i === 0}
-                    sizes="(max-width: 767px) 100vw, 50vw"
+                    sizes="50vw"
                   />
                 </div>
               ))}

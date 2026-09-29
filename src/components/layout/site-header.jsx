@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
-import { Suspense, useEffect, useRef, useState } from "react";
+import { Suspense, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
 import { useAuth } from "@/contexts/auth-context";
@@ -48,6 +48,28 @@ function BagIcon({ className }) {
       <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z" />
       <path d="M3 6h18" />
       <path d="M16 10a4 4 0 0 1-8 0" />
+    </svg>
+  );
+}
+
+function TruckIcon({ className }) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+      aria-hidden
+    >
+      <path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2" />
+      <path d="M15 18H9" />
+      <path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14" />
+      <circle cx="17" cy="18" r="2" />
+      <circle cx="7" cy="18" r="2" />
     </svg>
   );
 }
@@ -168,10 +190,81 @@ function CloseIcon({ className }) {
   );
 }
 
-const bottomBarItemActive =
-  "bg-white/22 shadow-[0_2px_10px_rgba(255,255,255,0.22)]";
-const bottomBarItemBase =
-  "flex min-w-0 flex-col items-center justify-center gap-0.5 rounded-full px-1 py-1.5 text-[var(--background)] transition-all";
+const BOTTOM_CHIP = 48; // h-12
+const BOTTOM_GAP = 8;
+const BOTTOM_GAP_RING = BOTTOM_CHIP + BOTTOM_GAP * 2; // 64
+const BOTTOM_NOTCH_R = 36; // soft rounded bowl (same look as before)
+const BOTTOM_DOCK_H = 60;
+const BOTTOM_DOCK_SPRING = { stiffness: 340, damping: 30 };
+
+const bottomBarIdleBtn =
+  "mx-auto flex h-11 w-11 items-center justify-center rounded-full text-[var(--secondary)]/75 transition-opacity duration-200";
+const bottomBarActiveChip =
+  "flex h-12 w-12 items-center justify-center rounded-full bg-[var(--secondary)] text-[var(--primary)] shadow-[0_10px_28px_rgba(0,0,0,0.38),0_2px_6px_rgba(0,0,0,0.2)]";
+
+function getBottomBarActiveIndex({
+  pathname,
+  bottomBarPanelOpen,
+  wishlistOpen,
+  cartMounted,
+  searchOpen,
+}) {
+  if (searchOpen) return 4;
+  if (cartMounted) return 2;
+  if (wishlistOpen) return 1;
+  if (
+    (pathname === "/account" || pathname === "/login") &&
+    !bottomBarPanelOpen
+  ) {
+    return 3;
+  }
+  if (pathname === "/" && !bottomBarPanelOpen) return 0;
+  return -1;
+}
+
+/** Soft rounded notch — circular bowl + mirrored shoulders (no cubic wobble). */
+function buildNotchedDockPath(width, height, notchX, notchR) {
+  const corner = Math.min(22, height / 2);
+  const fmt = (n) => Number(n.toFixed(2));
+
+  if (notchX == null || notchR <= 0) {
+    return `M ${corner},0 H ${width - corner} A ${corner} ${corner} 0 0 1 ${width},${corner} V ${height - corner} A ${corner} ${corner} 0 0 1 ${width - corner},${height} H ${corner} A ${corner} ${corner} 0 0 1 0,${height - corner} V ${corner} A ${corner} ${corner} 0 0 1 ${corner},0 Z`;
+  }
+
+  const r = notchR;
+  const shoulder = 16;
+  // Center on the chip. Edge tabs get enough inset via bar padding so this fits.
+  const cx = notchX;
+
+  const alpha = (58 * Math.PI) / 180;
+  const sinA = Math.sin(alpha);
+  const cosA = Math.cos(alpha);
+  const lx = cx - r * sinA;
+  const ly = r * cosA;
+  const rx = cx + r * sinA;
+  const leftFlat = cx - r - shoulder;
+  const rightFlat = cx + r + shoulder;
+
+  const joinHandle = r * 0.42;
+  const flatHandle = shoulder * 0.55;
+
+  return [
+    `M ${fmt(corner)},0`,
+    `H ${fmt(leftFlat)}`,
+    `C ${fmt(leftFlat + flatHandle)},0 ${fmt(lx - cosA * joinHandle)},${fmt(ly - sinA * joinHandle)} ${fmt(lx)},${fmt(ly)}`,
+    `A ${fmt(r)} ${fmt(r)} 0 0 0 ${fmt(rx)},${fmt(ly)}`,
+    `C ${fmt(rx + cosA * joinHandle)},${fmt(ly - sinA * joinHandle)} ${fmt(rightFlat - flatHandle)},0 ${fmt(rightFlat)},0`,
+    `H ${fmt(width - corner)}`,
+    `A ${corner} ${corner} 0 0 1 ${width} ${corner}`,
+    `V ${height - corner}`,
+    `A ${corner} ${corner} 0 0 1 ${width - corner} ${height}`,
+    `H ${corner}`,
+    `A ${corner} ${corner} 0 0 1 0 ${height - corner}`,
+    `V ${corner}`,
+    `A ${corner} ${corner} 0 0 1 ${corner} 0`,
+    "Z",
+  ].join(" ");
+}
 
 function ChevronDownIcon({ className }) {
   return (
@@ -326,6 +419,7 @@ export function SiteHeader() {
   const [logoError, setLogoError] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [headerCompact, setHeaderCompact] = useState(false);
   const bottomBarPanelOpen =
     wishlistOpen || cartMounted || searchOpen || menuOpen;
   const { countryCode, setCountryCode } = useCountry();
@@ -438,6 +532,16 @@ export function SiteHeader() {
     mq.addEventListener("change", sync);
     return () => mq.removeEventListener("change", sync);
   }, [cartMounted]);
+
+  useEffect(() => {
+    const onScroll = () => {
+      setHeaderCompact(window.scrollY > 24);
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   const noticeItems = [
     "New arrivals every Friday",
     "Free shipping over BDT 3000",
@@ -461,16 +565,109 @@ export function SiteHeader() {
     });
   };
 
+  const bottomBarRef = useRef(null);
+  const [bottomDockSize, setBottomDockSize] = useState({ width: 0, notchX: null });
+
+  const bottomActiveIndex = getBottomBarActiveIndex({
+    pathname,
+    bottomBarPanelOpen,
+    wishlistOpen,
+    cartMounted,
+    searchOpen,
+  });
+
+  useLayoutEffect(() => {
+    const syncDock = () => {
+      const root = bottomBarRef.current;
+      if (!root) return;
+      const width = root.getBoundingClientRect().width;
+      if (bottomActiveIndex < 0) {
+        setBottomDockSize({ width, notchX: null });
+        return;
+      }
+      const item = root.querySelector(`[data-bottom-idx="${bottomActiveIndex}"]`);
+      if (!item) {
+        setBottomDockSize({ width, notchX: null });
+        return;
+      }
+      const rootRect = root.getBoundingClientRect();
+      const itemRect = item.getBoundingClientRect();
+      setBottomDockSize({
+        width,
+        notchX: itemRect.left + itemRect.width / 2 - rootRect.left,
+      });
+    };
+
+    syncDock();
+    window.addEventListener("resize", syncDock);
+    return () => window.removeEventListener("resize", syncDock);
+  }, [bottomActiveIndex]);
+
+  const notchX = bottomDockSize.notchX;
+  const dockWidth = bottomDockSize.width || 360;
+  const dockPath = buildNotchedDockPath(
+    dockWidth,
+    BOTTOM_DOCK_H,
+    notchX,
+    notchX == null ? 0 : BOTTOM_NOTCH_R,
+  );
+  const iconLayerMask =
+    notchX == null
+      ? undefined
+      : {
+          WebkitMaskImage: `radial-gradient(circle ${BOTTOM_GAP_RING / 2 + 6}px at ${notchX}px 0px, transparent ${BOTTOM_GAP_RING / 2 + 4}px, #000 ${BOTTOM_GAP_RING / 2 + 5}px)`,
+          maskImage: `radial-gradient(circle ${BOTTOM_GAP_RING / 2 + 6}px at ${notchX}px 0px, transparent ${BOTTOM_GAP_RING / 2 + 4}px, #000 ${BOTTOM_GAP_RING / 2 + 5}px)`,
+        };
+  const dockSpring = {
+    type: "spring",
+    ...BOTTOM_DOCK_SPRING,
+  };
+
+  const openWishlistFromBar = () => {
+    if (wishlistOpen) {
+      closeWishlist();
+    } else {
+      if (cartMounted) closeCart();
+      if (menuOpen) setMenuOpen(false);
+      if (searchOpen) setSearchOpen(false);
+      openWishlist();
+    }
+  };
+
+  const openCartFromBar = () => {
+    if (cartMounted) {
+      closeCart();
+    } else {
+      if (wishlistOpen) closeWishlist();
+      if (menuOpen) setMenuOpen(false);
+      if (searchOpen) setSearchOpen(false);
+      openCart();
+    }
+  };
+
   return (
     <>
-      <header className="maaleen-brand-bg sticky top-0 z-40">
+      <header className="sticky top-0 z-40 bg-[var(--primary)]">
         <Container>
-          <div className="relative flex min-h-20 items-center justify-end sm:min-h-24">
+          <div
+            className={`relative flex items-center justify-end transition-[min-height] duration-300 ease-out ${
+              headerCompact
+                ? "min-h-16 sm:min-h-[4.5rem]"
+                : "min-h-[5.5rem] sm:min-h-[6.5rem]"
+            }`}
+          >
             <div
               className="absolute left-0 top-1/2 z-40 -translate-y-1/2"
               ref={searchAreaRef}
             >
               <div className="flex items-center gap-2">
+                <Link
+                  href="/track-order"
+                  className="hidden sm:inline-flex items-center gap-2 rounded-md border border-[var(--secondary)]/70 px-3 py-1.5 text-xs font-semibold text-[var(--secondary)] transition-colors hover:border-[var(--secondary)] hover:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white lg:px-3.5 lg:text-sm"
+                >
+                  <TruckIcon className="h-4 w-4" />
+                  Track Order
+                </Link>
                 <button
                   type="button"
                   onClick={toggleSearch}
@@ -575,7 +772,11 @@ export function SiteHeader() {
                 width={340}
                 height={100}
                 priority
-                className="h-20 w-auto object-contain sm:h-24"
+                className={`w-auto object-contain transition-[height] duration-300 ease-out ${
+                  headerCompact
+                    ? "h-14 sm:h-16"
+                    : "h-[4.5rem] sm:h-[5.5rem]"
+                }`}
                 onError={() => setLogoError(true)}
               />
             </Link>
@@ -735,7 +936,7 @@ export function SiteHeader() {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -12 }}
                   transition={{ duration: 0.2, ease: "easeOut" }}
-                  className="maaleen-brand-bg absolute inset-x-0 top-0 bottom-0 z-30 flex items-center gap-2 px-4 sm:hidden"
+                  className="absolute inset-x-0 top-0 bottom-0 z-30 flex items-center gap-2 bg-[var(--primary)] px-4 sm:hidden"
                 >
                   <button
                     type="button"
@@ -777,12 +978,12 @@ export function SiteHeader() {
         <div className="relative w-full border-t border-stone-200 bg-white py-2">
           <div className="maaleen-header-ticker overflow-hidden">
             <div className="maaleen-header-ticker-track flex min-w-max items-center">
-              <p className="shrink-0 whitespace-nowrap pr-10 text-[11px] font-medium tracking-wide text-stone-700 sm:text-xs">
+              <p className="shrink-0 whitespace-nowrap pr-10 text-xs font-bold tracking-wide text-[var(--primary)] sm:text-sm">
                 {noticeText}
               </p>
               <p
                 aria-hidden
-                className="shrink-0 whitespace-nowrap pr-10 text-[11px] font-medium tracking-wide text-stone-700 sm:text-xs"
+                className="shrink-0 whitespace-nowrap pr-10 text-xs font-bold tracking-wide text-[var(--primary)] sm:text-sm"
               >
                 {noticeText}
               </p>
@@ -1158,14 +1359,14 @@ export function SiteHeader() {
                   )}
                 </div>
                 <nav className="flex-1 overflow-y-auto px-6 py-8">
-                  <ul className="space-y-5">
+                  <ul className="space-y-6">
                     <li>
                       <Link
                         href="/"
                         onClick={() => setMenuOpen(false)}
-                        className="flex items-center gap-2.5 text-[15px] font-medium text-stone-900 transition-colors hover:text-[var(--accent)]"
+                        className="flex items-center gap-3 text-[17px] font-medium text-stone-900 transition-colors hover:text-[var(--accent)]"
                       >
-                        <HomeIcon className="h-[18px] w-[18px] shrink-0 text-[var(--primary)]" />
+                        <HomeIcon className="h-[22px] w-[22px] shrink-0 text-[var(--primary)]" />
                         Home
                       </Link>
                     </li>
@@ -1173,9 +1374,9 @@ export function SiteHeader() {
                       <Link
                         href="/collections"
                         onClick={() => setMenuOpen(false)}
-                        className="flex items-center gap-2.5 text-[15px] font-medium text-stone-900 transition-colors hover:text-[var(--accent)]"
+                        className="flex items-center gap-3 text-[17px] font-medium text-stone-900 transition-colors hover:text-[var(--accent)]"
                       >
-                        <CollectionsIcon className="h-[18px] w-[18px] shrink-0 text-[var(--primary)]" />
+                        <CollectionsIcon className="h-[22px] w-[22px] shrink-0 text-[var(--primary)]" />
                         Collections
                       </Link>
                     </li>
@@ -1183,27 +1384,37 @@ export function SiteHeader() {
                       <Link
                         href="/shop"
                         onClick={() => setMenuOpen(false)}
-                        className="flex items-center gap-2.5 text-[15px] font-medium text-stone-900 transition-colors hover:text-[var(--accent)]"
+                        className="flex items-center gap-3 text-[17px] font-medium text-stone-900 transition-colors hover:text-[var(--accent)]"
                       >
-                        <BagIcon className="h-[18px] w-[18px] shrink-0 text-[var(--primary)]" />
+                        <BagIcon className="h-[22px] w-[22px] shrink-0 text-[var(--primary)]" />
                         Shop
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        href="/track-order"
+                        onClick={() => setMenuOpen(false)}
+                        className="flex items-center gap-3 text-[17px] font-medium text-stone-900 transition-colors hover:text-[var(--accent)]"
+                      >
+                        <TruckIcon className="h-[22px] w-[22px] shrink-0 text-[var(--primary)]" />
+                        Track Order
                       </Link>
                     </li>
                   </ul>
 
                   <div className="my-6 border-b border-stone-200" />
 
-                  <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-stone-400">
+                  <p className="mb-3 text-xs font-semibold uppercase tracking-[0.18em] text-stone-400">
                     My Account
                   </p>
-                  <ul className="space-y-5">
+                  <ul className="space-y-6">
                     <li>
                       <Link
                         href="/wishlist"
                         onClick={() => setMenuOpen(false)}
-                        className="flex items-center gap-2.5 text-[15px] font-medium text-stone-900 transition-colors hover:text-[var(--accent)]"
+                        className="flex items-center gap-3 text-[17px] font-medium text-stone-900 transition-colors hover:text-[var(--accent)]"
                       >
-                        <HeartIcon className="h-[18px] w-[18px] shrink-0 text-[var(--primary)]" />
+                        <HeartIcon className="h-[22px] w-[22px] shrink-0 text-[var(--primary)]" />
                         My Wishlist
                       </Link>
                     </li>
@@ -1220,122 +1431,236 @@ export function SiteHeader() {
         )}
       </AnimatePresence>
 
-      {/* Mobile Bottom Bar */}
-      <div className="fixed bottom-0 left-0 right-0 z-[60] px-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-2 sm:hidden">
-        <div className="rounded-full border border-white/25 bg-stone-950/78 shadow-[0_8px_32px_rgba(0,0,0,0.38)] backdrop-blur-2xl backdrop-saturate-150">
-          <div className="grid h-14 grid-cols-5 items-center px-1">
-            <Link
-              href="/"
-              onClick={closeBottomBarPanels}
-              className={`${bottomBarItemBase} ${
-                pathname === "/" && !bottomBarPanelOpen
-                  ? bottomBarItemActive
-                  : ""
-              }`}
-              aria-label="Home"
-              aria-current={pathname === "/" ? "page" : undefined}
-            >
-              <HomeIcon className="h-5 w-5" />
-              <span className="text-[9px] font-semibold uppercase tracking-wide">
-                Home
-              </span>
-            </Link>
+      {/* Mobile Bottom Bar — soft rounded dock + floating active chip */}
+      <div className="fixed bottom-0 left-0 right-0 z-[60] px-3 pb-[max(0.85rem,env(safe-area-inset-bottom))] pt-10 sm:hidden">
+        <div ref={bottomBarRef} className="relative h-[3.75rem]">
+          <svg
+            aria-hidden
+            className="pointer-events-none absolute inset-x-0 bottom-0"
+            width={dockWidth}
+            height={BOTTOM_DOCK_H}
+            overflow="visible"
+          >
+            <defs>
+              <filter
+                id="maaleen-dock-shadow"
+                x="-20%"
+                y="-40%"
+                width="140%"
+                height="180%"
+              >
+                <feDropShadow
+                  dx="0"
+                  dy="10"
+                  stdDeviation="14"
+                  floodColor="#000"
+                  floodOpacity="0.38"
+                />
+              </filter>
+            </defs>
+            <motion.path
+              d={dockPath}
+              fill="rgb(18 14 13 / 0.94)"
+              filter="url(#maaleen-dock-shadow)"
+              initial={false}
+              animate={{ d: dockPath }}
+              transition={dockSpring}
+            />
+            <motion.path
+              d={dockPath}
+              fill="none"
+              stroke="rgba(255,255,255,0.12)"
+              strokeWidth="1"
+              initial={false}
+              animate={{ d: dockPath }}
+              transition={dockSpring}
+            />
+          </svg>
 
-            <button
-              type="button"
-              onClick={() => {
-                if (wishlistOpen) {
-                  closeWishlist();
-                } else {
-                  if (cartMounted) closeCart();
-                  if (menuOpen) setMenuOpen(false);
-                  if (searchOpen) setSearchOpen(false);
-                  openWishlist();
-                }
-              }}
-              className={`${bottomBarItemBase} ${
-                wishlistOpen ? bottomBarItemActive : ""
-              }`}
-              aria-label="Wishlist"
-              aria-pressed={wishlistOpen}
+          <div
+            className="relative z-10 grid h-full grid-cols-5 items-center px-12"
+            style={iconLayerMask}
+          >
+            <div
+              data-bottom-idx="0"
+              className="relative flex h-full items-center justify-center"
             >
-              <div className="relative">
-                <HeartIcon className="h-5 w-5" />
-                {wishReady && wishCount > 0 && (
-                  <span className="absolute -right-1 -top-1 flex h-3.5 min-w-3.5 items-center justify-center rounded-full bg-[var(--secondary)] px-0.5 text-[8px] font-bold leading-none text-stone-900">
-                    {wishCount > 99 ? "99+" : wishCount}
-                  </span>
-                )}
-              </div>
-              <span className="text-[9px] font-semibold uppercase tracking-wide">
-                Saved
-              </span>
-            </button>
+              {bottomActiveIndex !== 0 ? (
+                <Link
+                  href="/"
+                  onClick={closeBottomBarPanels}
+                  className={bottomBarIdleBtn}
+                  aria-label="Home"
+                  aria-current={pathname === "/" ? "page" : undefined}
+                >
+                  <HomeIcon className="h-5 w-5" />
+                </Link>
+              ) : null}
+            </div>
 
-            <button
-              type="button"
-              onClick={() => {
-                if (cartMounted) {
-                  closeCart();
-                } else {
-                  if (wishlistOpen) closeWishlist();
-                  if (menuOpen) setMenuOpen(false);
-                  if (searchOpen) setSearchOpen(false);
-                  openCart();
-                }
-              }}
-              className={`${bottomBarItemBase} ${
-                cartMounted ? bottomBarItemActive : ""
-              }`}
-              aria-label="Cart"
-              aria-pressed={cartMounted}
+            <div
+              data-bottom-idx="1"
+              className="relative flex h-full items-center justify-center"
             >
-              <div className="relative">
-                <BagIcon className="h-5 w-5" />
-                {ready && totalItems > 0 && (
-                  <span className="absolute -right-1 -top-1 flex h-3.5 min-w-3.5 items-center justify-center rounded-full bg-[var(--secondary)] px-0.5 text-[8px] font-bold leading-none text-stone-900">
-                    {totalItems > 99 ? "99+" : totalItems}
-                  </span>
-                )}
-              </div>
-              <span className="text-[9px] font-semibold uppercase tracking-wide">
-                Bag
-              </span>
-            </button>
+              {bottomActiveIndex !== 1 ? (
+                <button
+                  type="button"
+                  onClick={openWishlistFromBar}
+                  className={bottomBarIdleBtn}
+                  aria-label="Wishlist"
+                  aria-pressed={wishlistOpen}
+                >
+                  <div className="relative">
+                    <HeartIcon className="h-5 w-5" />
+                    {wishReady && wishCount > 0 && (
+                      <span className="absolute -right-1.5 -top-1.5 flex h-3.5 min-w-3.5 items-center justify-center rounded-full bg-[var(--primary)] px-0.5 text-[8px] font-bold leading-none text-[var(--secondary)]">
+                        {wishCount > 99 ? "99+" : wishCount}
+                      </span>
+                    )}
+                  </div>
+                </button>
+              ) : null}
+            </div>
 
-            <Link
-              href={accountHref}
-              onClick={closeBottomBarPanels}
-              className={`${bottomBarItemBase} ${
-                (pathname === "/account" || pathname === "/login") &&
-                !bottomBarPanelOpen
-                  ? bottomBarItemActive
-                  : ""
-              }`}
-              aria-label={isAuthenticated ? "My account" : "Login"}
+            <div
+              data-bottom-idx="2"
+              className="relative flex h-full items-center justify-center"
             >
-              <UserIcon className="h-5 w-5" />
-              <span className="text-[9px] font-semibold uppercase tracking-wide">
-                Account
-              </span>
-            </Link>
+              {bottomActiveIndex !== 2 ? (
+                <button
+                  type="button"
+                  onClick={openCartFromBar}
+                  className={bottomBarIdleBtn}
+                  aria-label="Cart"
+                  aria-pressed={cartMounted}
+                >
+                  <div className="relative">
+                    <BagIcon className="h-5 w-5" />
+                    {ready && totalItems > 0 && (
+                      <span className="absolute -right-1.5 -top-1.5 flex h-3.5 min-w-3.5 items-center justify-center rounded-full bg-[var(--primary)] px-0.5 text-[8px] font-bold leading-none text-[var(--secondary)]">
+                        {totalItems > 99 ? "99+" : totalItems}
+                      </span>
+                    )}
+                  </div>
+                </button>
+              ) : null}
+            </div>
 
-            <button
-              type="button"
-              ref={mobileSearchTriggerRef}
-              onClick={toggleSearch}
-              className={`${bottomBarItemBase} ${
-                searchOpen ? bottomBarItemActive : ""
-              }`}
-              aria-label={searchOpen ? "Close search" : "Search"}
-              aria-expanded={searchOpen}
+            <div
+              data-bottom-idx="3"
+              className="relative flex h-full items-center justify-center"
             >
-              <SearchIcon className="h-5 w-5" />
-              <span className="text-[9px] font-semibold uppercase tracking-wide">
-                Search
-              </span>
-            </button>
+              {bottomActiveIndex !== 3 ? (
+                <Link
+                  href={accountHref}
+                  onClick={closeBottomBarPanels}
+                  className={bottomBarIdleBtn}
+                  aria-label={isAuthenticated ? "My account" : "Login"}
+                >
+                  <UserIcon className="h-5 w-5" />
+                </Link>
+              ) : null}
+            </div>
+
+            <div
+              data-bottom-idx="4"
+              className="relative flex h-full items-center justify-center"
+            >
+              {bottomActiveIndex !== 4 ? (
+                <button
+                  type="button"
+                  ref={mobileSearchTriggerRef}
+                  onClick={toggleSearch}
+                  className={bottomBarIdleBtn}
+                  aria-label={searchOpen ? "Close search" : "Search"}
+                  aria-expanded={searchOpen}
+                >
+                  <SearchIcon className="h-5 w-5" />
+                </button>
+              ) : null}
+            </div>
           </div>
+
+          {notchX != null && bottomActiveIndex >= 0 ? (
+            <motion.div
+              className="absolute top-0 z-30"
+              initial={false}
+              animate={{ left: notchX }}
+              transition={dockSpring}
+            >
+              <div className="absolute left-0 top-0 -translate-x-1/2 -translate-y-1/2">
+                {bottomActiveIndex === 0 ? (
+                  <Link
+                    href="/"
+                    onClick={closeBottomBarPanels}
+                    className={bottomBarActiveChip}
+                    aria-label="Home"
+                    aria-current="page"
+                  >
+                    <HomeIcon className="h-5 w-5" />
+                  </Link>
+                ) : null}
+                {bottomActiveIndex === 1 ? (
+                  <button
+                    type="button"
+                    onClick={openWishlistFromBar}
+                    className={bottomBarActiveChip}
+                    aria-label="Wishlist"
+                    aria-pressed={wishlistOpen}
+                  >
+                    <div className="relative">
+                      <HeartIcon className="h-5 w-5" />
+                      {wishReady && wishCount > 0 && (
+                        <span className="absolute -right-1.5 -top-1.5 flex h-3.5 min-w-3.5 items-center justify-center rounded-full bg-[var(--primary)] px-0.5 text-[8px] font-bold leading-none text-[var(--secondary)]">
+                          {wishCount > 99 ? "99+" : wishCount}
+                        </span>
+                      )}
+                    </div>
+                  </button>
+                ) : null}
+                {bottomActiveIndex === 2 ? (
+                  <button
+                    type="button"
+                    onClick={openCartFromBar}
+                    className={bottomBarActiveChip}
+                    aria-label="Cart"
+                    aria-pressed={cartMounted}
+                  >
+                    <div className="relative">
+                      <BagIcon className="h-5 w-5" />
+                      {ready && totalItems > 0 && (
+                        <span className="absolute -right-1.5 -top-1.5 flex h-3.5 min-w-3.5 items-center justify-center rounded-full bg-[var(--primary)] px-0.5 text-[8px] font-bold leading-none text-[var(--secondary)]">
+                          {totalItems > 99 ? "99+" : totalItems}
+                        </span>
+                      )}
+                    </div>
+                  </button>
+                ) : null}
+                {bottomActiveIndex === 3 ? (
+                  <Link
+                    href={accountHref}
+                    onClick={closeBottomBarPanels}
+                    className={bottomBarActiveChip}
+                    aria-label={isAuthenticated ? "My account" : "Login"}
+                  >
+                    <UserIcon className="h-5 w-5" />
+                  </Link>
+                ) : null}
+                {bottomActiveIndex === 4 ? (
+                  <button
+                    type="button"
+                    ref={mobileSearchTriggerRef}
+                    onClick={toggleSearch}
+                    className={bottomBarActiveChip}
+                    aria-label={searchOpen ? "Close search" : "Search"}
+                    aria-expanded={searchOpen}
+                  >
+                    <SearchIcon className="h-5 w-5" />
+                  </button>
+                ) : null}
+              </div>
+            </motion.div>
+          ) : null}
         </div>
       </div>
     </>

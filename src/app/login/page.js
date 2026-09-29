@@ -1,4 +1,4 @@
-import { Container } from "@/components/layout/container";
+import { AuthShell } from "@/components/auth/auth-shell";
 import { LoginPanel } from "@/components/auth/login-panel";
 
 export const metadata = {
@@ -7,10 +7,8 @@ export const metadata = {
 
 export default function LoginPage() {
   return (
-    <section className="w-full py-10 sm:py-16">
-      <Container>
-        <LoginPanel />
-      </Container>
-    </section>
+    <AuthShell imageAlt="Maaleen fashion editorial">
+      <LoginPanel />
+    </AuthShell>
   );
 }

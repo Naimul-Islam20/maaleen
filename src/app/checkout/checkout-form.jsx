@@ -13,7 +13,7 @@ export function CheckoutForm() {
 
   if (sent) {
     return (
-      <div className="rounded-xl border border-stone-200 bg-[var(--surface-elevated)] p-8 text-center shadow-sm">
+      <div className="rounded-xl border border-[var(--primary)] bg-[var(--surface-elevated)] p-8 text-center shadow-sm">
         <p className="font-[family-name:var(--font-display)] text-2xl text-stone-900">
           Thank you
         </p>
@@ -34,7 +34,7 @@ export function CheckoutForm() {
   return (
     <form
       onSubmit={handleSubmit}
-      className="space-y-6 rounded-xl border border-stone-200 bg-[var(--surface-elevated)] p-6 shadow-sm sm:p-8"
+      className="space-y-6 rounded-xl border border-[var(--primary)] bg-[var(--surface-elevated)] p-6 shadow-sm sm:p-8"
     >
       <p className="text-sm text-stone-600">
         This form is UI-only. Orders are not processed until your API is
@@ -47,7 +47,7 @@ export function CheckoutForm() {
             required
             name="firstName"
             autoComplete="given-name"
-            className="mt-1 w-full rounded-lg border border-stone-200 px-3 py-2.5 text-sm text-stone-900 focus:border-[var(--accent)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/25"
+            className="mt-1 w-full rounded-lg border border-[var(--primary)] px-3 py-2.5 text-sm text-stone-900 focus:border-[var(--primary)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)]/25"
           />
         </label>
         <label className="block text-xs font-medium text-stone-500">
@@ -56,7 +56,7 @@ export function CheckoutForm() {
             required
             name="lastName"
             autoComplete="family-name"
-            className="mt-1 w-full rounded-lg border border-stone-200 px-3 py-2.5 text-sm text-stone-900 focus:border-[var(--accent)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/25"
+            className="mt-1 w-full rounded-lg border border-[var(--primary)] px-3 py-2.5 text-sm text-stone-900 focus:border-[var(--primary)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)]/25"
           />
         </label>
       </div>
@@ -67,7 +67,7 @@ export function CheckoutForm() {
           type="email"
           name="email"
           autoComplete="email"
-          className="mt-1 w-full rounded-lg border border-stone-200 px-3 py-2.5 text-sm text-stone-900 focus:border-[var(--accent)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/25"
+          className="mt-1 w-full rounded-lg border border-[var(--primary)] px-3 py-2.5 text-sm text-stone-900 focus:border-[var(--primary)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)]/25"
         />
       </label>
       <label className="block text-xs font-medium text-stone-500">
@@ -76,7 +76,7 @@ export function CheckoutForm() {
           required
           name="address"
           autoComplete="street-address"
-          className="mt-1 w-full rounded-lg border border-stone-200 px-3 py-2.5 text-sm text-stone-900 focus:border-[var(--accent)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/25"
+          className="mt-1 w-full rounded-lg border border-[var(--primary)] px-3 py-2.5 text-sm text-stone-900 focus:border-[var(--primary)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)]/25"
         />
       </label>
       <label className="block text-xs font-medium text-stone-500">
@@ -85,7 +85,7 @@ export function CheckoutForm() {
           required
           name="city"
           autoComplete="address-level2"
-          className="mt-1 w-full rounded-lg border border-stone-200 px-3 py-2.5 text-sm text-stone-900 focus:border-[var(--accent)] focus:outline-none focus:ring-2 focus:ring-[var(--accent)]/25"
+          className="mt-1 w-full rounded-lg border border-[var(--primary)] px-3 py-2.5 text-sm text-stone-900 focus:border-[var(--primary)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)]/25"
         />
       </label>
       <button

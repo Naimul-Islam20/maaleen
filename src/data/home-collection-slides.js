@@ -62,3 +62,9 @@ export const HOME_COLLECTION_SLIDES = [
     },
   },
 ];
+
+/** Flat list for the collections page mosaic grid. */
+export const HOME_COLLECTION_ITEMS = HOME_COLLECTION_SLIDES.flatMap((slide) => [
+  slide.left,
+  slide.right,
+]);

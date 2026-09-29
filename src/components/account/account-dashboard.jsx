@@ -72,7 +72,7 @@ function ProfileSection({ user }) {
                 onChange={(event) =>
                   setForm((current) => ({ ...current, name: event.target.value }))
                 }
-                className="rounded-md border border-stone-200 px-3 py-2 text-sm text-stone-900 outline-none focus:border-[var(--primary)]"
+                className="rounded-md border border-[var(--primary)] px-3 py-2 text-sm text-stone-900 outline-none focus:border-[var(--primary)]"
               />
             </label>
             <label className="grid gap-2 px-5 py-4 sm:grid-cols-[140px_1fr] sm:items-center">
@@ -83,7 +83,7 @@ function ProfileSection({ user }) {
                 onChange={(event) =>
                   setForm((current) => ({ ...current, email: event.target.value }))
                 }
-                className="rounded-md border border-stone-200 px-3 py-2 text-sm text-stone-900 outline-none focus:border-[var(--primary)]"
+                className="rounded-md border border-[var(--primary)] px-3 py-2 text-sm text-stone-900 outline-none focus:border-[var(--primary)]"
               />
             </label>
             <label className="grid gap-2 px-5 py-4 sm:grid-cols-[140px_1fr] sm:items-center">
@@ -94,7 +94,7 @@ function ProfileSection({ user }) {
                 onChange={(event) =>
                   setForm((current) => ({ ...current, phone: event.target.value }))
                 }
-                className="rounded-md border border-stone-200 px-3 py-2 text-sm text-stone-900 outline-none focus:border-[var(--primary)]"
+                className="rounded-md border border-[var(--primary)] px-3 py-2 text-sm text-stone-900 outline-none focus:border-[var(--primary)]"
               />
             </label>
             <div className="flex justify-end px-5 py-4">
@@ -141,7 +141,7 @@ function ProfileSection({ user }) {
                     current: event.target.value,
                   }))
                 }
-                className="rounded-md border border-stone-200 px-3 py-2 text-sm text-stone-900 outline-none focus:border-[var(--primary)]"
+                className="rounded-md border border-[var(--primary)] px-3 py-2 text-sm text-stone-900 outline-none focus:border-[var(--primary)]"
               />
             </label>
             <label className="grid gap-2 px-5 py-4 sm:grid-cols-[140px_1fr] sm:items-center">
@@ -155,7 +155,7 @@ function ProfileSection({ user }) {
                     next: event.target.value,
                   }))
                 }
-                className="rounded-md border border-stone-200 px-3 py-2 text-sm text-stone-900 outline-none focus:border-[var(--primary)]"
+                className="rounded-md border border-[var(--primary)] px-3 py-2 text-sm text-stone-900 outline-none focus:border-[var(--primary)]"
               />
             </label>
             <label className="grid gap-2 px-5 py-4 sm:grid-cols-[140px_1fr] sm:items-center">
@@ -169,7 +169,7 @@ function ProfileSection({ user }) {
                     confirm: event.target.value,
                   }))
                 }
-                className="rounded-md border border-stone-200 px-3 py-2 text-sm text-stone-900 outline-none focus:border-[var(--primary)]"
+                className="rounded-md border border-[var(--primary)] px-3 py-2 text-sm text-stone-900 outline-none focus:border-[var(--primary)]"
               />
             </label>
             <div className="flex justify-end gap-3 px-5 py-4">
@@ -179,7 +179,7 @@ function ProfileSection({ user }) {
                   setChangingPassword(false);
                   setPasswordForm({ current: "", next: "", confirm: "" });
                 }}
-                className="inline-flex items-center justify-center rounded-md border border-stone-200 px-4 py-2 text-sm font-semibold text-stone-700 transition-colors hover:border-stone-300"
+                className="inline-flex items-center justify-center rounded-md border border-[var(--primary)] px-4 py-2 text-sm font-semibold text-stone-700 transition-colors hover:opacity-80"
               >
                 Cancel
               </button>

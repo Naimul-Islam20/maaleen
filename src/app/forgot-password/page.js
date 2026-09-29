@@ -9,7 +9,7 @@ export default function ForgotPasswordPage() {
   return (
     <section className="w-full py-14 sm:py-20">
       <Container>
-        <div className="mx-auto max-w-md rounded-2xl border border-stone-200 bg-white p-6 shadow-sm sm:p-8">
+        <div className="mx-auto max-w-md rounded-2xl border border-[var(--primary)] bg-[var(--background)] p-6 shadow-sm sm:p-8">
           <h1 className="font-[family-name:var(--font-display)] text-3xl text-stone-900 sm:text-4xl">
             Reset Password
           </h1>
@@ -30,7 +30,7 @@ export default function ForgotPasswordPage() {
                 id="email"
                 type="email"
                 placeholder="you@example.com"
-                className="mt-2 w-full rounded-lg border border-stone-300 px-3 py-2.5 text-sm text-stone-900 outline-none transition-colors focus:border-[var(--accent)]"
+                className="mt-2 w-full rounded-lg border border-[var(--primary)] px-3 py-2.5 text-sm text-stone-900 outline-none transition-colors focus:border-[var(--primary)]"
               />
             </div>
 

@@ -122,7 +122,7 @@ export default function ContactPage() {
             <input
               id="name"
               type="text"
-              className="mt-2 w-full rounded-md border border-stone-300 bg-white px-3 py-2 text-sm text-stone-900 shadow-sm focus:border-[var(--accent)] focus:outline-none focus:ring-1 focus:ring-[var(--accent)]"
+              className="mt-2 w-full rounded-md border border-[var(--primary)] bg-white px-3 py-2 text-sm text-stone-900 shadow-sm focus:border-[var(--primary)] focus:outline-none focus:ring-1 focus:ring-[var(--primary)]"
               placeholder="Your name"
             />
           </div>
@@ -137,7 +137,7 @@ export default function ContactPage() {
             <input
               id="email"
               type="email"
-              className="mt-2 w-full rounded-md border border-stone-300 bg-white px-3 py-2 text-sm text-stone-900 shadow-sm focus:border-[var(--accent)] focus:outline-none focus:ring-1 focus:ring-[var(--accent)]"
+              className="mt-2 w-full rounded-md border border-[var(--primary)] bg-white px-3 py-2 text-sm text-stone-900 shadow-sm focus:border-[var(--primary)] focus:outline-none focus:ring-1 focus:ring-[var(--primary)]"
               placeholder="you@example.com"
             />
           </div>
@@ -152,7 +152,7 @@ export default function ContactPage() {
             <input
               id="subject"
               type="text"
-              className="mt-2 w-full rounded-md border border-stone-300 bg-white px-3 py-2 text-sm text-stone-900 shadow-sm focus:border-[var(--accent)] focus:outline-none focus:ring-1 focus:ring-[var(--accent)]"
+              className="mt-2 w-full rounded-md border border-[var(--primary)] bg-white px-3 py-2 text-sm text-stone-900 shadow-sm focus:border-[var(--primary)] focus:outline-none focus:ring-1 focus:ring-[var(--primary)]"
               placeholder="What is your message about?"
             />
           </div>
@@ -167,7 +167,7 @@ export default function ContactPage() {
             <textarea
               id="message"
               rows={5}
-              className="mt-2 w-full rounded-md border border-stone-300 bg-white px-3 py-2 text-sm text-stone-900 shadow-sm focus:border-[var(--accent)] focus:outline-none focus:ring-1 focus:ring-[var(--accent)]"
+              className="mt-2 w-full rounded-md border border-[var(--primary)] bg-white px-3 py-2 text-sm text-stone-900 shadow-sm focus:border-[var(--primary)] focus:outline-none focus:ring-1 focus:ring-[var(--primary)]"
               placeholder="Write your message here..."
             />
           </div>

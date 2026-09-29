@@ -11,28 +11,30 @@
   --surface-elevated: #ffffff;
 }
 
-/* Mobile (<640px) */
+/* Fluid site width: fills viewport on large PCs; only side padding constrains */
 .maaleen-container {
   width: 100%;
+  max-width: none;
   margin-inline: auto;
   box-sizing: border-box;
-  max-width: 100%;
   padding-inline: 0.75rem;
 }
 
-/* Tablet (640px–1023px) */
 @media (min-width: 640px) {
   .maaleen-container {
-    max-width: 48rem;
     padding-inline: 1.5rem;
   }
 }
 
-/* Desktop (1024px+) */
 @media (min-width: 1024px) {
   .maaleen-container {
-    max-width: 86rem;
     padding-inline: 2rem;
+  }
+}
+
+@media (min-width: 1536px) {
+  .maaleen-container {
+    padding-inline: 2.5rem;
   }
 }
 
@@ -156,11 +158,7 @@ body {
     right: 0;
     top: 100%;
     height: calc(4rem + env(safe-area-inset-bottom, 0px));
-    background-color: var(--accent);
-    background-image: url("/Maaleen-bg.png");
-    background-repeat: repeat;
-    background-size: 780px auto;
-    background-position: top center;
+    background-color: var(--primary);
     pointer-events: none;
   }
 }

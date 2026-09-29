@@ -25,7 +25,7 @@ function CloseIcon({ className = "h-5 w-5" }) {
 }
 
 const inputClassName =
-  "mt-1 w-full rounded-lg border border-stone-200 bg-white px-3 py-2.5 text-sm text-stone-900 outline-none focus:border-[var(--primary)] focus:ring-2 focus:ring-[var(--primary)]/15";
+  "mt-1 w-full rounded-lg border border-[var(--primary)] bg-white px-3 py-2.5 text-sm text-stone-900 outline-none focus:border-[var(--primary)] focus:ring-2 focus:ring-[var(--primary)]/15";
 
 function createEmptyForm(country) {
   return {
@@ -142,11 +142,11 @@ export function AddAddressModal({ open, onClose, onSave }) {
                   <span className="block text-sm font-medium text-stone-700">
                     Phone Number
                   </span>
-                  <div className="mt-1 flex overflow-hidden rounded-lg border border-stone-200 bg-white focus-within:border-[var(--primary)] focus-within:ring-2 focus-within:ring-[var(--primary)]/15">
-                    <span className="inline-flex items-center border-r border-stone-200 bg-stone-50 px-3 text-sm text-stone-600">
+                  <div className="mt-1 flex overflow-hidden rounded-lg border border-[var(--primary)] bg-white focus-within:border-[var(--primary)] focus-within:ring-2 focus-within:ring-[var(--primary)]/15">
+                    <span className="inline-flex items-center border-r border-[var(--primary)] bg-stone-50 px-3 text-sm text-stone-600">
                       {country.label}
                     </span>
-                    <span className="inline-flex items-center border-r border-stone-200 bg-stone-50 px-3 text-sm text-stone-600">
+                    <span className="inline-flex items-center border-r border-[var(--primary)] bg-stone-50 px-3 text-sm text-stone-600">
                       {country.dialCode}
                     </span>
                     <input
@@ -213,7 +213,7 @@ export function AddAddressModal({ open, onClose, onSave }) {
                     onChange={(event) =>
                       updateField("isDefault", event.target.checked)
                     }
-                    className="h-4 w-4 rounded border-stone-300 text-[var(--primary)] focus:ring-[var(--primary)]"
+                    className="h-4 w-4 rounded border-[var(--primary)] text-[var(--primary)] focus:ring-[var(--primary)]"
                   />
                   Set default address
                 </label>
@@ -223,7 +223,7 @@ export function AddAddressModal({ open, onClose, onSave }) {
                 <button
                   type="button"
                   onClick={onClose}
-                  className="inline-flex items-center justify-center rounded-md border border-stone-200 px-5 py-2.5 text-sm font-semibold text-stone-700 transition-colors hover:border-stone-300"
+                  className="inline-flex items-center justify-center rounded-md border border-[var(--primary)] px-5 py-2.5 text-sm font-semibold text-stone-700 transition-colors hover:opacity-80"
                 >
                   Cancel
                 </button>

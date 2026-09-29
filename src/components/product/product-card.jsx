@@ -62,12 +62,12 @@ export function ProductCard({ product }) {
             ) : null}
           </div>
         </div>
-        <div className="mt-3 space-y-1">
+        <div className="mt-3 space-y-1 text-center">
           <h2 className="font-medium text-stone-900 transition-colors group-hover:text-[var(--accent)]">
             {product.name}
           </h2>
           <ProductSizeOptions product={product} showLegend={false} compact />
-          <div className="flex flex-wrap items-baseline gap-2">
+          <div className="flex flex-wrap items-baseline justify-center gap-2">
             <span className="text-sm text-stone-800">
               {formatPrice(product.price, product.currency)}
             </span>
@@ -117,9 +117,9 @@ export function ProductCardSkeleton() {
         <div className="absolute right-2 top-2 h-11 w-11 rounded-full bg-stone-100/80" />
       </div>
       <div className="mt-3 space-y-1">
-        <div className="h-4 w-3/4 rounded bg-stone-200" />
-        <div className="h-3 w-1/2 rounded bg-stone-200" />
-        <div className="h-3.5 w-1/4 rounded bg-stone-200" />
+        <div className="mx-auto h-4 w-3/4 rounded bg-stone-200" />
+        <div className="mx-auto h-3 w-1/2 rounded bg-stone-200" />
+        <div className="mx-auto h-3.5 w-1/4 rounded bg-stone-200" />
       </div>
     </div>
   );
