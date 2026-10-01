@@ -1,17 +1,18 @@
 export const DEMO_USER = {
-  id: "demo-1",
-  name: "Naimul Islam",
-  email: "naimulislam8828@gmail.com",
-  password: "11111111",
-  phone: "1786493740",
-  otp: "111111",
+  id: "admin-1",
+  name: "Admin",
+  email: "admin@gmail.com",
+  password: "11111",
+  phone: null,
+  otp: null,
 };
 
 export function validateEmailLogin(email, password) {
   const normalizedEmail = email.trim().toLowerCase();
+  const normalizedPassword = String(password ?? "").trim();
   if (
     normalizedEmail === DEMO_USER.email.toLowerCase() &&
-    password === DEMO_USER.password
+    normalizedPassword === DEMO_USER.password
   ) {
     return {
       id: DEMO_USER.id,
@@ -23,15 +24,7 @@ export function validateEmailLogin(email, password) {
   return null;
 }
 
-export function validatePhoneOtp(phone, otp) {
-  const digits = phone.replace(/\D/g, "").slice(-10);
-  if (digits.length === 10 && otp === DEMO_USER.otp) {
-    return {
-      id: DEMO_USER.id,
-      name: DEMO_USER.name,
-      email: DEMO_USER.email,
-      phone: digits,
-    };
-  }
+/** Phone login disabled — only email admin@gmail.com works. */
+export function validatePhoneOtp() {
   return null;
 }

@@ -56,7 +56,7 @@ function LoginPanelContent() {
   const redirectTo = searchParams.get("redirect") || "/account";
   const { loginWithEmail, loginWithPhoneOtp, isAuthenticated, ready } = useAuth();
 
-  const [mode, setMode] = useState(null);
+  const [mode, setMode] = useState("email");
   const [phoneStep, setPhoneStep] = useState("phone");
   const [phone, setPhone] = useState("");
   const [otp, setOtp] = useState("");
@@ -95,14 +95,7 @@ function LoginPanelContent() {
 
   const handleSendOtp = (event) => {
     event.preventDefault();
-    resetError();
-    const digits = phone.replace(/\D/g, "");
-    if (digits.length !== 10) {
-      setError("Enter a valid 10-digit phone number.");
-      return;
-    }
-    setPhoneStep("otp");
-    setOtpTimer(60);
+    setError("Phone login is disabled. Use Login with Email.");
   };
 
   const handleVerifyOtp = (event) => {

@@ -11,12 +11,15 @@ export function SiteFooter() {
   const isAuthPage = pathname === "/login" || pathname === "/signup";
   const footerDividerClass = "border-t border-[var(--secondary)]";
 
+  if (pathname === "/account") return null;
+
   return (
     <footer
       className={`maaleen-footer-mobile-extend bg-[var(--primary)] pt-16 pb-9 text-[var(--secondary)] sm:pt-16 sm:pb-8 ${
         isAuthPage ? "mt-0" : "mt-16"
       }`}
-    >      <Container>
+    >
+      <Container>
         <div className="grid grid-cols-1 gap-x-8 gap-y-12 text-center max-sm:gap-y-0 sm:grid-cols-2 lg:grid-cols-3 lg:gap-8">
           {/* INFORMATION */}
           <div className="max-sm:pb-6">

@@ -645,6 +645,8 @@ export function SiteHeader() {
     }
   };
 
+  if (pathname === "/account") return null;
+
   return (
     <>
       <header className="sticky top-0 z-40 bg-[var(--primary)]">

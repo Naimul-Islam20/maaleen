@@ -8,7 +8,7 @@ import {
   useMemo,
   useState,
 } from "react";
-import { validateEmailLogin, validatePhoneOtp } from "@/lib/demo-auth";
+import { validateEmailLogin } from "@/lib/demo-auth";
 
 const STORAGE_KEY = "maaleen-auth";
 
@@ -44,11 +44,11 @@ export function AuthProvider({ children }) {
     return { ok: true };
   }, []);
 
-  const loginWithPhoneOtp = useCallback((phone, otp) => {
-    const account = validatePhoneOtp(phone, otp);
-    if (!account) return { ok: false, error: "Invalid phone number or OTP." };
-    setUser(account);
-    return { ok: true };
+  const loginWithPhoneOtp = useCallback(() => {
+    return {
+      ok: false,
+      error: "Phone login is disabled. Use email: admin@gmail.com",
+    };
   }, []);
 
   const logout = useCallback(() => {
