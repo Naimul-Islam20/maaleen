@@ -592,9 +592,9 @@ function AccountDetailView({ onBack }) {
   ];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-5">
       {/* Top Bar with Back Link & Action Buttons */}
-      <div className="flex flex-wrap items-center justify-between gap-4">
+      <div className="flex flex-wrap items-center justify-between gap-2">
         <button
           type="button"
           onClick={onBack}
@@ -603,24 +603,24 @@ function AccountDetailView({ onBack }) {
           <span className="text-base font-bold">‹</span> My Account
         </button>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5 sm:gap-2">
           <button
             type="button"
-            className="flex items-center gap-1.5 rounded-xl border border-[#370006]/30 bg-white px-3 py-1.5 text-xs font-semibold text-[#370006] shadow-2xs hover:bg-[#fff9f5] transition"
+            className="flex items-center gap-1 sm:gap-1.5 rounded-xl border border-[#370006]/30 bg-white px-2.5 sm:px-3 py-1.5 text-[11px] sm:text-xs font-semibold text-[#370006] shadow-2xs hover:bg-[#fff9f5] transition"
           >
             <span>+</span> Redeem Gift Card
           </button>
           <button
             type="button"
-            className="flex items-center gap-1.5 rounded-xl border border-stone-200 bg-white px-3 py-1.5 text-xs font-semibold text-stone-700 shadow-2xs hover:bg-stone-50 transition"
+            className="flex items-center gap-1 sm:gap-1.5 rounded-xl border border-stone-200 bg-white px-2.5 sm:px-3 py-1.5 text-[11px] sm:text-xs font-semibold text-stone-700 shadow-2xs hover:bg-stone-50 transition"
           >
-            <IconGear className="h-3.5 w-3.5 text-stone-500" /> Settings
+            <IconGear className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-stone-500" /> Settings
           </button>
         </div>
       </div>
 
       {/* Main Two-Column Layout */}
-      <div className="grid gap-6 lg:grid-cols-12 items-start">
+      <div className="grid gap-4 sm:gap-5 lg:grid-cols-12 items-start">
         {/* Left Column: Accounts & Cards Selector */}
         <div className="space-y-4 lg:col-span-4 xl:col-span-4">
           <div>
@@ -689,9 +689,9 @@ function AccountDetailView({ onBack }) {
         </div>
 
         {/* Right Main Column: Passbook Card, Tabs & Details */}
-        <div className="space-y-5 lg:col-span-8 xl:col-span-8">
+        <div className="space-y-4 sm:space-y-5 lg:col-span-8 xl:col-span-8">
           {/* Top Account Passbook Hero Card */}
-          <div className="relative overflow-hidden rounded-3xl border border-[#c59e75]/30 bg-gradient-to-r from-[#370006] via-[#4a080e] to-[#2c0005] p-6 text-white shadow-md">
+          <div className="relative overflow-hidden rounded-2xl sm:rounded-3xl border border-[#c59e75]/30 bg-gradient-to-r from-[#370006] via-[#4a080e] to-[#2c0005] p-5 sm:p-6 text-white shadow-md">
             <div className="flex items-start justify-between">
               <div>
                 <p className="text-xs font-extrabold uppercase tracking-widest text-[#c59e75]">MAALEEN STORE CREDIT</p>
@@ -702,19 +702,19 @@ function AccountDetailView({ onBack }) {
               </div>
             </div>
 
-            <div className="mt-8">
+            <div className="mt-6 sm:mt-8">
               <p className="text-[11px] font-medium text-stone-300">Available Credit Balance</p>
-              <p className="text-2xl font-black text-white sm:text-3xl">৳ 2,500.00</p>
+              <p className="text-xl font-black text-white sm:text-3xl">৳ 2,500.00</p>
             </div>
           </div>
 
           {/* Navigation Tabs (Account Details | Transactions) */}
           <div className="border-b border-stone-200">
-            <div className="flex gap-8">
+            <div className="flex gap-6 sm:gap-8">
               <button
                 type="button"
                 onClick={() => setActiveTab("details")}
-                className={`pb-3 text-xs font-bold transition border-b-2 ${
+                className={`pb-2.5 sm:pb-3 text-xs font-bold transition border-b-2 ${
                   activeTab === "details"
                     ? "border-[#370006] text-[#370006]"
                     : "border-transparent text-stone-500 hover:text-stone-800"
@@ -725,7 +725,7 @@ function AccountDetailView({ onBack }) {
               <button
                 type="button"
                 onClick={() => setActiveTab("transactions")}
-                className={`pb-3 text-xs font-bold transition border-b-2 ${
+                className={`pb-2.5 sm:pb-3 text-xs font-bold transition border-b-2 ${
                   activeTab === "transactions"
                     ? "border-[#370006] text-[#370006]"
                     : "border-transparent text-stone-500 hover:text-stone-800"
@@ -738,8 +738,8 @@ function AccountDetailView({ onBack }) {
 
           {/* Tab 1: Account Details Content */}
           {activeTab === "details" ? (
-            <div className="rounded-2xl border border-[#eee7e1] bg-white p-5 shadow-2xs">
-              <div className="grid gap-4 sm:grid-cols-2">
+            <div className="rounded-2xl border border-[#eee7e1] bg-white p-4 sm:p-5 shadow-2xs">
+              <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2">
                 <div>
                   <p className="text-[11px] font-medium text-stone-400">Membership Tier</p>
                   <p className="text-xs font-bold text-[#370006]">BRONZE MEMBER</p>
@@ -759,7 +759,7 @@ function AccountDetailView({ onBack }) {
             <div className="overflow-hidden rounded-2xl border border-[#eee7e1] bg-white shadow-2xs">
               <div className="divide-y divide-stone-100">
                 {transactions.map((tx) => (
-                  <div key={tx.id} className="flex items-center justify-between p-4 text-xs">
+                  <div key={tx.id} className="flex items-center justify-between p-3.5 sm:p-4 text-xs">
                     <div>
                       <p className="font-bold text-stone-800">{tx.title}</p>
                       <p className="text-[10px] text-stone-400">{tx.date}</p>
@@ -774,17 +774,17 @@ function AccountDetailView({ onBack }) {
           )}
 
           {/* Bottom Action Cards - EXACT SCREENSHOT MATCH */}
-          <div className="grid gap-3 sm:grid-cols-2">
+          <div className="grid gap-3 grid-cols-1 sm:grid-cols-2">
             <button
               type="button"
-              className="flex items-center justify-center gap-2.5 rounded-2xl border border-[#eee7e1] bg-white p-4 shadow-2xs transition hover:bg-[#fff9f5] hover:border-[#370006]/30 group"
+              className="flex items-center justify-center gap-2.5 rounded-2xl border border-[#eee7e1] bg-white p-3.5 sm:p-4 shadow-2xs transition hover:bg-[#fff9f5] hover:border-[#370006]/30 group"
             >
               <IconChequeBook className="h-5 w-5 text-[#370006] transition group-hover:scale-110" />
               <span className="text-xs font-bold text-stone-800">Cheque Management</span>
             </button>
             <button
               type="button"
-              className="flex items-center justify-center gap-2.5 rounded-2xl border border-[#eee7e1] bg-white p-4 shadow-2xs transition hover:bg-[#fff9f5] hover:border-[#370006]/30 group"
+              className="flex items-center justify-center gap-2.5 rounded-2xl border border-[#eee7e1] bg-white p-3.5 sm:p-4 shadow-2xs transition hover:bg-[#fff9f5] hover:border-[#370006]/30 group"
             >
               <IconShareNetwork className="h-5 w-5 text-[#370006] transition group-hover:scale-110" />
               <span className="text-xs font-bold text-stone-800">Share Account Details</span>
@@ -803,18 +803,18 @@ function DashboardHomeView({ onNavigate, wishCount }) {
   const [showCardBal, setShowCardBal] = useState(false);
 
   return (
-    <div className="grid gap-6 lg:grid-cols-12 items-start">
+    <div className="w-full grid gap-4 sm:gap-5 lg:gap-6 lg:grid-cols-12 items-start">
       {/* LEFT MAIN COLUMN (spans 8 of 12 cols on desktop) */}
-      <div className="space-y-6 lg:col-span-8 xl:col-span-8">
+      <div className="w-full min-w-0 space-y-4 sm:space-y-5 lg:col-span-8 xl:col-span-8">
         {/* TOP CARDS ROW (Maaleen Rewards, Store Credit, View All) */}
-        <div className="grid gap-4 sm:grid-cols-12">
+        <div className="grid grid-cols-2 gap-2.5 sm:gap-3">
           {/* Account Card 1: Maaleen Rewards */}
           <div
             onClick={() => onNavigate("account-detail")}
-            className="sm:col-span-5 flex flex-col justify-between rounded-2xl border border-[#eee7e1] bg-white p-4 shadow-xs transition hover:shadow-md cursor-pointer group"
+            className="flex flex-col justify-between rounded-2xl border border-[#eee7e1] bg-white p-3 shadow-xs transition hover:shadow-md cursor-pointer group min-w-0"
           >
             <div className="flex items-center justify-between">
-              <span className="text-sm font-bold tracking-wide text-[#370006]">
+              <span className="text-xs font-bold tracking-wide text-[#370006] truncate">
                 {showAccountBal ? "1,450 PTS" : "bxxxx.xx"}
               </span>
               <button
@@ -823,19 +823,19 @@ function DashboardHomeView({ onNavigate, wishCount }) {
                   e.stopPropagation();
                   setShowAccountBal((v) => !v);
                 }}
-                className="text-stone-400 transition hover:text-[#370006]"
+                className="ml-1 shrink-0 text-stone-400 transition hover:text-[#370006]"
                 aria-label="Toggle points visibility"
               >
-                {showAccountBal ? <IconEye className="h-4 w-4" /> : <IconEyeSlash className="h-4 w-4" />}
+                {showAccountBal ? <IconEye className="h-3.5 w-3.5" /> : <IconEyeSlash className="h-3.5 w-3.5" />}
               </button>
             </div>
-            <div className="mt-5 flex items-center gap-3">
-              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#370006] text-white font-bold text-xs shadow-xs">
+            <div className="mt-3 flex items-center gap-2">
+              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#370006] text-white font-bold text-xs shadow-xs">
                 ★
               </div>
-              <div>
-                <p className="text-[11px] font-bold uppercase tracking-wider text-stone-800 group-hover:text-[#370006] transition">MAALEEN REWARDS</p>
-                <p className="text-[11px] text-[#c59e75] font-semibold">Bronze Member</p>
+              <div className="min-w-0">
+                <p className="text-[10px] font-bold uppercase tracking-wide text-stone-800 group-hover:text-[#370006] transition truncate">MAALEEN REWARDS</p>
+                <p className="text-[10px] text-[#c59e75] font-semibold truncate">Bronze Member</p>
               </div>
             </div>
           </div>
@@ -843,11 +843,11 @@ function DashboardHomeView({ onNavigate, wishCount }) {
           {/* Account Card 2: Store Credit */}
           <div
             onClick={() => onNavigate("account-detail")}
-            className="sm:col-span-5 flex flex-col justify-between rounded-2xl border border-[#eee7e1] bg-white p-4 shadow-xs transition hover:shadow-md cursor-pointer group"
+            className="flex flex-col justify-between rounded-2xl border border-[#eee7e1] bg-white p-3 shadow-xs transition hover:shadow-md cursor-pointer group min-w-0"
           >
             <div className="flex items-center justify-between">
-              <span className="text-sm font-bold tracking-wide text-[#370006]">
-                {showCardBal ? "৳ 2,500.00" : "bxxxx.xx"}
+              <span className="text-xs font-bold tracking-wide text-[#370006] truncate">
+                {showCardBal ? "৳ 2,500" : "bxxxx.xx"}
               </span>
               <button
                 type="button"
@@ -855,51 +855,51 @@ function DashboardHomeView({ onNavigate, wishCount }) {
                   e.stopPropagation();
                   setShowCardBal((v) => !v);
                 }}
-                className="text-stone-400 transition hover:text-[#370006]"
+                className="ml-1 shrink-0 text-stone-400 transition hover:text-[#370006]"
                 aria-label="Toggle credit visibility"
               >
-                {showCardBal ? <IconEye className="h-4 w-4" /> : <IconEyeSlash className="h-4 w-4" />}
+                {showCardBal ? <IconEye className="h-3.5 w-3.5" /> : <IconEyeSlash className="h-3.5 w-3.5" />}
               </button>
             </div>
-            <div className="mt-5 flex items-center gap-3">
-              <div className="flex h-9 w-10 shrink-0 items-center justify-center rounded bg-[#c59e75] font-extrabold text-[9px] text-white tracking-tighter shadow-xs">
+            <div className="mt-3 flex items-center gap-2">
+              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded bg-[#c59e75] font-extrabold text-[8px] text-white tracking-tighter shadow-xs">
                 MLN
               </div>
-              <div>
-                <p className="text-[11px] font-bold uppercase tracking-wider text-stone-800 group-hover:text-[#370006] transition">STORE CREDIT</p>
-                <p className="text-[11px] text-stone-400">ID: MLN-89274</p>
+              <div className="min-w-0">
+                <p className="text-[10px] font-bold uppercase tracking-wide text-stone-800 group-hover:text-[#370006] transition truncate">STORE CREDIT</p>
+                <p className="text-[10px] text-stone-400 truncate">MLN-89274</p>
               </div>
             </div>
           </div>
 
-          {/* View All Pill Circle Button */}
+          {/* View All — spans full width on mobile */}
           <div
-            className="sm:col-span-2 flex items-center justify-center rounded-2xl border border-[#eee7e1] bg-white p-4 shadow-xs hover:bg-[#fff9f5] transition cursor-pointer"
+            className="col-span-2 flex items-center justify-center rounded-2xl border border-[#eee7e1] bg-white p-3 shadow-xs hover:bg-[#fff9f5] transition cursor-pointer"
             onClick={() => onNavigate("account-detail")}
           >
-            <div className="flex flex-col items-center gap-1.5 text-center">
-              <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[#370006]/10 text-[#370006] transition hover:scale-105">
-                <IconChevronRight className="h-4 w-4" />
+            <div className="flex flex-row items-center gap-2 text-center">
+              <span className="flex h-7 w-7 items-center justify-center rounded-full bg-[#370006]/10 text-[#370006]">
+                <IconChevronRight className="h-3.5 w-3.5" />
               </span>
-              <span className="text-xs font-semibold text-[#370006]">View All</span>
+              <span className="text-xs font-semibold text-[#370006]">View All Accounts</span>
             </div>
           </div>
         </div>
 
         {/* QUICK SHOPPING CARD */}
-        <div className="rounded-2xl border border-[#eee7e1] bg-white p-5 shadow-xs">
-          <h3 className="text-sm font-semibold text-stone-800">Quick Shopping &amp; Services</h3>
-          <hr className="my-3 border-stone-100" />
+        <div className="rounded-2xl border border-[#eee7e1] bg-white p-3.5 sm:p-5 shadow-xs">
+          <h3 className="text-xs sm:text-sm font-semibold text-stone-800">Quick Shopping &amp; Services</h3>
+          <hr className="my-2.5 sm:my-3 border-stone-100" />
           
-          <div className="grid grid-cols-2 gap-y-6 gap-x-4 sm:grid-cols-5 md:grid-cols-5">
+          <div className="grid grid-cols-5 gap-y-4 gap-x-1 sm:gap-y-5 sm:gap-x-4">
             {QUICK_SHOPPING_ACTIONS.map((item) => {
               const IconComponent = item.icon;
               const content = (
                 <>
-                  <span className="flex h-10 w-10 items-center justify-center rounded-full text-[#370006] transition group-hover:scale-110">
-                    <IconComponent className="h-6 w-6 stroke-[1.6]" />
+                  <span className="flex h-9 w-9 sm:h-11 sm:w-11 items-center justify-center rounded-full bg-[#370006]/5 text-[#370006] transition group-hover:bg-[#370006]/10 group-hover:scale-110">
+                    <IconComponent className="h-4 w-4 sm:h-5 sm:w-5 stroke-[1.6]" />
                   </span>
-                  <span className="text-xs font-medium text-stone-700 group-hover:text-[#370006]">
+                  <span className="text-[10px] sm:text-[11px] font-medium text-stone-700 group-hover:text-[#370006] leading-tight">
                     {item.label}
                   </span>
                 </>
@@ -907,7 +907,7 @@ function DashboardHomeView({ onNavigate, wishCount }) {
 
               if (item.href) {
                 return (
-                  <Link key={item.id} href={item.href} className="group flex flex-col items-center gap-2.5 text-center transition hover:opacity-80">
+                  <Link key={item.id} href={item.href} className="group flex flex-col items-center gap-1.5 sm:gap-2 text-center transition hover:opacity-80">
                     {content}
                   </Link>
                 );
@@ -918,7 +918,7 @@ function DashboardHomeView({ onNavigate, wishCount }) {
                   key={item.id}
                   type="button"
                   onClick={() => onNavigate(item.idNav || "dashboard")}
-                  className="group flex flex-col items-center gap-2.5 text-center transition hover:opacity-80"
+                  className="group flex flex-col items-center gap-1.5 sm:gap-2 text-center transition hover:opacity-80"
                 >
                   {content}
                 </button>
@@ -928,29 +928,29 @@ function DashboardHomeView({ onNavigate, wishCount }) {
         </div>
 
         {/* MY FAVOURITE COLLECTIONS */}
-        <div className="rounded-2xl border border-[#eee7e1] bg-white p-5 shadow-xs">
-          <h3 className="text-sm font-semibold text-stone-800">My Favourite Collections</h3>
+        <div className="rounded-2xl border border-[#eee7e1] bg-white p-3.5 sm:p-5 shadow-xs overflow-hidden">
+          <h3 className="text-xs sm:text-sm font-semibold text-stone-800">My Favourite Collections</h3>
           
-          <div className="mt-4 flex items-center gap-6 overflow-x-auto pb-2 scrollbar-none">
+          <div className="mt-3 -mx-3.5 sm:-mx-5 flex items-center gap-3 overflow-x-auto px-3.5 sm:px-5 pb-2 scrollbar-none">
             {FAVORITES_LIST.map((fav) => (
               <Link
                 key={fav.id}
                 href="/collections"
-                className="flex w-24 shrink-0 flex-col items-center text-center cursor-pointer transition hover:opacity-80"
+                className="flex w-16 sm:w-20 shrink-0 flex-col items-center text-center cursor-pointer transition hover:opacity-80"
               >
                 <div
-                  className={`flex h-14 w-14 items-center justify-center rounded-full text-base font-bold shadow-xs ${fav.avatarBg} ${fav.avatarText}`}
+                  className={`flex h-11 w-11 sm:h-13 sm:w-13 items-center justify-center rounded-full text-sm font-bold shadow-xs ${fav.avatarBg} ${fav.avatarText}`}
                 >
                   {fav.isBird ? (
-                    <IconMaaleenBird className="h-6 w-6" />
+                    <IconMaaleenBird className="h-5 w-5" />
                   ) : (
                     fav.initials
                   )}
                 </div>
-                <span className="mt-2 text-xs font-semibold text-stone-800 line-clamp-1">
+                <span className="mt-1.5 text-[10px] sm:text-xs font-semibold text-stone-800 line-clamp-1 w-full">
                   {fav.name}
                 </span>
-                <span className="mt-0.5 text-[10px] text-stone-400 line-clamp-1">
+                <span className="mt-0.5 text-[9px] sm:text-[10px] text-stone-400 line-clamp-1 w-full">
                   {fav.type}
                 </span>
               </Link>
@@ -959,9 +959,9 @@ function DashboardHomeView({ onNavigate, wishCount }) {
         </div>
 
         {/* OFFERS & VOUCHERS SECTION */}
-        <div>
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-sm font-bold text-stone-800">Offers &amp; Vouchers</h3>
+        <div className="min-w-0">
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="text-xs sm:text-sm font-bold text-stone-800">Offers &amp; Vouchers</h3>
             <Link
               href="/shop"
               className="text-xs font-bold text-[#370006] hover:underline"
@@ -970,20 +970,54 @@ function DashboardHomeView({ onNavigate, wishCount }) {
             </Link>
           </div>
 
-          <div className="flex gap-4 overflow-x-auto pb-2 scrollbar-none">
+          {/* Mobile: vertical stack. Desktop: horizontal scroll */}
+          <div className="grid grid-cols-1 gap-3 sm:hidden">
             {OFFERS_DATA.map((offer) => (
               <div
                 key={offer.id}
-                className="group flex w-[280px] shrink-0 overflow-hidden rounded-2xl border border-[#eee7e1] bg-white shadow-xs transition hover:-translate-y-1 hover:shadow-md sm:w-[300px]"
+                className="group flex overflow-hidden rounded-2xl border border-[#eee7e1] bg-white shadow-xs"
               >
-                {/* Left vertical ribbon banner */}
+                <div className="flex w-7 shrink-0 items-center justify-center bg-[#370006] px-1">
+                  <span className="rotate-180 text-[9px] font-black uppercase tracking-widest text-[#c59e75] [writing-mode:vertical-rl]">
+                    {offer.tag}
+                  </span>
+                </div>
+                <div className="flex flex-1 min-w-0 items-center gap-3 p-3">
+                  <div className="relative h-16 w-20 shrink-0 overflow-hidden rounded-xl bg-stone-100">
+                    <Image
+                      src={offer.image}
+                      alt={offer.title}
+                      fill
+                      className="object-cover"
+                      sizes="80px"
+                    />
+                  </div>
+                  <div className="min-w-0">
+                    <span className="inline-block rounded bg-[#370006] px-1.5 py-0.5 text-[8px] font-extrabold uppercase text-white mb-1">
+                      {offer.badge}
+                    </span>
+                    <h4 className="text-xs font-bold text-stone-900 truncate">{offer.title}</h4>
+                    <p className="mt-0.5 line-clamp-2 text-[10px] leading-relaxed text-stone-500">
+                      {offer.description}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Desktop: horizontal scroll cards */}
+          <div className="hidden sm:flex gap-4 overflow-x-auto pb-2 scrollbar-none">
+            {OFFERS_DATA.map((offer) => (
+              <div
+                key={offer.id}
+                className="group flex w-[280px] shrink-0 overflow-hidden rounded-2xl border border-[#eee7e1] bg-white shadow-xs transition hover:-translate-y-1 hover:shadow-md"
+              >
                 <div className="flex w-9 shrink-0 items-center justify-center bg-[#370006] px-1">
                   <span className="rotate-180 text-[10px] font-black uppercase tracking-widest text-[#c59e75] [writing-mode:vertical-rl]">
                     {offer.tag}
                   </span>
                 </div>
-
-                {/* Right content */}
                 <div className="flex flex-1 flex-col">
                   <div className="relative h-36 w-full overflow-hidden bg-stone-100">
                     <Image
@@ -991,7 +1025,7 @@ function DashboardHomeView({ onNavigate, wishCount }) {
                       alt={offer.title}
                       fill
                       className="object-cover transition duration-300 group-hover:scale-105"
-                      sizes="300px"
+                      sizes="280px"
                     />
                     <span className="absolute right-2 top-2 rounded bg-[#370006] px-1.5 py-0.5 text-[9px] font-extrabold uppercase tracking-wide text-white shadow-xs">
                       {offer.badge}
@@ -1011,33 +1045,33 @@ function DashboardHomeView({ onNavigate, wishCount }) {
       </div>
 
       {/* DEDICATED RIGHT COLUMN FOR BANNER CARDS ONLY */}
-      <div className="space-y-4 lg:col-span-4 xl:col-span-4">
+      <div className="w-full min-w-0 space-y-3 lg:col-span-4 xl:col-span-4">
         {/* Banner 1: Spend & Earn */}
-        <div className="flex items-center gap-3.5 rounded-2xl border border-[#c59e75]/40 bg-gradient-to-r from-[#fffbf7] to-[#fff3e6] p-4 shadow-xs transition hover:shadow-md">
-          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-white text-2xl shadow-xs">
+        <div className="flex items-center gap-3 rounded-2xl border border-[#c59e75]/40 bg-gradient-to-r from-[#fffbf7] to-[#fff3e6] p-3 shadow-xs">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white text-xl shadow-xs">
             🎁
           </div>
-          <div className="min-w-0">
-            <h4 className="text-xs font-bold leading-snug text-[#370006]">
+          <div className="min-w-0 flex-1">
+            <h4 className="text-[11px] font-bold leading-snug text-[#370006]">
               Spend &amp; Earn! Get Rewards on Every Order.
             </h4>
-            <p className="mt-1 text-[11px] leading-relaxed text-stone-600">
+            <p className="mt-1 text-[10px] leading-relaxed text-stone-600">
               Shop Maaleen fashion edits and earn reward points on every checkout.
             </p>
           </div>
         </div>
 
         {/* Banner 2: Start Tracking to Save */}
-        <div className="flex items-center gap-3.5 rounded-2xl border border-amber-200/80 bg-gradient-to-r from-[#fffaf3] to-[#fdf4e8] p-4 shadow-xs transition hover:shadow-md">
+        <div className="flex items-center gap-3 rounded-2xl border border-amber-200/80 bg-gradient-to-r from-[#fffaf3] to-[#fdf4e8] p-3 shadow-xs">
           <div className="min-w-0 flex-1">
-            <h4 className="text-xs font-bold leading-snug text-[#370006]">
+            <h4 className="text-[11px] font-bold leading-snug text-[#370006]">
               Start Tracking to Save!
             </h4>
-            <p className="mt-1 text-[11px] leading-relaxed text-stone-600">
+            <p className="mt-1 text-[10px] leading-relaxed text-stone-600">
               Track active orders and set a wishlist budget to manage your style efficiently.
             </p>
           </div>
-          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-white text-2xl shadow-xs">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white text-xl shadow-xs">
             📑
           </div>
         </div>
@@ -1105,38 +1139,38 @@ export function AccountDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-[#fcf9f6] text-stone-900 font-sans antialiased">
+    <div className="min-h-screen bg-[#fcf9f6] text-stone-900 font-sans antialiased overflow-x-hidden">
       {/* Top Header Bar */}
-      <header className="sticky top-0 z-30 flex items-center justify-between border-b border-[#eee7e1] bg-white px-6 py-3.5 shadow-2xs font-sans">
+      <header className="sticky top-0 z-30 flex items-center justify-between border-b border-[#eee7e1] bg-white px-4 sm:px-6 py-3 sm:py-3.5 shadow-2xs font-sans">
         {/* Brand Logo */}
-        <Link href="/" className="flex items-center gap-1 font-sans text-2xl font-bold tracking-tight text-[#370006]">
+        <Link href="/" className="flex items-center gap-1 font-sans text-xl sm:text-2xl font-bold tracking-tight text-[#370006]">
           <span>maaleen</span>
-          <span className="h-2 w-2 rounded-full bg-[#370006] inline-block align-baseline" />
+          <span className="h-1.5 w-1.5 sm:h-2 sm:w-2 rounded-full bg-[#370006] inline-block align-baseline" />
         </Link>
 
         {/* Right Action Icons */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1 sm:gap-2">
           <Link
             href="/shop"
             aria-label="Search"
-            className="flex h-9 w-9 items-center justify-center rounded-full text-stone-600 transition hover:bg-stone-100 hover:text-[#370006]"
+            className="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-full text-stone-600 transition hover:bg-stone-100 hover:text-[#370006]"
           >
-            <IconSearch className="h-5 w-5" />
+            <IconSearch className="h-4 w-4 sm:h-5 sm:w-5" />
           </Link>
           <button
             type="button"
             aria-label="Trophy Rewards"
-            className="flex h-9 w-9 items-center justify-center rounded-full text-stone-600 transition hover:bg-stone-100 hover:text-[#370006]"
+            className="hidden sm:flex h-9 w-9 items-center justify-center rounded-full text-stone-600 transition hover:bg-stone-100 hover:text-[#370006]"
           >
             <IconTrophy className="h-5 w-5" />
           </button>
           <button
             type="button"
             aria-label="Notifications"
-            className="relative flex h-9 w-9 items-center justify-center rounded-full text-stone-600 transition hover:bg-stone-100 hover:text-[#370006]"
+            className="relative flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-full text-stone-600 transition hover:bg-stone-100 hover:text-[#370006]"
           >
-            <IconBell className="h-5 w-5" />
-            <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-[#c59e75] px-1 text-[9px] font-black text-white shadow-xs">
+            <IconBell className="h-4 w-4 sm:h-5 sm:w-5" />
+            <span className="absolute -right-0.5 -top-0.5 flex h-3.5 min-w-3.5 items-center justify-center rounded-full bg-[#c59e75] px-1 text-[8px] font-black text-white shadow-xs">
               2
             </span>
           </button>
@@ -1144,9 +1178,9 @@ export function AccountDashboard() {
       </header>
 
       {/* Main Body Container */}
-      <div className="mx-auto flex max-w-[1440px]">
-        {/* Sidebar */}
-        <aside className="sticky top-[57px] hidden h-[calc(100vh-57px)] w-[240px] shrink-0 flex-col border-r border-[#eee7e1] bg-white px-4 py-6 lg:flex">
+      <div className="mx-auto flex w-full max-w-[1440px] flex-col lg:flex-row overflow-x-hidden">
+        {/* Sidebar - Desktop Only */}
+        <aside className="sticky top-[53px] sm:top-[57px] hidden h-[calc(100vh-53px)] sm:h-[calc(100vh-57px)] w-[240px] shrink-0 flex-col border-r border-[#eee7e1] bg-white px-4 py-6 lg:flex overflow-y-auto">
           {/* User Profile Card */}
           <div className="flex items-start gap-3 px-1">
             <div className="relative">
@@ -1211,40 +1245,61 @@ export function AccountDashboard() {
           </div>
         </aside>
 
-        {/* Mobile Header / Nav Bar */}
-        <div className="w-full lg:hidden border-b border-stone-200 bg-white px-4 py-3">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#f2efe9] text-[#370006] text-xs font-bold">
-                {firstName.charAt(0)}
-              </div>
+        {/* Mobile Header / Nav Bar - Only visible on mobile & tablet */}
+        <div className="w-full lg:hidden border-b border-stone-100 bg-white shadow-xs">
+          {/* Profile row */}
+          <div className="flex items-center justify-between px-4 py-3">
+            <div className="flex items-center gap-2.5">
+              <button
+                type="button"
+                onClick={() => setActiveSection("profile")}
+                className="relative"
+              >
+                <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[#f2efe9] text-[#370006] text-sm font-bold">
+                  {firstName.charAt(0)}
+                </div>
+              </button>
               <div>
-                <p className="text-xs text-stone-500">{greeting}, {firstName}</p>
-                <span className="text-[10px] font-bold text-[#c59e75]">Bronze Member</span>
+                <p className="text-[11px] text-stone-500">{greeting}</p>
+                <p className="text-xs font-bold text-stone-900 leading-tight">{firstName}</p>
+                <span className="inline-flex items-center gap-0.5 text-[9px] font-bold text-[#c59e75]">
+                  <IconShield className="h-2.5 w-2.5 text-[#c59e75]" /> Bronze Member
+                </span>
               </div>
             </div>
-            <button type="button" onClick={handleSignOut} className="text-xs font-bold text-[#370006]">
-              Log out
+            <button
+              type="button"
+              onClick={handleSignOut}
+              className="flex items-center gap-1 rounded-full border border-stone-200 px-3 py-1.5 text-[11px] font-semibold text-stone-600 hover:border-[#370006]/30 hover:text-[#370006] transition"
+            >
+              <IconLogout className="h-3 w-3" /> Log out
             </button>
           </div>
-          <div className="mt-3 flex gap-2 overflow-x-auto pb-1 scrollbar-none">
-            {NAV_ITEMS.map((item) => (
-              <button
-                key={item.id}
-                type="button"
-                onClick={() => setActiveSection(item.id)}
-                className={`shrink-0 rounded-full px-3.5 py-1 text-xs font-semibold transition ${
-                  activeSection === item.id ? "bg-[#370006] text-white" : "bg-stone-100 text-stone-600"
-                }`}
-              >
-                {item.label}
-              </button>
-            ))}
+          {/* Nav pills row */}
+          <div className="flex gap-1.5 overflow-x-auto pb-3 px-4 scrollbar-none">
+            {NAV_ITEMS.map((item) => {
+              const IconComp = item.icon;
+              return (
+                <button
+                  key={item.id}
+                  type="button"
+                  onClick={() => setActiveSection(item.id)}
+                  className={`flex shrink-0 items-center gap-1.5 rounded-full px-3 py-1.5 text-[11px] font-semibold transition ${
+                    activeSection === item.id
+                      ? "bg-[#370006] text-white shadow-xs"
+                      : "bg-stone-100 text-stone-600 hover:bg-stone-200"
+                  }`}
+                >
+                  <IconComp className="h-3 w-3" />
+                  {item.label}
+                </button>
+              );
+            })}
           </div>
         </div>
 
         {/* Main Content Area */}
-        <main className="flex-1 px-4 py-6 sm:px-6 lg:px-8">
+        <main className="flex-1 min-w-0 w-full overflow-x-hidden px-3 py-4 sm:px-5 sm:py-5 lg:px-8 lg:py-6">
           {renderSection()}
         </main>
       </div>
