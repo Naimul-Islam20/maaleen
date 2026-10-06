@@ -1,6 +1,6 @@
 function sizeChipClass(selected, compact = false) {
   if (compact) {
-    return `inline-flex min-h-8 min-w-10 items-center justify-center rounded-lg border px-2 py-1.5 text-[11px] font-medium transition-colors sm:min-h-10 sm:px-3 sm:py-2 sm:text-sm ${
+    return `inline-flex h-7 shrink-0 items-center justify-center rounded-md border px-2 text-xs font-medium leading-none transition-colors ${
       selected
         ? "border-stone-900 bg-stone-900 text-white"
         : "border-stone-200 bg-[var(--surface-elevated)] text-stone-800"
@@ -26,7 +26,7 @@ export function ProductSizeOptions({
   if (sizes.length === 0) return null;
 
   const rowClass = compact
-    ? `flex flex-wrap justify-center gap-1 sm:gap-2 ${showLegend ? "mt-2" : ""}`
+    ? `flex w-full flex-nowrap justify-center gap-1.5 ${showLegend ? "mt-2" : ""}`
     : `flex flex-wrap gap-2 ${showLegend ? "mt-2" : ""}`;
 
   return (
