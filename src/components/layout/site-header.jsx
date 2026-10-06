@@ -769,10 +769,14 @@ export function SiteHeader() {
               className="absolute left-1/2 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2"
             >
               <Image
-                src="/Maaleen-Logo-1.png"
+                src={
+                  headerCompact
+                    ? "/Maaleen_New_Logo-2.png"
+                    : "/Maaleen_New_Logo-1.png"
+                }
                 alt="Maaleen"
-                width={340}
-                height={100}
+                width={headerCompact ? 160 : 340}
+                height={headerCompact ? 120 : 180}
                 priority
                 className={`w-auto object-contain transition-[height] duration-300 ease-out ${
                   headerCompact
@@ -1299,19 +1303,12 @@ export function SiteHeader() {
                     className="inline-flex h-12 w-44 max-w-[70%] items-center justify-center"
                     aria-label="Maaleen"
                   >
-                    <span
-                      className="block h-12 w-full max-w-[11rem] bg-[var(--secondary)]"
-                      style={{
-                        WebkitMaskImage: "url(/Maaleen-Logo-1.png)",
-                        maskImage: "url(/Maaleen-Logo-1.png)",
-                        WebkitMaskSize: "contain",
-                        maskSize: "contain",
-                        WebkitMaskRepeat: "no-repeat",
-                        maskRepeat: "no-repeat",
-                        WebkitMaskPosition: "center",
-                        maskPosition: "center",
-                      }}
-                      aria-hidden
+                    <Image
+                      src="/Maaleen_New_Logo-1.png"
+                      alt=""
+                      width={176}
+                      height={48}
+                      className="h-12 w-auto object-contain"
                     />
                   </Link>
                   <button

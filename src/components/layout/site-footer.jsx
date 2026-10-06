@@ -63,7 +63,7 @@ export function SiteFooter() {
           <div className="max-sm:pb-6">
             <Link href="/" className="inline-block">
               <Image
-                src="/Maaleen-Logo-1.png"
+                src="/Maaleen_New_Logo-1.png"
                 alt="Maaleen"
                 width={280}
                 height={320}
