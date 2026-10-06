@@ -980,12 +980,12 @@ export function SiteHeader() {
         <div className="relative w-full border-t border-stone-200 bg-white py-2">
           <div className="maaleen-header-ticker overflow-hidden">
             <div className="maaleen-header-ticker-track flex min-w-max items-center">
-              <p className="shrink-0 whitespace-nowrap pr-10 text-xs font-bold tracking-wide text-[var(--primary)] sm:text-sm">
+              <p className="shrink-0 whitespace-nowrap pr-10 text-xs font-normal tracking-wide text-[var(--primary)] sm:text-sm">
                 {noticeText}
               </p>
               <p
                 aria-hidden
-                className="shrink-0 whitespace-nowrap pr-10 text-xs font-bold tracking-wide text-[var(--primary)] sm:text-sm"
+                className="shrink-0 whitespace-nowrap pr-10 text-xs font-normal tracking-wide text-[var(--primary)] sm:text-sm"
               >
                 {noticeText}
               </p>

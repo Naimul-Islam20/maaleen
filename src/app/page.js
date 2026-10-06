@@ -23,6 +23,8 @@ export default function HomePage() {
         ctaLabel="Shop new"
         ctaHref="/shop"
         reduceBottomSpacing
+        useDesktopCarouselOnMobile
+        mobileTwoUpNoLoop
       />
     </div>
   );

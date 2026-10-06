@@ -282,11 +282,12 @@ export function ProductsSliderSection({
               return (
                 <div
                   key={`${product.id}-${index}`}
-                  className="absolute left-1/2 top-1/2 w-[72%] transition-[transform,opacity] duration-300 ease-out"
+                  className="absolute left-1/2 top-1/2 w-[72%] transition-[transform,opacity,filter] duration-300 ease-out"
                   onDragStartCapture={preventNativeDrag}
                   style={{
                     transform,
-                    opacity: isCenter ? 1 : 0.9,
+                    opacity: isCenter ? 1 : 0.45,
+                    filter: isCenter ? "blur(0px)" : "blur(6px)",
                     zIndex: isCenter ? 20 : 10,
                     pointerEvents: isCenter ? "auto" : "none",
                   }}
