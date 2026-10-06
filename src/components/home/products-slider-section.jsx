@@ -286,8 +286,8 @@ export function ProductsSliderSection({
                   onDragStartCapture={preventNativeDrag}
                   style={{
                     transform,
-                    opacity: isCenter ? 1 : 0.45,
-                    filter: isCenter ? "blur(0px)" : "blur(6px)",
+                    opacity: isCenter ? 1 : 0.72,
+                    filter: isCenter ? "blur(0px)" : "blur(2px)",
                     zIndex: isCenter ? 20 : 10,
                     pointerEvents: isCenter ? "auto" : "none",
                   }}

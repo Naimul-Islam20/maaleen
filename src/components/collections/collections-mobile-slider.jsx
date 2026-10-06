@@ -10,44 +10,44 @@ import { CollectionColumn } from "@/components/collections/collection-column";
  */
 const SLOT_STYLE = {
   "-2": {
-    transform: "translate(calc(-300% - 1.25rem), -50%) scale(0.9)",
-    opacity: 0.45,
-    filter: "blur(6px)",
+    transform: "translate(calc(-290% - 0.625rem), -50%) scale(0.9)",
+    opacity: 0.72,
+    filter: "blur(2px)",
     zIndex: 5,
     interactive: false,
   },
   "-1": {
-    transform: "translate(calc(-200% - 0.75rem), -50%) scale(0.9)",
-    opacity: 0.45,
-    filter: "blur(6px)",
+    transform: "translate(calc(-195% - 0.375rem), -50%) scale(0.9)",
+    opacity: 0.72,
+    filter: "blur(2px)",
     zIndex: 10,
     interactive: false,
   },
   0: {
-    transform: "translate(calc(-100% - 0.25rem), -50%) scale(1)",
+    transform: "translate(calc(-100% - 0.125rem), -50%) scale(1)",
     opacity: 1,
     filter: "blur(0px)",
     zIndex: 20,
     interactive: true,
   },
   1: {
-    transform: "translate(calc(0.25rem), -50%) scale(1)",
+    transform: "translate(calc(0.125rem), -50%) scale(1)",
     opacity: 1,
     filter: "blur(0px)",
     zIndex: 20,
     interactive: true,
   },
   2: {
-    transform: "translate(calc(100% + 0.75rem), -50%) scale(0.9)",
-    opacity: 0.45,
-    filter: "blur(6px)",
+    transform: "translate(calc(95% + 0.375rem), -50%) scale(0.9)",
+    opacity: 0.72,
+    filter: "blur(2px)",
     zIndex: 10,
     interactive: false,
   },
   3: {
-    transform: "translate(calc(200% + 1.25rem), -50%) scale(0.9)",
-    opacity: 0.45,
-    filter: "blur(6px)",
+    transform: "translate(calc(190% + 0.625rem), -50%) scale(0.9)",
+    opacity: 0.72,
+    filter: "blur(2px)",
     zIndex: 5,
     interactive: false,
   },
@@ -175,7 +175,7 @@ export function CollectionsMobileSlider({ items }) {
         onDragStartCapture={(event) => event.preventDefault()}
         style={{ touchAction: "pan-y" }}
       >
-        <div className={`${hasLoop ? "w-[40%]" : "w-full"} mx-auto opacity-0`}>
+        <div className={`${hasLoop ? "w-[46%]" : "w-full"} mx-auto opacity-0`}>
           <CollectionColumn
             item={items[activeIndex]}
             variant="tile"
@@ -191,7 +191,7 @@ export function CollectionsMobileSlider({ items }) {
             <div
               key={`collection-slide-${slot.index}`}
               className={`absolute left-1/2 top-1/2 transition-[transform,opacity,filter] duration-300 ease-out ${
-                hasLoop ? "w-[40%]" : "w-[72%]"
+                hasLoop ? "w-[46%]" : "w-[72%]"
               }`}
               onDragStartCapture={(event) => event.preventDefault()}
               style={{
