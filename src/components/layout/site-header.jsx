@@ -198,7 +198,7 @@ const BOTTOM_DOCK_H = 60;
 const BOTTOM_DOCK_SPRING = { stiffness: 340, damping: 30 };
 
 const bottomBarIdleBtn =
-  "mx-auto flex h-11 w-11 items-center justify-center rounded-full text-[var(--secondary)]/75 transition-opacity duration-200";
+  "mx-auto flex h-11 w-11 items-center justify-center rounded-full text-[var(--primary)]/80 transition-opacity duration-200";
 const bottomBarActiveChip =
   "flex h-12 w-12 items-center justify-center rounded-full bg-[var(--secondary)] text-[var(--primary)] shadow-[0_10px_28px_rgba(0,0,0,0.38),0_2px_6px_rgba(0,0,0,0.2)]";
 
@@ -1441,43 +1441,36 @@ export function SiteHeader() {
             className="pointer-events-none absolute inset-x-0 bottom-0"
             width={dockWidth}
             height={BOTTOM_DOCK_H}
-            overflow="visible"
           >
             <defs>
-              <filter
-                id="maaleen-dock-shadow"
-                x="-20%"
-                y="-40%"
-                width="140%"
-                height="180%"
+              <mask
+                id="maaleen-dock-mask"
+                maskUnits="userSpaceOnUse"
+                maskContentUnits="userSpaceOnUse"
               >
-                <feDropShadow
-                  dx="0"
-                  dy="10"
-                  stdDeviation="14"
-                  floodColor="#000"
-                  floodOpacity="0.38"
+                <motion.path
+                  d={dockPath}
+                  fill="white"
+                  initial={false}
+                  animate={{ d: dockPath }}
+                  transition={dockSpring}
                 />
-              </filter>
+              </mask>
             </defs>
-            <motion.path
-              d={dockPath}
-              fill="rgb(18 14 13 / 0.94)"
-              filter="url(#maaleen-dock-shadow)"
-              initial={false}
-              animate={{ d: dockPath }}
-              transition={dockSpring}
-            />
-            <motion.path
-              d={dockPath}
-              fill="none"
-              stroke="rgba(255,255,255,0.12)"
-              strokeWidth="1"
-              initial={false}
-              animate={{ d: dockPath }}
-              transition={dockSpring}
-            />
           </svg>
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-x-0 bottom-0"
+            style={{
+              height: BOTTOM_DOCK_H,
+              width: dockWidth,
+              backdropFilter: "blur(22px)",
+              WebkitBackdropFilter: "blur(22px)",
+              backgroundColor: "rgba(255, 255, 255, 0.72)",
+              WebkitMaskImage: "url(#maaleen-dock-mask)",
+              maskImage: "url(#maaleen-dock-mask)",
+            }}
+          />
 
           <div
             className="relative z-10 grid h-full grid-cols-5 items-center px-12"
