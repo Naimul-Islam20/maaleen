@@ -28,12 +28,39 @@
 
 @media (min-width: 1024px) {
   .maaleen-container {
-    padding-inline: 2rem;
+    padding-inline: 10rem;
   }
 }
 
 @media (min-width: 1536px) {
   .maaleen-container {
+    padding-inline: 8rem;
+  }
+}
+
+/* Header and footer: wider than page sections. */
+.maaleen-chrome-container {
+  width: 100%;
+  max-width: none;
+  margin-inline: auto;
+  box-sizing: border-box;
+  padding-inline: 0.75rem;
+}
+
+@media (min-width: 640px) {
+  .maaleen-chrome-container {
+    padding-inline: 1.25rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .maaleen-chrome-container {
+    padding-inline: 4rem;
+  }
+}
+
+@media (min-width: 1536px) {
+  .maaleen-chrome-container {
     padding-inline: 2.5rem;
   }
 }
@@ -109,26 +136,6 @@ body {
 }
 
 /* (cart drawer animation now handled via Tailwind translate-x utilities) */
-
-/* Collections: one card per snap — 1-up on small screens, 2-up from md (matches Tailwind md).
-   Use margin between slides, not flex gap: Embla loop clones + gap can collapse space at the wrap. */
-.maaleen-collections-embla {
-  container-type: inline-size;
-  width: 100%;
-}
-
-.maaleen-collections-embla-slide {
-  flex: 0 0 100cqi;
-  min-width: 0;
-  box-sizing: border-box;
-  margin-inline-end: 1.5rem; /* same as gap-6; survives loop seam */
-}
-
-@media (min-width: 768px) {
-  .maaleen-collections-embla-slide {
-    flex-basis: calc((100cqi - 1.5rem) / 2);
-  }
-}
 
 /* Header & footer brand texture */
 .maaleen-brand-bg {

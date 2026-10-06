@@ -797,13 +797,229 @@ function AccountDetailView({ onBack }) {
 }
 
 // Main Dashboard Content View - MAALEEN BRANDED REPLICA WITH SEPARATE RIGHT COLUMN
+function MobileDashboardHome({ onNavigate }) {
+  const [showRewards, setShowRewards] = useState(false);
+  const [showCredit, setShowCredit] = useState(false);
+  const [tab, setTab] = useState("quick");
+  const [quickOpen, setQuickOpen] = useState(false);
+
+  const accounts = [
+    {
+      id: "rewards",
+      shown: showRewards,
+      toggle: () => setShowRewards((value) => !value),
+      masked: "bxxxx.xx",
+      value: "1,450 PTS",
+      title: "MAALEEN REWARDS",
+      detail: "Bronze Member",
+      mark: "★",
+    },
+    {
+      id: "credit",
+      shown: showCredit,
+      toggle: () => setShowCredit((value) => !value),
+      masked: "bxxxx.xx",
+      value: "৳ 2,500",
+      title: "STORE CREDIT",
+      detail: "MLN-89274",
+      mark: "MLN",
+    },
+  ];
+
+  const quickItems = quickOpen
+    ? QUICK_SHOPPING_ACTIONS
+    : QUICK_SHOPPING_ACTIONS.slice(0, 3);
+
+  return (
+    <div className="space-y-4 lg:hidden">
+      <div className="-mx-3 -mt-4 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-1">
+        {accounts.map((account) => (
+          <div
+            key={account.id}
+            className="w-[84%] shrink-0 snap-start rounded-2xl bg-gradient-to-b from-white to-[#fff6f2] p-4 text-left shadow-md"
+          >
+            <div className="flex items-center gap-2 text-lg font-semibold tracking-wide text-[#370006]">
+              <button
+                type="button"
+                onClick={() => onNavigate("account-detail")}
+                className="text-left"
+              >
+                {account.shown ? account.value : account.masked}
+              </button>
+              <button
+                type="button"
+                onClick={account.toggle}
+                className="text-stone-400"
+                aria-label="Toggle balance visibility"
+              >
+                {account.shown ? (
+                  <IconEye className="h-4 w-4" />
+                ) : (
+                  <IconEyeSlash className="h-4 w-4" />
+                )}
+              </button>
+            </div>
+            <button
+              type="button"
+              onClick={() => onNavigate("account-detail")}
+              className="mt-4 flex w-full items-center gap-2.5 text-left"
+            >
+              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-[#370006] text-[10px] font-bold text-white">
+                {account.mark}
+              </span>
+              <span className="min-w-0">
+                <span className="block text-[11px] font-bold uppercase tracking-wide text-stone-800">
+                  {account.title}
+                </span>
+                <span className="block text-xs text-stone-500">{account.detail}</span>
+              </span>
+            </button>
+          </div>
+        ))}
+      </div>
+
+      <div className="rounded-2xl bg-white px-3 pb-3 pt-4 shadow-sm">
+        <div className="grid grid-cols-2 border-b border-stone-100">
+          {[
+            { id: "quick", label: "Quick Shopping" },
+            { id: "favourites", label: "Favourites" },
+          ].map((item) => (
+            <button
+              key={item.id}
+              type="button"
+              onClick={() => setTab(item.id)}
+              className={`pb-2.5 text-sm font-semibold ${
+                tab === item.id
+                  ? "border-b-2 border-[#370006] text-[#370006]"
+                  : "text-stone-400"
+              }`}
+            >
+              {item.label}
+            </button>
+          ))}
+        </div>
+
+        {tab === "quick" ? (
+          <div className="grid grid-cols-3 gap-y-4 px-1 pt-5">
+            {quickItems.map((item) => {
+              const IconComponent = item.icon;
+              const inner = (
+                <>
+                  <IconComponent className="h-7 w-7 stroke-[1.6]" />
+                  <span className="text-[11px] font-medium leading-tight text-stone-700">
+                    {item.label}
+                  </span>
+                </>
+              );
+              const className = "flex flex-col items-center gap-2 text-center text-[#370006]";
+              if (item.href) {
+                return (
+                  <Link key={item.id} href={item.href} className={className}>
+                    {inner}
+                  </Link>
+                );
+              }
+              return (
+                <button
+                  key={item.id}
+                  type="button"
+                  onClick={() => onNavigate(item.idNav || "dashboard")}
+                  className={className}
+                >
+                  {inner}
+                </button>
+              );
+            })}
+          </div>
+        ) : (
+          <div className="flex gap-3 overflow-x-auto px-1 pt-5">
+            {FAVORITES_LIST.map((fav) => (
+              <Link
+                key={fav.id}
+                href="/collections"
+                className="flex w-16 shrink-0 flex-col items-center text-center"
+              >
+                <span
+                  className={`flex h-12 w-12 items-center justify-center rounded-full text-sm font-bold ${fav.avatarBg} ${fav.avatarText}`}
+                >
+                  {fav.isBird ? <IconMaaleenBird className="h-5 w-5" /> : fav.initials}
+                </span>
+                <span className="mt-1.5 line-clamp-1 w-full text-[11px] font-semibold text-stone-800">
+                  {fav.name}
+                </span>
+              </Link>
+            ))}
+          </div>
+        )}
+
+        {tab === "quick" ? (
+          <button
+            type="button"
+            onClick={() => setQuickOpen((value) => !value)}
+            aria-expanded={quickOpen}
+            aria-label={quickOpen ? "Show fewer actions" : "Show more actions"}
+            className="mx-auto mt-4 flex h-8 w-full items-center justify-center text-stone-400"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              className={`h-5 w-5 transition-transform ${quickOpen ? "rotate-180" : ""}`}
+              aria-hidden
+            >
+              <path d="M6 9l6 6 6-6" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </button>
+        ) : null}
+      </div>
+
+      <div className="flex items-center gap-3 rounded-2xl border border-[#c59e75]/30 bg-gradient-to-r from-[#fff8f4] to-[#fff1e8] p-4">
+        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-white text-2xl shadow-sm">
+          🎁
+        </div>
+        <div>
+          <p className="text-sm font-bold leading-snug text-[#370006]">
+            Spend &amp; Earn! Get Rewards on Every Order.
+          </p>
+          <p className="mt-1 text-xs leading-relaxed text-stone-600">
+            Shop Maaleen edits and earn reward points on every checkout.
+          </p>
+        </div>
+      </div>
+
+      <div className="overflow-hidden rounded-2xl bg-white shadow-sm">
+        <h3 className="px-4 pt-4 text-sm font-semibold text-stone-800">My Orders</h3>
+        <button
+          type="button"
+          onClick={() => onNavigate("orders")}
+          className="mt-2 flex w-full items-center gap-3 border-t border-stone-100 px-4 py-3.5 text-left"
+        >
+          <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[#370006]/5 text-[#370006]">
+            <IconPackage className="h-5 w-5" />
+          </span>
+          <span className="min-w-0 flex-1">
+            <span className="block text-sm font-semibold text-stone-900">Track an order</span>
+            <span className="block text-xs text-stone-500">
+              See shipments and delivery updates.
+            </span>
+          </span>
+          <IconChevronRight className="h-4 w-4 text-stone-400" />
+        </button>
+      </div>
+    </div>
+  );
+}
+
 function DashboardHomeView({ onNavigate, wishCount }) {
   // Balance visibility toggles
   const [showAccountBal, setShowAccountBal] = useState(false);
   const [showCardBal, setShowCardBal] = useState(false);
 
   return (
-    <div className="w-full grid gap-4 sm:gap-5 lg:gap-6 lg:grid-cols-12 items-start">
+    <>
+    <MobileDashboardHome onNavigate={onNavigate} />
+    <div className="hidden w-full lg:grid gap-4 sm:gap-5 lg:gap-6 lg:grid-cols-12 items-start">
       {/* LEFT MAIN COLUMN (spans 8 of 12 cols on desktop) */}
       <div className="w-full min-w-0 space-y-4 sm:space-y-5 lg:col-span-8 xl:col-span-8">
         {/* TOP CARDS ROW (Maaleen Rewards, Store Credit, View All) */}
@@ -1079,6 +1295,7 @@ function DashboardHomeView({ onNavigate, wishCount }) {
         {/* Empty space below right column as requested */}
       </div>
     </div>
+    </>
   );
 }
 
@@ -1132,7 +1349,19 @@ export function AccountDashboard() {
       case "services":
         return <AddressesSection />;
       case "profile":
-        return <ProfileSection user={user} />;
+        return (
+          <div className="space-y-6">
+            <ProfileSection user={user} />
+            <button
+              type="button"
+              onClick={handleSignOut}
+              className="flex items-center gap-2 text-sm font-semibold text-stone-500 lg:hidden"
+            >
+              <IconLogout className="h-4 w-4" />
+              Log out
+            </button>
+          </div>
+        );
       default:
         return <DashboardHomeView onNavigate={setActiveSection} wishCount={wishCount} />;
     }
@@ -1141,7 +1370,7 @@ export function AccountDashboard() {
   return (
     <div className="min-h-screen bg-[#fcf9f6] text-stone-900 font-sans antialiased overflow-x-hidden">
       {/* Top Header Bar */}
-      <header className="sticky top-0 z-30 flex items-center justify-between border-b border-[#eee7e1] bg-white px-4 sm:px-6 py-3 sm:py-3.5 shadow-2xs font-sans">
+      <header className="sticky top-0 z-30 hidden items-center justify-between border-b border-[#eee7e1] bg-white px-4 sm:px-6 py-3 sm:py-3.5 shadow-2xs font-sans lg:flex">
         {/* Brand Logo */}
         <Link href="/" className="flex items-center gap-1 font-sans text-xl sm:text-2xl font-bold tracking-tight text-[#370006]">
           <span>maaleen</span>
@@ -1245,63 +1474,119 @@ export function AccountDashboard() {
           </div>
         </aside>
 
-        {/* Mobile Header / Nav Bar - Only visible on mobile & tablet */}
-        <div className="w-full lg:hidden border-b border-stone-100 bg-white shadow-xs">
-          {/* Profile row */}
-          <div className="flex items-center justify-between px-4 py-3">
-            <div className="flex items-center gap-2.5">
+        <div
+          className={`bg-gradient-to-b from-[#8d2430] via-[#5c1018] to-[#370006] px-4 pt-4 text-white lg:hidden ${
+            activeSection === "dashboard" ? "pb-16" : "pb-6"
+          }`}
+        >
+          <div className="flex items-center justify-between">
+            <button
+              type="button"
+              onClick={() => setActiveSection("profile")}
+              className="flex h-11 w-11 items-center justify-center rounded-full bg-white/15 text-base font-semibold"
+              aria-label="Profile"
+            >
+              {firstName.charAt(0)}
+            </button>
+            <div className="flex items-center gap-1">
+              <Link
+                href="/shop"
+                aria-label="Search"
+                className="flex h-10 w-10 items-center justify-center rounded-full text-white"
+              >
+                <IconSearch className="h-5 w-5" />
+              </Link>
               <button
                 type="button"
-                onClick={() => setActiveSection("profile")}
-                className="relative"
+                aria-label="Rewards"
+                onClick={() => setActiveSection("wishlist")}
+                className="flex h-10 w-10 items-center justify-center rounded-full text-white"
               >
-                <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[#f2efe9] text-[#370006] text-sm font-bold">
-                  {firstName.charAt(0)}
-                </div>
+                <IconTrophy className="h-5 w-5" />
               </button>
-              <div>
-                <p className="text-[11px] text-stone-500">{greeting}</p>
-                <p className="text-xs font-bold text-stone-900 leading-tight">{firstName}</p>
-                <span className="inline-flex items-center gap-0.5 text-[9px] font-bold text-[#c59e75]">
-                  <IconShield className="h-2.5 w-2.5 text-[#c59e75]" /> Bronze Member
+              <button
+                type="button"
+                aria-label="Notifications"
+                className="relative flex h-10 w-10 items-center justify-center rounded-full text-white"
+              >
+                <IconBell className="h-5 w-5" />
+                <span className="absolute right-1 top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-[#e2b657] px-1 text-[9px] font-bold text-[#370006]">
+                  2
                 </span>
-              </div>
+              </button>
+            </div>
+          </div>
+          <div className="mt-5 flex items-end justify-between gap-3">
+            <div>
+              <p className="text-sm text-white/80">{greeting}</p>
+              <p className="mt-0.5 text-lg font-bold uppercase tracking-wide">
+                {user.name}
+              </p>
             </div>
             <button
               type="button"
-              onClick={handleSignOut}
-              className="flex items-center gap-1 rounded-full border border-stone-200 px-3 py-1.5 text-[11px] font-semibold text-stone-600 hover:border-[#370006]/30 hover:text-[#370006] transition"
+              onClick={() => setActiveSection("account-detail")}
+              className="mb-1 shrink-0 text-sm text-white/90"
             >
-              <IconLogout className="h-3 w-3" /> Log out
+              View All &gt;
             </button>
           </div>
-          {/* Nav pills row */}
-          <div className="flex gap-1.5 overflow-x-auto pb-3 px-4 scrollbar-none">
-            {NAV_ITEMS.map((item) => {
+        </div>
+
+        {/* Main Content Area */}
+        <main
+          className={`min-w-0 w-full flex-1 overflow-x-hidden px-3 sm:px-5 lg:px-8 ${
+            activeSection === "dashboard"
+              ? "-mt-12 pb-24 pt-0 lg:mt-0 lg:py-6"
+              : "py-4 pb-24 lg:py-6"
+          }`}
+        >
+          {renderSection()}
+        </main>
+
+        <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-stone-200 bg-white pb-[env(safe-area-inset-bottom)] lg:hidden">
+          <div className="grid grid-cols-5">
+            {[
+              { id: "dashboard", label: "Home", icon: IconHome },
+              { id: "orders", label: "Orders", icon: IconPackage },
+              { id: "shop", label: "Shop", href: "/shop", icon: IconBag },
+              { id: "wishlist", label: "Wishlist", icon: IconHeart },
+              { id: "services", label: "Services", icon: IconGrid },
+            ].map((item) => {
               const IconComp = item.icon;
+              const active = !item.href && activeSection === item.id;
+              const className = `flex flex-col items-center gap-1 px-1 pb-2 pt-2.5 text-[10px] font-semibold ${
+                active ? "text-[#370006]" : "text-stone-400"
+              }`;
+              const inner = (
+                <>
+                  <span
+                    className={`h-0.5 w-8 rounded-full ${active ? "bg-[#370006]" : "bg-transparent"}`}
+                  />
+                  <IconComp className="h-5 w-5" />
+                  {item.label}
+                </>
+              );
+              if (item.href) {
+                return (
+                  <Link key={item.id} href={item.href} className={className}>
+                    {inner}
+                  </Link>
+                );
+              }
               return (
                 <button
                   key={item.id}
                   type="button"
                   onClick={() => setActiveSection(item.id)}
-                  className={`flex shrink-0 items-center gap-1.5 rounded-full px-3 py-1.5 text-[11px] font-semibold transition ${
-                    activeSection === item.id
-                      ? "bg-[#370006] text-white shadow-xs"
-                      : "bg-stone-100 text-stone-600 hover:bg-stone-200"
-                  }`}
+                  className={className}
                 >
-                  <IconComp className="h-3 w-3" />
-                  {item.label}
+                  {inner}
                 </button>
               );
             })}
           </div>
-        </div>
-
-        {/* Main Content Area */}
-        <main className="flex-1 min-w-0 w-full overflow-x-hidden px-3 py-4 sm:px-5 sm:py-5 lg:px-8 lg:py-6">
-          {renderSection()}
-        </main>
+        </nav>
       </div>
     </div>
   );

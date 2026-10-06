@@ -4,7 +4,46 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Container } from "@/components/layout/container";
+import { ChromeContainer } from "@/components/layout/container";
+
+function FooterDisclosure({ title, children }) {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <>
+      <button
+        type="button"
+        onClick={() => setOpen((current) => !current)}
+        aria-expanded={open}
+        className="relative flex min-h-11 w-full items-center justify-center sm:hidden"
+      >
+        <span className="text-base font-bold uppercase tracking-[0.2em] text-white">
+          {title}
+        </span>
+        <span
+          className="absolute right-0 inline-flex h-9 w-9 items-center justify-center text-[var(--secondary)]"
+          aria-hidden
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className={`h-5 w-5 transition-transform duration-200 ${open ? "rotate-180" : ""}`}
+          >
+            <path d="M6 9l6 6 6-6" />
+          </svg>
+        </span>
+      </button>
+      <h3 className="mb-8 hidden text-base font-bold uppercase tracking-[0.2em] text-white sm:block">
+        {title}
+      </h3>
+      <div className={open ? "mt-5 sm:mt-0" : "hidden sm:block"}>{children}</div>
+    </>
+  );
+}
 
 export function SiteFooter() {
   const pathname = usePathname();
@@ -19,111 +58,88 @@ export function SiteFooter() {
         isAuthPage ? "mt-0" : "mt-16"
       }`}
     >
-      <Container>
-        <div className="grid grid-cols-1 gap-x-8 gap-y-12 text-center max-sm:gap-y-0 sm:grid-cols-2 lg:grid-cols-3 lg:gap-8">
-          {/* INFORMATION */}
+      <ChromeContainer>
+        <div className="grid grid-cols-1 gap-x-8 gap-y-12 text-center max-sm:gap-y-0 sm:grid-cols-2 sm:text-start lg:grid-cols-4 lg:gap-10">
           <div className="max-sm:pb-6">
-            <h3 className="mb-8 text-base font-bold uppercase tracking-[0.2em] text-white">
-              INFORMATION
-            </h3>
+            <Link href="/" className="inline-block">
+              <Image
+                src="/Maaleen-Logo-1.png"
+                alt="Maaleen"
+                width={280}
+                height={320}
+                className="mx-auto h-28 w-auto object-contain sm:mx-0 sm:h-32"
+              />
+            </Link>
+            <p className="mt-2 text-sm leading-relaxed text-white/80">
+              A contemporary clothing brand defined by refined aesthetics,
+              purposeful design, and everyday wearability.
+            </p>
+            <p className="mt-4 text-sm font-bold leading-relaxed">
+              House #1/A, Road #6, Sector #3
+              <br />
+              Uttara Model Town, Uttara, Dhaka-1230
+            </p>
+          </div>
+
+          {/* INFORMATION */}
+          <div
+            className={`max-sm:pt-6 max-sm:pb-6 sm:pt-0 ${footerDividerClass} sm:border-t-0`}
+          >
+            <FooterDisclosure title="INFORMATION">
             <ul className="space-y-3">
               {[
-                {
-                  href: "/exchange-refund",
-                  label: "Exchange & Refund",
-                  bn: "(এক্সচেঞ্জ ও রিফান্ড নীতিমালা)",
-                },
-                {
-                  href: "/size-guide",
-                  label: "Size Guide",
-                  bn: "(সাইজ চার্ট)",
-                },
-                {
-                  href: "/return-policy",
-                  label: "Return Policy",
-                  bn: "(রিটার্ন নীতিমালা)",
-                },
-                {
-                  href: "/shipping-policy",
-                  label: "Shipping Policy",
-                  bn: "(শিপিং নীতিমালা)",
-                },
-                {
-                  href: "/track-order",
-                  label: "Track Order",
-                  bn: "(অর্ডার ট্র্যাক)",
-                },
-                {
-                  href: "/faqs",
-                  label: "FAQs",
-                  bn: "(প্রায়শই জিজ্ঞাসিত প্রশ্ন)",
-                },
-                {
-                  href: "/privacy-policy",
-                  label: "Privacy Policy",
-                  bn: "(গোপনীয়তা নীতি)",
-                },
+                { href: "/exchange-refund", label: "Exchange & Refund" },
+                { href: "/size-guide", label: "Size Guide" },
+                { href: "/return-policy", label: "Return Policy" },
+                { href: "/shipping-policy", label: "Shipping Policy" },
+                { href: "/track-order", label: "Track Order" },
+                { href: "/faqs", label: "FAQs" },
+                { href: "/privacy-policy", label: "Privacy Policy" },
               ].map((item) => (
                 <li key={item.label}>
                   <Link
                     href={item.href}
-                    className="group block text-sm transition-colors"
+                    className="block text-[15.5px] font-bold transition-colors hover:underline"
                   >
-                    <div className="text-[15.5px] font-bold">{item.label}</div>
-                    <div className="text-[12.5px] opacity-70 transition-opacity group-hover:opacity-100">
-                      {item.bn}
-                    </div>
+                    {item.label}
                   </Link>
                 </li>
               ))}
             </ul>
+            </FooterDisclosure>
           </div>
 
           {/* COMPANY */}
           <div
             className={`max-sm:pt-6 max-sm:pb-6 sm:pt-0 ${footerDividerClass} sm:border-t-0`}
           >
-            <h3 className="mb-8 text-base font-bold uppercase tracking-[0.2em] text-white">
-              COMPANY
-            </h3>
+            <FooterDisclosure title="COMPANY">
             <ul className="space-y-3">
               {[
-                {
-                  href: "/about-us",
-                  label: "About Us",
-                  bn: "(আমাদের সম্পর্কে)",
-                },
-                { href: "/contact", label: "Contact", bn: "(যোগাযোগ)" },
-                {
-                  href: "/terms-conditions",
-                  label: "Terms & Conditions",
-                  bn: "(শর্তাবলি)",
-                },
+                { href: "/about-us", label: "About Us" },
+                { href: "/contact", label: "Contact" },
+                { href: "/terms-conditions", label: "Terms & Conditions" },
               ].map((item) => (
                 <li key={item.label}>
                   <Link
                     href={item.href}
-                    className="group block text-sm transition-colors"
+                    className="block text-[15.5px] font-bold transition-colors hover:underline"
                   >
-                    <div className="text-[15.5px] font-bold">{item.label}</div>
-                    <div className="text-[12.5px] opacity-70 transition-opacity group-hover:opacity-100">
-                      {item.bn}
-                    </div>
+                    {item.label}
                   </Link>
                 </li>
               ))}
             </ul>
+            </FooterDisclosure>
           </div>
 
           {/* SERVICE CENTER & FIND US ON */}
-          <div className="col-span-1 max-sm:pt-0 sm:col-span-2 lg:col-span-1">
+          <div className="col-span-1 max-sm:pt-0">
             <div className="grid grid-cols-1 gap-8 max-sm:gap-y-0 lg:grid-cols-1 lg:gap-12">
               <div
                 className={`max-sm:pt-6 max-sm:pb-6 ${footerDividerClass} sm:border-t-0`}
               >
-                <h3 className="mb-8 text-base font-bold uppercase tracking-[0.2em] text-white">
-                  SERVICE CENTER
-                </h3>
+                <FooterDisclosure title="SERVICE CENTER">
                 <div className="space-y-5 text-[15.5px] font-bold">
                   <div>
                     <a
@@ -142,15 +158,14 @@ export function SiteFooter() {
                     TRAD/CHTG/010466/2023
                   </div>
                 </div>
+                </FooterDisclosure>
               </div>
 
               <div
                 className={`max-sm:pt-6 max-sm:pb-6 ${footerDividerClass} sm:border-t-0`}
               >
-                <h3 className="mb-8 text-base font-bold uppercase tracking-[0.2em] text-white">
-                  FIND US ON
-                </h3>
-                <div className="flex items-center justify-center gap-4">
+                <FooterDisclosure title="FIND US ON">
+                <div className="flex items-center justify-center gap-4 sm:justify-start">
                   <a
                     href="#"
                     className="transition-all hover:opacity-80"
@@ -208,6 +223,7 @@ export function SiteFooter() {
                     </svg>
                   </a>
                 </div>
+                </FooterDisclosure>
               </div>
             </div>
           </div>
@@ -215,11 +231,11 @@ export function SiteFooter() {
 
         {/* Bottom Bar */}
         <div
-          className={`${footerDividerClass} pt-6 text-center text-base opacity-70 max-sm:mt-0 sm:mt-10`}
+          className={`${footerDividerClass} pt-6 text-center text-base opacity-70 max-sm:mt-0 sm:mt-10 sm:text-start`}
         >
           <p>© {new Date().getFullYear()} Maaleen. All rights reserved.</p>
         </div>
-      </Container>
+      </ChromeContainer>
       <FloatingBackToTop />
     </footer>
   );

@@ -9,7 +9,7 @@ import { useAuth } from "@/contexts/auth-context";
 import { useCart } from "@/contexts/cart-context";
 import { useCountry } from "@/contexts/country-context";
 import { useWishlist } from "@/contexts/wishlist-context";
-import { Container } from "@/components/layout/container";
+import { ChromeContainer } from "@/components/layout/container";
 import { ImageWithFallback } from "@/components/ui/image-with-fallback";
 import { getShopEdit } from "@/data/shop-edits";
 import { formatPrice } from "@/lib/format";
@@ -650,7 +650,7 @@ export function SiteHeader() {
   return (
     <>
       <header className="sticky top-0 z-40 bg-[var(--primary)]">
-        <Container>
+        <ChromeContainer>
           <div
             className={`relative flex items-center justify-end transition-[min-height] duration-300 ease-out ${
               headerCompact
@@ -976,7 +976,7 @@ export function SiteHeader() {
               <MainNavLinks />
             </Suspense>
           </nav>
-        </Container>
+        </ChromeContainer>
         <div className="relative w-full border-t border-stone-200 bg-white py-2">
           <div className="maaleen-header-ticker overflow-hidden">
             <div className="maaleen-header-ticker-track flex min-w-max items-center">
