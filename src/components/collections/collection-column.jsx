@@ -8,6 +8,7 @@ export function CollectionColumn({
   priority = false,
   sizes = "(max-width: 768px) 100vw, 50vw",
   variant = "panel",
+  compact = false,
   className = "",
 }) {
   if (variant === "tile") {
@@ -31,12 +32,30 @@ export function CollectionColumn({
           className="absolute inset-0 bg-gradient-to-t from-stone-950/80 via-stone-950/25 to-transparent"
           aria-hidden
         />
-        <div className="absolute inset-x-0 bottom-0 z-10 p-4 sm:p-5 lg:p-6">
-          <h3 className="font-[family-name:var(--font-display)] text-xl tracking-tight text-white sm:text-2xl lg:text-[1.65rem]">
+        <div
+          className={
+            compact
+              ? "absolute inset-x-0 bottom-0 z-10 p-3 sm:p-4"
+              : "absolute inset-x-0 bottom-0 z-10 p-4 sm:p-5 lg:p-6"
+          }
+        >
+          <h3
+            className={
+              compact
+                ? "font-[family-name:var(--font-display)] text-lg tracking-tight text-white sm:text-xl"
+                : "font-[family-name:var(--font-display)] text-xl tracking-tight text-white sm:text-2xl lg:text-[1.65rem]"
+            }
+          >
             {item.title}
           </h3>
           {item.description ? (
-            <p className="mt-1 line-clamp-2 text-xs leading-relaxed text-white/80 sm:text-sm">
+            <p
+              className={
+                compact
+                  ? "mt-0.5 line-clamp-1 text-xs leading-relaxed text-white/80"
+                  : "mt-1 line-clamp-2 text-xs leading-relaxed text-white/80 sm:text-sm"
+              }
+            >
               {item.description}
             </p>
           ) : null}

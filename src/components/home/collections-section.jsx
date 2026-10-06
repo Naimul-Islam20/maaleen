@@ -54,7 +54,7 @@ export function CollectionsSection() {
           </Link>
         </div>
 
-        {/* Mobile + tablet: same center/peek carousel as New arrivals */}
+        {/* Mobile + tablet: one landscape card, side peeks */}
         <CollectionsMobileSlider items={HOME_COLLECTION_ITEMS} />
 
         {/* Desktop: two-up Embla carousel */}

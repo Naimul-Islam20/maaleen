@@ -4,48 +4,41 @@ import { useMemo, useRef, useState } from "react";
 import { CollectionColumn } from "@/components/collections/collection-column";
 
 /**
- * Products-style peek carousel, with two full cards in the center.
+ * One landscape card in the center, with a shorter peek on each side.
  * Each card keeps a stable key so the same element animates one slot
- * per swipe (scale + opacity), matching the products section.
+ * per swipe, matching the products section.
  */
 const SLOT_STYLE = {
   "-2": {
-    transform: "translate(calc(-290% - 0.625rem), -50%) scale(0.9)",
+    transform: "translate(calc(-50% - 200%), -50%) scale(0.9)",
     opacity: 0.72,
     filter: "blur(2px)",
     zIndex: 5,
     interactive: false,
   },
   "-1": {
-    transform: "translate(calc(-195% - 0.375rem), -50%) scale(0.9)",
+    transform: "translate(calc(-50% - 100%), -50%) scale(0.9)",
     opacity: 0.72,
     filter: "blur(2px)",
     zIndex: 10,
     interactive: false,
   },
   0: {
-    transform: "translate(calc(-100% - 0.125rem), -50%) scale(1)",
+    transform: "translate(-50%, -50%) scale(1)",
     opacity: 1,
     filter: "blur(0px)",
     zIndex: 20,
     interactive: true,
   },
   1: {
-    transform: "translate(calc(0.125rem), -50%) scale(1)",
-    opacity: 1,
-    filter: "blur(0px)",
-    zIndex: 20,
-    interactive: true,
-  },
-  2: {
-    transform: "translate(calc(95% + 0.375rem), -50%) scale(0.9)",
+    transform: "translate(calc(-50% + 100%), -50%) scale(0.9)",
     opacity: 0.72,
     filter: "blur(2px)",
     zIndex: 10,
     interactive: false,
   },
-  3: {
-    transform: "translate(calc(190% + 0.625rem), -50%) scale(0.9)",
+  2: {
+    transform: "translate(calc(-50% + 200%), -50%) scale(0.9)",
     opacity: 0.72,
     filter: "blur(2px)",
     zIndex: 5,
@@ -68,7 +61,7 @@ export function CollectionsMobileSlider({ items }) {
     if (!total) return [];
     const at = (offset) => (activeIndex + offset + total * 8) % total;
     if (!hasLoop) return [{ index: 0, offset: 0 }];
-    return [-2, -1, 0, 1, 2, 3].map((offset) => ({
+    return [-2, -1, 0, 1, 2].map((offset) => ({
       index: at(offset),
       offset,
     }));
@@ -175,12 +168,13 @@ export function CollectionsMobileSlider({ items }) {
         onDragStartCapture={(event) => event.preventDefault()}
         style={{ touchAction: "pan-y" }}
       >
-        <div className={`${hasLoop ? "w-[46%]" : "w-full"} mx-auto opacity-0`}>
+        <div className={`${hasLoop ? "w-[82%]" : "w-full"} mx-auto opacity-0`}>
           <CollectionColumn
             item={items[activeIndex]}
             variant="tile"
-            className="aspect-[4/5] min-h-0"
-            sizes="40vw"
+            compact
+            className="aspect-video min-h-0"
+            sizes="80vw"
           />
         </div>
 
@@ -190,9 +184,7 @@ export function CollectionsMobileSlider({ items }) {
           return (
             <div
               key={`collection-slide-${slot.index}`}
-              className={`absolute left-1/2 top-1/2 transition-[transform,opacity,filter] duration-300 ease-out ${
-                hasLoop ? "w-[46%]" : "w-[72%]"
-              }`}
+              className="absolute left-1/2 top-1/2 w-[82%] transition-[transform,opacity,filter] duration-300 ease-out"
               onDragStartCapture={(event) => event.preventDefault()}
               style={{
                 transform: hasLoop
@@ -207,9 +199,10 @@ export function CollectionsMobileSlider({ items }) {
               <CollectionColumn
                 item={item}
                 variant="tile"
+                compact
                 priority={slot.offset === 0}
-                className="aspect-[4/5] min-h-0"
-                sizes="40vw"
+                className="aspect-video min-h-0"
+                sizes="80vw"
               />
             </div>
           );
