@@ -888,7 +888,7 @@ function MobileDashboardHome({ onNavigate }) {
               key={item.id}
               type="button"
               onClick={() => setTab(item.id)}
-              className={`pb-2.5 text-sm font-semibold ${
+              className={`rounded-none pb-2.5 text-sm font-semibold ${
                 tab === item.id
                   ? "border-b-2 border-[#370006] text-[#370006]"
                   : "text-stone-400"
@@ -1006,6 +1006,49 @@ function MobileDashboardHome({ onNavigate }) {
           </span>
           <IconChevronRight className="h-4 w-4 text-stone-400" />
         </button>
+      </div>
+
+      <div>
+        <div className="mb-3 flex items-center justify-between">
+          <h3 className="text-sm font-bold text-stone-800">Offers &amp; Vouchers</h3>
+          <Link href="/shop" className="text-xs font-bold text-[#370006]">
+            View All &gt;
+          </Link>
+        </div>
+        <div className="grid grid-cols-1 gap-3">
+          {OFFERS_DATA.map((offer) => (
+            <div
+              key={offer.id}
+              className="flex overflow-hidden rounded-2xl border border-[#eee7e1] bg-white shadow-xs"
+            >
+              <div className="flex w-7 shrink-0 items-center justify-center bg-[#370006] px-1">
+                <span className="rotate-180 text-[9px] font-black uppercase tracking-widest text-[#c59e75] [writing-mode:vertical-rl]">
+                  {offer.tag}
+                </span>
+              </div>
+              <div className="flex min-w-0 flex-1 items-center gap-3 p-3">
+                <div className="relative h-16 w-20 shrink-0 overflow-hidden rounded-xl bg-stone-100">
+                  <Image
+                    src={offer.image}
+                    alt={offer.title}
+                    fill
+                    className="object-cover"
+                    sizes="80px"
+                  />
+                </div>
+                <div className="min-w-0">
+                  <span className="mb-1 inline-block rounded bg-[#370006] px-1.5 py-0.5 text-[8px] font-extrabold uppercase text-white">
+                    {offer.badge}
+                  </span>
+                  <h4 className="truncate text-xs font-bold text-stone-900">{offer.title}</h4>
+                  <p className="mt-0.5 line-clamp-2 text-[10px] leading-relaxed text-stone-500">
+                    {offer.description}
+                  </p>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
