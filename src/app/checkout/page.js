@@ -1,13 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useCart } from "@/contexts/cart-context";
+import { useAuth } from "@/contexts/auth-context";
 import { useCountry } from "@/contexts/country-context";
 import { currency } from "@/lib/format";
 import { COUNTRY_CITIES } from "@/lib/country-config";
 import { Container } from "@/components/layout/container";
+import { CheckoutAccountGate } from "@/components/checkout/checkout-account-gate";
 import SuccessPopup from "@/components/checkout/success-popup";
 import { ImageWithFallback } from "@/components/ui/image-with-fallback";
 
@@ -56,7 +57,9 @@ const paymentMethods = [
 
 export default function CheckoutPage() {
   const { items: cartItems, subtotal, clearCart, updateQuantity } = useCart();
+  const { user, ready: authReady, isAuthenticated, loginWithEmail } = useAuth();
   const { country, countryCode } = useCountry();
+  const [guestContact, setGuestContact] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [orderId, setOrderId] = useState("");
   const [error, setError] = useState("");
@@ -94,6 +97,18 @@ export default function CheckoutPage() {
   const cartListRef = useRef(null);
 
   const hasItems = detailedItems.length > 0;
+  const checkoutUnlocked = isAuthenticated || Boolean(guestContact);
+
+  function continueAsGuest(contact) {
+    setGuestContact(contact);
+    if (!contact.includes("@")) {
+      setForm((prev) => ({
+        ...prev,
+        phone: contact,
+        deliveryPhone: prev.deliveryPhone || contact,
+      }));
+    }
+  }
 
   const shippingOptions = useMemo(
     () => shippingOptionsByCountry[countryCode] ?? shippingOptionsByCountry.BD,
@@ -206,10 +221,8 @@ export default function CheckoutPage() {
       return;
     }
 
-    // Simple validation
-    if (!form.phone.trim()) {
-      setErrors({ phone: true });
-      window.scrollTo({ top: 0, behavior: 'smooth' }); // Scroll to the error
+    if (!checkoutUnlocked) {
+      scrollToTop();
       return;
     }
 
@@ -272,7 +285,7 @@ export default function CheckoutPage() {
   }
 
   return (
-    <div className="min-h-screen py-4 sm:py-6 md:py-8 relative bg-stone-50 font-[family-name:var(--font-dm-sans)]">
+    <div className="relative min-h-screen bg-[var(--surface)] py-4 font-[family-name:var(--font-dm-sans)] sm:py-6 md:py-8">
       {/* Success Popup Overlay */}
       {submitted && <SuccessPopup orderId={orderId} total={finalTotal} />}
       
@@ -283,31 +296,24 @@ export default function CheckoutPage() {
           className="grid gap-4 sm:gap-6 md:gap-8 lg:grid-cols-[1fr_400px] xl:grid-cols-[1fr_420px] lg:pl-0"
         >
           {/* Left Column - Form */}
-          <div className="space-y-4 sm:space-y-5 md:space-y-6 order-2 lg:order-1">
-            {/* Phone Number & Sign In */}
-            <div className="bg-white rounded-lg px-4 sm:px-5 md:px-6 pt-3 sm:pt-4 space-y-3 sm:space-y-4 pb-6 border border-stone-200">
-              <div className="flex items-center justify-between">
-                <h2 className="text-lg sm:text-xl font-bold font-[family-name:var(--font-cormorant)] text-stone-900">
-                  Phone Number
-                </h2>
-                <Link
-                  href="/login?redirect=/checkout"
-                  className="text-xs sm:text-sm text-[var(--accent)] hover:underline"
-                >
-                  Sign in
-                </Link>
-              </div>
-              <PhoneField
-                country={country}
-                value={form.phone}
-                onChange={handlePhoneChange("phone")}
-                hasError={errors.phone}
-              />
-                {errors.phone && (
-                  <p className="text-[10px] sm:text-xs text-[#8b3a3a] mt-1 font-medium">Please enter your phone number to continue</p>
-                )}
-            </div>
+          <div className="rounded-lg bg-[#efe4da] p-5 lg:order-1">
+          <div className="space-y-4 rounded-lg bg-[var(--surface)] sm:space-y-5 md:space-y-6">
+            <CheckoutAccountGate
+              authReady={authReady}
+              user={user}
+              isAuthenticated={isAuthenticated}
+              loginWithEmail={loginWithEmail}
+              guestContact={guestContact}
+              onGuest={continueAsGuest}
+              onChangeGuest={() => setGuestContact("")}
+            />
 
+            <div
+              className={`space-y-4 sm:space-y-5 md:space-y-6 ${
+                checkoutUnlocked ? "" : "pointer-events-none opacity-40"
+              }`}
+              {...(checkoutUnlocked ? {} : { inert: true })}
+            >
             {/* Delivery */}
             <div className="bg-white rounded-lg px-4 sm:px-5 md:px-6 pt-3 sm:pt-4 space-y-2.5 sm:space-y-3 pb-6 border border-stone-200">
               <h2 className="text-lg sm:text-xl font-bold font-[family-name:var(--font-cormorant)] text-stone-900">Delivery</h2>
@@ -317,7 +323,7 @@ export default function CheckoutPage() {
                   type="text"
                   readOnly
                   value={country.label}
-                  className="w-full cursor-not-allowed rounded-md border border-stone-200 bg-stone-50 px-3 py-2 text-xs sm:text-sm text-stone-700"
+                  className="w-full cursor-not-allowed rounded-md border border-stone-200 bg-white px-3 py-2 text-xs sm:text-sm text-stone-700"
                 />
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
@@ -401,11 +407,7 @@ export default function CheckoutPage() {
               </h2>
 
               <div className="rounded-lg border border-stone-200 overflow-hidden divide-y divide-stone-100">
-                <label
-                  className={`flex items-center gap-2 sm:gap-3 p-3 sm:p-4 cursor-pointer transition ${
-                    form.billingAddress === "same" ? "bg-stone-50" : "bg-white"
-                  }`}
-                >
+                <label className="flex cursor-pointer items-center gap-2 bg-white p-3 transition sm:gap-3 sm:p-4">
                   <input
                     type="radio"
                     name="billing"
@@ -419,11 +421,7 @@ export default function CheckoutPage() {
                     Same as shipping address
                   </span>
                 </label>
-                <label
-                  className={`flex items-center gap-2 sm:gap-3 p-3 sm:p-4 cursor-pointer transition ${
-                    form.billingAddress === "different" ? "bg-stone-50" : "bg-white"
-                  }`}
-                >
+                <label className="flex cursor-pointer items-center gap-2 bg-white p-3 transition sm:gap-3 sm:p-4">
                   <input
                     type="radio"
                     name="billing"
@@ -453,9 +451,7 @@ export default function CheckoutPage() {
                 {shippingOptions.map((option) => (
                   <label
                     key={option.id}
-                    className={`flex items-center justify-between p-3 sm:p-4 cursor-pointer transition ${
-                      form.shippingMethod === option.id ? "bg-stone-50" : "bg-white"
-                    }`}
+                    className="flex cursor-pointer items-center justify-between bg-white p-3 transition sm:p-4"
                   >
                     <div className="flex items-center gap-2 sm:gap-3">
                       <input
@@ -492,11 +488,7 @@ export default function CheckoutPage() {
               <div className="rounded-lg border border-stone-200 overflow-hidden divide-y divide-stone-100 mt-4">
                 {paymentMethods.map((method) => (
                   <div key={method.id}>
-                    <label
-                      className={`flex items-center justify-between p-3 sm:p-4 cursor-pointer transition ${
-                        form.payment === method.id ? "bg-stone-50" : "bg-white"
-                      }`}
-                    >
+                    <label className="flex cursor-pointer items-center justify-between bg-white p-3 transition sm:p-4">
                       <div className="flex items-center gap-2 sm:gap-3">
                         <input
                           type="radio"
@@ -525,7 +517,7 @@ export default function CheckoutPage() {
                       )}
                     </label>
                     {form.payment === method.id && method.description && (
-                      <div className="px-3 sm:px-4 pb-4 pt-0 text-xs sm:text-sm text-stone-500 bg-stone-50 text-justify">
+                      <div className="bg-white px-3 pb-4 pt-0 text-justify text-xs text-stone-500 sm:px-4 sm:text-sm">
                         {method.description}
                       </div>
                     )}
@@ -543,10 +535,12 @@ export default function CheckoutPage() {
                 Pay now
               </button>
             </div>
+            </div>
+          </div>
           </div>
 
           {/* Right Column - Order Summary */}
-          <div className="space-y-4 sm:space-y-5 md:space-y-6 lg:border-l lg:border-stone-200 lg:pl-6 xl:pl-8 order-1 lg:order-2">
+          <div className="space-y-4 sm:space-y-5 md:space-y-6 lg:order-2 lg:border-l lg:border-stone-200 lg:pl-6 xl:pl-8">
             <div className="bg-white rounded-lg p-4 sm:p-5 md:p-6 space-y-4 sm:space-y-5 md:space-y-6 lg:sticky lg:top-50 border border-stone-200 shadow-sm">
               {/* Shopping Cart */}
               <div className="space-y-3 sm:space-y-4">
@@ -616,7 +610,7 @@ export default function CheckoutPage() {
                       )
                     }
                   />
-                  <div className="border-t border-stone-200 pt-3 sm:pt-4 mt-3 sm:mt-4">
+                  <div className="mt-3 border-t border-stone-200 pt-3 sm:mt-4 sm:pt-4">
                     <div className="flex items-center justify-between">
                       <span className="text-base sm:text-lg font-bold font-[family-name:var(--font-cormorant)] uppercase tracking-widest text-stone-900">
                         Total
@@ -652,10 +646,10 @@ function PhoneField({ country, value, onChange, hasError = false }) {
         hasError ? "border-[#8b3a3a] ring-1 ring-[#8b3a3a]" : "border-stone-200"
       }`}
     >
-      <span className="inline-flex items-center border-r border-stone-200 bg-stone-50 px-3 text-xs sm:text-sm text-stone-600">
+      <span className="inline-flex items-center border-r border-stone-200 bg-white px-3 text-xs sm:text-sm text-stone-600">
         {country.label}
       </span>
-      <span className="inline-flex items-center border-r border-stone-200 bg-stone-50 px-3 text-xs sm:text-sm text-stone-600">
+      <span className="inline-flex items-center border-r border-stone-200 bg-white px-3 text-xs sm:text-sm text-stone-600">
         {country.dialCode}
       </span>
       <input
