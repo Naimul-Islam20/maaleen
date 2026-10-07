@@ -296,7 +296,7 @@ export default function CheckoutPage() {
           className="grid gap-4 sm:gap-6 md:gap-8 lg:grid-cols-[1fr_400px] xl:grid-cols-[1fr_420px] lg:pl-0"
         >
           {/* Left Column - Form */}
-          <div className="rounded-lg bg-[#efe4da] p-5 lg:order-1">
+          <div className="rounded-lg bg-[#efe4da] p-2.5 sm:p-5 lg:order-1">
           <div className="space-y-4 rounded-lg bg-[var(--surface)] sm:space-y-5 md:space-y-6">
             <CheckoutAccountGate
               authReady={authReady}

@@ -219,8 +219,25 @@ const BOTTOM_CHIP = 48; // h-12
 const BOTTOM_GAP = 8;
 const BOTTOM_GAP_RING = BOTTOM_CHIP + BOTTOM_GAP * 2; // 64
 const BOTTOM_NOTCH_R = 36; // soft rounded bowl (same look as before)
+const BOTTOM_NOTCH_SHOULDER = 16;
+const BOTTOM_DOCK_CORNER = 22;
 const BOTTOM_DOCK_H = 60;
 const BOTTOM_DOCK_SPRING = { stiffness: 340, damping: 30 };
+const BOTTOM_ICON_COLS = 5;
+
+const BOTTOM_IDLE = 44; // h-11
+const BOTTOM_BTN_GAP = 16;
+
+/** Side inset that leaves a light gap between the five dock buttons. */
+function dockIconInset(width) {
+  if (!width) return 8;
+  const pitch = BOTTOM_IDLE + BOTTOM_BTN_GAP;
+  const inset = (width - BOTTOM_ICON_COLS * pitch) / 2;
+  const minInset = 8;
+  const maxInset = (width - BOTTOM_ICON_COLS * (BOTTOM_IDLE + 10)) / 2;
+  if (maxInset < minInset) return minInset;
+  return Math.max(minInset, Math.min(inset, maxInset));
+}
 
 const bottomBarIdleBtn =
   "mx-auto flex h-11 w-11 items-center justify-center rounded-full text-[var(--primary)]/80 transition-opacity duration-200";
@@ -249,16 +266,23 @@ function getBottomBarActiveIndex({
 
 /** Soft rounded notch — circular bowl + mirrored shoulders (no cubic wobble). */
 function buildNotchedDockPath(width, height, notchX, notchR) {
-  const corner = Math.min(22, height / 2);
+  const corner = Math.min(BOTTOM_DOCK_CORNER, height / 2);
   const fmt = (n) => Number(n.toFixed(2));
 
   if (notchX == null || notchR <= 0) {
     return `M ${corner},0 H ${width - corner} A ${corner} ${corner} 0 0 1 ${width},${corner} V ${height - corner} A ${corner} ${corner} 0 0 1 ${width - corner},${height} H ${corner} A ${corner} ${corner} 0 0 1 0,${height - corner} V ${corner} A ${corner} ${corner} 0 0 1 ${corner},0 Z`;
   }
 
-  const r = notchR;
-  const shoulder = 16;
-  // Center on the chip. Edge tabs get enough inset via bar padding so this fits.
+  // Shrink the bowl only when an edge icon would otherwise push the notch
+  // through the dock's rounded corner (that pinch is what breaks the home tab).
+  let r = notchR;
+  let shoulder = BOTTOM_NOTCH_SHOULDER;
+  const room = Math.min(notchX, width - notchX) - corner;
+  if (room > 0 && r + shoulder > room) {
+    const scale = room / (r + shoulder);
+    r *= scale;
+    shoulder *= scale;
+  }
   const cx = notchX;
 
   const alpha = (58 * Math.PI) / 180;
@@ -585,6 +609,10 @@ export function SiteHeader() {
     searchOpen,
   });
 
+  const notchX = bottomDockSize.notchX;
+  const dockWidth = bottomDockSize.width || 360;
+  const iconInset = dockIconInset(dockWidth);
+
   useLayoutEffect(() => {
     const syncDock = () => {
       const root = bottomBarRef.current;
@@ -610,10 +638,8 @@ export function SiteHeader() {
     syncDock();
     window.addEventListener("resize", syncDock);
     return () => window.removeEventListener("resize", syncDock);
-  }, [bottomActiveIndex]);
+  }, [bottomActiveIndex, iconInset]);
 
-  const notchX = bottomDockSize.notchX;
-  const dockWidth = bottomDockSize.width || 360;
   const dockPath = buildNotchedDockPath(
     dockWidth,
     BOTTOM_DOCK_H,
@@ -1486,8 +1512,8 @@ export function SiteHeader() {
           />
 
           <div
-            className="relative z-10 grid h-full grid-cols-5 items-center px-2"
-            style={iconLayerMask}
+            className="relative z-10 grid h-full grid-cols-5 items-center"
+            style={{ ...iconLayerMask, paddingInline: iconInset }}
           >
             <div
               data-bottom-idx="0"

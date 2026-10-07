@@ -15,7 +15,7 @@ export function CollectionColumn({
     return (
       <Link
         href={item.href}
-        className={`group relative block min-h-0 overflow-hidden rounded-2xl transition-transform duration-300 ease-out hover:-translate-y-1.5 motion-reduce:transition-none motion-reduce:hover:translate-y-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)] ${className}`}
+        className={`group relative block min-h-0 overflow-hidden rounded-xl transition-transform duration-300 ease-out hover:-translate-y-1.5 motion-reduce:transition-none motion-reduce:hover:translate-y-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)] ${className}`}
       >
         <ImageWithFallback
           src={item.image}
