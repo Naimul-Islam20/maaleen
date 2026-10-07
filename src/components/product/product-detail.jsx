@@ -1,17 +1,44 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
 import { useCart } from "@/contexts/cart-context";
 import { useToast } from "@/contexts/toast-context";
 import { useWishlist } from "@/contexts/wishlist-context";
 import { formatPrice } from "@/lib/format";
-import { ProductsSliderSection } from "@/components/home/products-slider-section";
-import { ProductInfoSections } from "@/components/product/product-info-sections";
-import { ProductSizeOptions } from "@/components/product/product-size-options";
+import { getProductInfo } from "@/lib/product-info";
 import { ImageWithFallback } from "@/components/ui/image-with-fallback";
+
+const SIZE_MEASUREMENTS = {
+  XS: { bust: "31–32", waist: "24–25", hip: "34–35", length: "38" },
+  S: { bust: "33–34", waist: "26–27", hip: "36–37", length: "39" },
+  M: { bust: "35–36", waist: "28–29", hip: "38–39", length: "40" },
+  L: { bust: "37–39", waist: "30–32", hip: "40–42", length: "41" },
+  XL: { bust: "40–42", waist: "33–35", hip: "43–45", length: "42" },
+};
+
+function chartColumns(category) {
+  if (category === "bottoms") {
+    return [
+      { key: "waist", label: "Waist" },
+      { key: "hip", label: "Hip" },
+      { key: "length", label: "Length" },
+    ];
+  }
+  return [
+    { key: "bust", label: "Bust" },
+    { key: "waist", label: "Waist" },
+    { key: "length", label: "Length" },
+  ];
+}
+
+function formatMeasure(value, unit) {
+  if (unit === "in") return value;
+  return value
+    .split("–")
+    .map((part) => (Number.parseFloat(part) * 2.54).toFixed(1))
+    .join("–");
+}
 
 export function ProductDetail({ product, related, breadcrumbs = null }) {
   const [imageIndex, setImageIndex] = useState(0);
@@ -22,7 +49,9 @@ export function ProductDetail({ product, related, breadcrumbs = null }) {
   const [imageModalDragging, setImageModalDragging] = useState(false);
   const [imageModalFailed, setImageModalFailed] = useState(false);
   const [size, setSize] = useState("");
-  const [color, setColor] = useState("");
+  const [color, setColor] = useState(product.colors?.[0]?.name ?? "");
+  const [quantity, setQuantity] = useState(1);
+  const [unit, setUnit] = useState("in");
   const modalViewportRef = useRef(null);
   const modalImageRef = useRef(null);
   const dragOriginRef = useRef(null);
@@ -30,14 +59,30 @@ export function ProductDetail({ product, related, breadcrumbs = null }) {
   const { addItem } = useCart();
   const { showToast } = useToast();
   const { toggleItem, isWishlisted, ready: wishReady } = useWishlist();
-  const router = useRouter();
 
   const images = product.images ?? [];
   const main = images[imageIndex] ?? images[0];
   const onSale =
     product.compareAtPrice != null && product.compareAtPrice > product.price;
+  const discount = onSale
+    ? Math.round(
+        ((product.compareAtPrice - product.price) / product.compareAtPrice) *
+          100,
+      )
+    : 0;
   const canAdd = Boolean(size && color && main);
   const imageSlides = images.length > 0 ? images : main ? [main] : [];
+  const info = getProductInfo(product);
+  const paired = related?.[0] ?? null;
+  const columns = chartColumns(product.category);
+
+  useEffect(() => {
+    setImageIndex(0);
+    setSize("");
+    setColor(product.colors?.[0]?.name ?? "");
+    setQuantity(1);
+    setUnit("in");
+  }, [product.id]);
 
   const openImageModal = () => {
     if (!main) return;
@@ -152,7 +197,6 @@ export function ProductDetail({ product, related, breadcrumbs = null }) {
 
   function handleAdd() {
     if (!canAdd) return;
-    const colorObj = product.colors?.find((c) => c.name === color);
     addItem({
       productId: product.id,
       slug: product.slug,
@@ -162,28 +206,28 @@ export function ProductDetail({ product, related, breadcrumbs = null }) {
       image: main,
       size,
       color,
-      quantity: 1,
+      quantity,
     });
     showToast(`${product.name} added to your bag`);
   }
 
-  function handleBuyNow() {
-    if (!canAdd) return;
-    
-    const colorObj = product.colors?.find((c) => c.name === color);
+  function addPairedItem() {
+    if (!paired) return;
+    const pairedSize = paired.sizes?.[0];
+    const pairedColor = paired.colors?.[0]?.name;
+    if (!pairedSize || !pairedColor || !paired.images?.[0]) return;
     addItem({
-      productId: product.id,
-      slug: product.slug,
-      name: product.name,
-      price: product.price,
-      currency: product.currency,
-      image: main,
-      size,
-      color,
+      productId: paired.id,
+      slug: paired.slug,
+      name: paired.name,
+      price: paired.price,
+      currency: paired.currency,
+      image: paired.images[0],
+      size: pairedSize,
+      color: pairedColor,
       quantity: 1,
     });
-    
-    router.push("/checkout");
+    showToast(`${paired.name} added to your bag`);
   }
 
   return (
@@ -192,62 +236,114 @@ export function ProductDetail({ product, related, breadcrumbs = null }) {
         <div className="mb-8 hidden lg:block">{breadcrumbs}</div>
       ) : null}
 
-      <div className="grid gap-3 sm:gap-6 lg:grid-cols-2 lg:gap-12">
-        <div className="space-y-1 max-lg:-mx-3 max-lg:w-[calc(100%+1.5rem)] sm:max-lg:-mx-6 sm:max-lg:w-[calc(100%+3rem)] lg:mx-0 lg:w-full">
-          <div className="relative aspect-[4/4] w-full overflow-hidden rounded-none bg-stone-200 sm:aspect-[3/2] lg:aspect-[6/5] lg:rounded-xl">
-            <ImageWithFallback
-              src={main}
-              alt={`${product.name} — view ${imageIndex + 1}`}
-              imageClassName="object-cover"
-              sizes="(max-width: 1024px) 100vw, 50vw"
-              priority
-              fallbackLabelClassName="font-[family-name:var(--font-display)] text-xl tracking-[0.18em] sm:text-2xl lg:text-4xl"
-              fallbackSubLabel="image coming soon"
-              fallbackSubLabelClassName="text-[10px] font-medium uppercase tracking-[0.22em] text-stone-400 sm:text-xs"
-            />
-            {main ? (
-              <button
-                type="button"
-                onClick={openImageModal}
-                className="absolute inset-0 z-10 cursor-zoom-in"
-                aria-label="Open product image"
-              />
-            ) : null}
-          </div>
-          {images.length > 1 ? (
-            <ul className="flex gap-2 overflow-x-auto px-3 pb-1 pt-3 sm:px-0 lg:px-0 lg:pt-0">
-              {images.map((src, i) => (
-                <li key={src}>
+      <div className="grid items-start gap-8 lg:grid-cols-2 lg:gap-10">
+        <div>
+          <div className="grid grid-cols-1 gap-3 lg:grid-cols-[minmax(0,0.78fr)_minmax(0,1.05fr)] lg:items-stretch">
+            {images.length > 0 ? (
+              <div className="order-2 flex gap-2 overflow-x-auto lg:order-1 lg:flex lg:h-full lg:flex-col lg:gap-3 lg:overflow-visible">
+                {images.map((src, i) => (
                   <button
+                    key={src}
                     type="button"
                     onClick={() => setImageIndex(i)}
-                    className={`relative block h-20 w-16 shrink-0 overflow-hidden rounded-md border-2 transition-colors ${
-                      i === imageIndex
-                        ? "border-[var(--accent)]"
-                        : "border-transparent ring-1 ring-stone-200"
+                    aria-label={`Show image ${i + 1}`}
+                    aria-pressed={i === imageIndex}
+                    className={`relative aspect-[4/5] w-24 shrink-0 overflow-hidden bg-stone-100 lg:aspect-auto lg:h-auto lg:min-h-0 lg:w-full lg:flex-1 ${
+                      i === imageIndex ? "ring-2 ring-stone-900" : ""
                     }`}
                   >
                     <ImageWithFallback
                       src={src}
                       alt=""
                       imageClassName="object-cover"
-                      sizes="112px"
+                      sizes="240px"
                       fallbackClassName="flex h-full w-full items-center justify-center bg-stone-200 text-stone-500"
-                      fallbackLabelClassName="text-[8px] font-semibold uppercase tracking-[0.14em]"
+                      fallbackLabelClassName="text-[10px] font-semibold uppercase tracking-[0.14em]"
                     />
+                    {i === 0 && (onSale || product.tags?.includes("sale")) ? (
+                      <span className="absolute left-2 top-2 bg-[#c0392b] px-2 py-0.5 text-[10px] font-bold tracking-wide text-white">
+                        SALE
+                      </span>
+                    ) : null}
                   </button>
-                </li>
-              ))}
-            </ul>
+                ))}
+              </div>
+            ) : null}
+
+            <button
+              type="button"
+              onClick={openImageModal}
+              className="relative order-1 aspect-[3/4] w-full cursor-zoom-in overflow-hidden bg-stone-100 lg:order-2 lg:aspect-auto lg:min-h-[34rem]"
+              aria-label="Open product image"
+            >
+              <ImageWithFallback
+                src={main}
+                alt={`${product.name} — view ${imageIndex + 1}`}
+                imageClassName="object-cover"
+                sizes="(max-width: 1024px) 100vw, 40vw"
+                priority
+                fallbackLabelClassName="font-[family-name:var(--font-display)] text-xl tracking-[0.18em] sm:text-2xl lg:text-4xl"
+                fallbackSubLabel="image coming soon"
+                fallbackSubLabelClassName="text-[10px] font-medium uppercase tracking-[0.22em] text-stone-400 sm:text-xs"
+              />
+            </button>
+          </div>
+
+          {paired ? (
+            <div className="mt-8">
+              <h2 className="text-lg font-semibold text-stone-900">
+                Frequently Bought Together
+              </h2>
+              <div className="mt-4 flex gap-4 border-t border-stone-200 pt-4">
+                <Link
+                  href={`/shop/${paired.slug}`}
+                  className="relative h-24 w-20 shrink-0 overflow-hidden bg-stone-100"
+                >
+                  <ImageWithFallback
+                    src={paired.images?.[0]}
+                    alt=""
+                    imageClassName="object-cover"
+                    sizes="80px"
+                    fallbackClassName="flex h-full w-full items-center justify-center bg-stone-200"
+                    fallbackLabelClassName="text-[8px] font-semibold uppercase tracking-[0.12em]"
+                  />
+                </Link>
+                <div className="min-w-0">
+                  <Link
+                    href={`/shop/${paired.slug}`}
+                    className="text-sm font-medium text-stone-900 hover:underline"
+                  >
+                    {paired.name}
+                  </Link>
+                  <p className="mt-1 flex flex-wrap items-baseline gap-2 text-sm">
+                    <span className="font-semibold text-stone-900">
+                      {formatPrice(paired.price, paired.currency)}
+                    </span>
+                    {paired.compareAtPrice > paired.price ? (
+                      <span className="text-stone-400 line-through">
+                        {formatPrice(paired.compareAtPrice, paired.currency)}
+                      </span>
+                    ) : null}
+                  </p>
+                  <button
+                    type="button"
+                    onClick={addPairedItem}
+                    className="mt-2 inline-flex items-center gap-1 bg-stone-900 px-3 py-1.5 text-xs font-semibold text-white hover:bg-stone-800"
+                  >
+                    + Add to Cart
+                  </button>
+                </div>
+              </div>
+            </div>
           ) : null}
         </div>
 
-        <div className="pt-0">
+        <div className="rounded-lg border border-stone-200 bg-white p-5 sm:p-6">
           {breadcrumbs ? (
-            <div className="mb-2 lg:hidden sm:mb-3">{breadcrumbs}</div>
+            <div className="mb-3 lg:hidden">{breadcrumbs}</div>
           ) : null}
-          <div className="flex flex-wrap items-start justify-between gap-3">
-            <h1 className="font-[family-name:var(--font-display)] text-3xl tracking-tight text-stone-900 sm:text-4xl">
+          <div className="flex items-start justify-between gap-3">
+            <h1 className="text-2xl font-bold tracking-tight text-stone-900 sm:text-[1.65rem]">
               {product.name}
             </h1>
             <button
@@ -268,80 +364,77 @@ export function ProductDetail({ product, related, breadcrumbs = null }) {
                   image: main,
                 })
               }
-              className="inline-flex h-12 w-12 shrink-0 cursor-pointer items-center justify-center focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
+              className="inline-flex h-10 w-10 shrink-0 items-center justify-center text-stone-700"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
                 fill={
-                  wishReady && isWishlisted(product.id)
-                    ? "var(--icon-button-bg)"
-                    : "none"
+                  wishReady && isWishlisted(product.id) ? "currentColor" : "none"
                 }
-                stroke="var(--icon-button-bg)"
+                stroke="currentColor"
                 strokeWidth="1.75"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="h-[1.75rem] w-[1.75rem]"
+                className="h-6 w-6"
                 aria-hidden
               >
                 <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
               </svg>
             </button>
           </div>
-          <div className="mt-3 flex flex-wrap items-baseline gap-2">
-            <span className="text-xl text-stone-900">
+
+          <div className="mt-3 flex flex-wrap items-center gap-2">
+            <span className="text-2xl font-semibold text-stone-900">
               {formatPrice(product.price, product.currency)}
             </span>
             {onSale ? (
-              <span className="text-lg text-stone-400 line-through">
+              <span className="text-base text-stone-400 line-through">
                 {formatPrice(product.compareAtPrice, product.currency)}
               </span>
             ) : null}
+            {discount > 0 ? (
+              <span className="text-sm font-semibold text-[#e07a3d]">
+                {discount}% Off
+              </span>
+            ) : null}
           </div>
-          <div className="mt-8 space-y-6">
-            <fieldset>
-              <legend className="sr-only">Size</legend>
-              <div className="flex items-center justify-between gap-3">
-                <p className="text-xs font-semibold uppercase tracking-wider text-stone-500">
-                  Size
-                </p>
-                <Link
-                  href="/size-guide"
-                  className="text-sm font-medium text-[var(--primary)] underline underline-offset-2 transition-opacity hover:opacity-80"
-                >
-                  Size Guide
-                </Link>
-              </div>
-              <div className="mt-2">
-                <ProductSizeOptions
-                  product={product}
-                  selectedSize={size}
-                  onSelectSize={setSize}
-                  interactive
-                  showLegend={false}
-                />
-              </div>
-            </fieldset>
 
-            <fieldset>
-              <legend className="text-xs font-semibold uppercase tracking-wider text-stone-500">
-                Color
-              </legend>
+          <div className="mt-6">
+            <p className="text-sm font-semibold text-stone-900">Select Size:</p>
+            <div className="mt-2 flex flex-wrap gap-2">
+              {(product.sizes ?? []).map((option) => (
+                <button
+                  key={option}
+                  type="button"
+                  onClick={() => setSize(option)}
+                  className={`min-w-12 border px-3 py-2 text-sm ${
+                    size === option
+                      ? "border-stone-900 bg-stone-900 text-white"
+                      : "border-stone-300 bg-white text-stone-800 hover:border-stone-500"
+                  }`}
+                >
+                  {option}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {(product.colors ?? []).length > 0 ? (
+            <div className="mt-5">
+              <p className="text-sm font-semibold text-stone-900">Color:</p>
               <div className="mt-2 flex flex-wrap gap-2">
-                {(product.colors ?? []).map((c) => (
+                {product.colors.map((c) => (
                   <button
                     key={c.name}
                     type="button"
                     onClick={() => setColor(c.name)}
-                    className={`flex items-center gap-2 rounded-lg border px-3 py-2 text-sm transition-colors ${
+                    className={`flex items-center gap-2 border px-3 py-2 text-sm ${
                       color === c.name
-                        ? "border-stone-900 ring-2 ring-stone-900/20"
-                        : "border-stone-200 bg-[var(--surface-elevated)] hover:border-stone-400"
+                        ? "border-stone-900 bg-stone-900 text-white"
+                        : "border-stone-300 bg-white text-stone-800 hover:border-stone-500"
                     }`}
                   >
                     <span
-                      className="h-4 w-4 rounded-full border border-stone-300"
+                      className="h-3.5 w-3.5 rounded-full border border-stone-300"
                       style={{ backgroundColor: c.hex }}
                       aria-hidden
                     />
@@ -349,46 +442,156 @@ export function ProductDetail({ product, related, breadcrumbs = null }) {
                   </button>
                 ))}
               </div>
-            </fieldset>
+            </div>
+          ) : null}
 
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+          <div className="mt-6 flex flex-wrap items-center gap-3">
+            <div className="inline-flex items-center border border-stone-300">
               <button
                 type="button"
-                disabled={!canAdd}
-                onClick={handleAdd}
-                className="w-full rounded-full border border-stone-200 bg-white py-3.5 text-sm font-semibold text-stone-900 transition-colors hover:bg-stone-50 disabled:cursor-not-allowed disabled:opacity-40 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)] sm:w-auto sm:min-w-[180px] sm:px-8"
+                aria-label="Decrease quantity"
+                onClick={() => setQuantity((value) => Math.max(1, value - 1))}
+                className="flex h-11 w-11 items-center justify-center text-lg text-stone-700"
               >
-                Add to bag
+                −
               </button>
+              <span className="flex h-11 w-10 items-center justify-center text-sm font-medium">
+                {quantity}
+              </span>
               <button
                 type="button"
-                disabled={!canAdd}
-                onClick={handleBuyNow}
-                className="w-full rounded-full bg-[var(--accent)] py-3.5 text-sm font-semibold text-white transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)] sm:w-auto sm:min-w-[180px] sm:px-8"
+                aria-label="Increase quantity"
+                onClick={() => setQuantity((value) => Math.min(10, value + 1))}
+                className="flex h-11 w-11 items-center justify-center text-lg text-stone-700"
               >
-                Buy Now
+                +
               </button>
             </div>
-
-            <ProductInfoSections product={product} />
+            <button
+              type="button"
+              disabled={!canAdd}
+              onClick={handleAdd}
+              className="inline-flex h-11 items-center gap-2 bg-stone-900 px-5 text-sm font-semibold text-white hover:bg-stone-800 disabled:cursor-not-allowed disabled:opacity-40"
+            >
+              + Add to Cart
+            </button>
           </div>
+
+          <Link
+            href="/exchange-refund"
+            className="mt-6 flex items-start justify-between gap-3 rounded-md border border-stone-200 px-4 py-3"
+          >
+            <div>
+              <p className="flex items-center gap-2 text-sm font-semibold text-stone-900">
+                <span className="text-emerald-600" aria-hidden>
+                  ✓
+                </span>
+                Easy Returns & Exchange
+              </p>
+              <p className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-xs text-stone-600">
+                <span className="inline-flex items-center gap-1">
+                  <span className="text-emerald-600" aria-hidden>
+                    ✓
+                  </span>
+                  Tell us within 7 days
+                </span>
+                <span className="inline-flex items-center gap-1">
+                  <span className="text-emerald-600" aria-hidden>
+                    ✓
+                  </span>
+                  Exchange within 7 days
+                </span>
+              </p>
+            </div>
+            <span className="text-stone-400" aria-hidden>
+              ›
+            </span>
+          </Link>
+
+          <p className="mt-6 text-sm leading-relaxed text-stone-600">
+            {product.description}
+          </p>
+
+          <h2 className="mt-6 text-sm font-bold text-stone-900">
+            Detailed Description
+          </h2>
+          <ul className="mt-3 list-disc space-y-1.5 pl-5 text-sm leading-relaxed text-stone-700">
+            {info.details.map((item) => (
+              <li key={item}>{item}</li>
+            ))}
+          </ul>
+
+          {(product.sizes ?? []).length > 0 ? (
+            <div className="mt-8">
+              <h2 className="text-sm font-bold text-stone-900">
+                Size chart{" "}
+                <span className="font-normal text-stone-500">
+                  (Expected deviation ± 3%)
+                </span>
+              </h2>
+              <div className="mt-3 inline-flex border border-stone-200">
+                {[
+                  { id: "in", label: "INCH" },
+                  { id: "cm", label: "CM" },
+                ].map((option) => (
+                  <button
+                    key={option.id}
+                    type="button"
+                    onClick={() => setUnit(option.id)}
+                    className={`px-4 py-1.5 text-xs font-semibold ${
+                      unit === option.id
+                        ? "bg-white text-stone-900 ring-1 ring-inset ring-stone-400"
+                        : "bg-stone-50 text-stone-500"
+                    }`}
+                  >
+                    {option.label}
+                  </button>
+                ))}
+              </div>
+              <div className="mt-3 overflow-x-auto">
+                <table className="w-full min-w-[20rem] border-collapse text-left text-sm">
+                  <thead>
+                    <tr className="bg-stone-100 text-stone-700">
+                      <th className="border border-stone-200 px-3 py-2 font-semibold">
+                        Size
+                      </th>
+                      {columns.map((column) => (
+                        <th
+                          key={column.key}
+                          className="border border-stone-200 px-3 py-2 font-semibold"
+                        >
+                          {column.label}
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {product.sizes.map((option) => {
+                      const row = SIZE_MEASUREMENTS[option];
+                      if (!row) return null;
+                      return (
+                        <tr key={option}>
+                          <td className="border border-stone-200 px-3 py-2">
+                            {option}
+                          </td>
+                          {columns.map((column) => (
+                            <td
+                              key={column.key}
+                              className="border border-stone-200 px-3 py-2"
+                            >
+                              {formatMeasure(row[column.key], unit)}
+                            </td>
+                          ))}
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          ) : null}
         </div>
       </div>
-      {related.length > 0 ? (
-        <div className="mt-6">
-          <ProductsSliderSection
-            products={related}
-            title="You may also like"
-            sectionClassName="border-t border-stone-200 bg-transparent"
-            useDesktopCarouselOnMobile
-            mobileTwoUpNoLoop
-            showCta={false}
-            centerTitleOnMobile
-            compactMobileSpacing
-            useParentContainer
-          />
-        </div>
-      ) : null}
       {imageModalOpen ? (
         <div
           className="fixed inset-0 z-[80] bg-black/90"

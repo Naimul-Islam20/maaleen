@@ -15,7 +15,7 @@ function FooterDisclosure({ title, children }) {
         type="button"
         onClick={() => setOpen((current) => !current)}
         aria-expanded={open}
-        className="relative flex min-h-11 w-full items-center justify-center sm:hidden"
+        className="relative flex w-full items-center justify-center sm:hidden"
       >
         <span className="text-base font-bold uppercase tracking-[0.2em] text-white">
           {title}
@@ -48,7 +48,7 @@ function FooterDisclosure({ title, children }) {
 export function SiteFooter() {
   const pathname = usePathname();
   const isAuthPage = pathname === "/login" || pathname === "/signup";
-  const footerDividerClass = "border-t border-[var(--secondary)]";
+  const footerDividerClass = "border-t-[0.5px] border-[var(--secondary)]";
 
   if (pathname === "/account") return null;
 
@@ -60,7 +60,7 @@ export function SiteFooter() {
     >
       <ChromeContainer>
         <div className="grid grid-cols-1 gap-x-8 gap-y-12 text-center max-sm:gap-y-0 sm:grid-cols-2 sm:text-start lg:grid-cols-4 lg:gap-10">
-          <div className="max-sm:pb-6">
+          <div className="max-sm:pb-3">
             <Link href="/" className="inline-block">
               <Image
                 src="/Maaleen_New_Logo-1.png"
@@ -83,7 +83,7 @@ export function SiteFooter() {
 
           {/* INFORMATION */}
           <div
-            className={`max-sm:pt-6 max-sm:pb-6 sm:pt-0 ${footerDividerClass} sm:border-t-0`}
+            className={`max-sm:py-3 sm:pt-0 ${footerDividerClass} sm:border-t-0`}
           >
             <FooterDisclosure title="INFORMATION">
             <ul className="space-y-3">
@@ -111,7 +111,7 @@ export function SiteFooter() {
 
           {/* COMPANY */}
           <div
-            className={`max-sm:pt-6 max-sm:pb-6 sm:pt-0 ${footerDividerClass} sm:border-t-0`}
+            className={`max-sm:py-3 sm:pt-0 ${footerDividerClass} sm:border-t-0`}
           >
             <FooterDisclosure title="COMPANY">
             <ul className="space-y-3">
@@ -137,7 +137,7 @@ export function SiteFooter() {
           <div className="col-span-1 max-sm:pt-0">
             <div className="grid grid-cols-1 gap-8 max-sm:gap-y-0 lg:grid-cols-1 lg:gap-12">
               <div
-                className={`max-sm:pt-6 max-sm:pb-6 ${footerDividerClass} sm:border-t-0`}
+                className={`max-sm:py-3 ${footerDividerClass} sm:border-t-0`}
               >
                 <FooterDisclosure title="SERVICE CENTER">
                 <div className="space-y-5 text-[15.5px] font-bold">
@@ -162,7 +162,7 @@ export function SiteFooter() {
               </div>
 
               <div
-                className={`max-sm:pt-6 max-sm:pb-6 ${footerDividerClass} sm:border-t-0`}
+                className={`max-sm:py-3 ${footerDividerClass} sm:border-t-0`}
               >
                 <FooterDisclosure title="FIND US ON">
                 <div className="flex items-center justify-center gap-4 sm:justify-start">
@@ -231,7 +231,7 @@ export function SiteFooter() {
 
         {/* Bottom Bar */}
         <div
-          className={`${footerDividerClass} pt-6 text-center text-base opacity-70 max-sm:mt-0 sm:mt-10 sm:text-start`}
+          className={`${footerDividerClass} pt-3 text-center text-base opacity-70 max-sm:mt-0 sm:mt-10 sm:pt-6 sm:text-start`}
         >
           <p>© {new Date().getFullYear()} Maaleen. All rights reserved.</p>
         </div>

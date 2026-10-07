@@ -1470,7 +1470,7 @@ export function SiteHeader() {
           />
 
           <div
-            className="relative z-10 grid h-full grid-cols-5 items-center px-12"
+            className="relative z-10 grid h-full grid-cols-5 items-center px-2"
             style={iconLayerMask}
           >
             <div
@@ -1485,7 +1485,7 @@ export function SiteHeader() {
                   aria-label="Home"
                   aria-current={pathname === "/" ? "page" : undefined}
                 >
-                  <HomeIcon className="h-5 w-5" />
+                  <HomeIcon className="h-6 w-6" />
                 </Link>
               ) : null}
             </div>
@@ -1503,7 +1503,7 @@ export function SiteHeader() {
                   aria-pressed={wishlistOpen}
                 >
                   <div className="relative">
-                    <HeartIcon className="h-5 w-5" />
+                    <HeartIcon className="h-6 w-6" />
                     {wishReady && wishCount > 0 && (
                       <span className="absolute -right-1.5 -top-1.5 flex h-3.5 min-w-3.5 items-center justify-center rounded-full bg-[var(--primary)] px-0.5 text-[8px] font-bold leading-none text-[var(--secondary)]">
                         {wishCount > 99 ? "99+" : wishCount}
@@ -1527,7 +1527,7 @@ export function SiteHeader() {
                   aria-pressed={cartMounted}
                 >
                   <div className="relative">
-                    <BagIcon className="h-5 w-5" />
+                    <BagIcon className="h-6 w-6" />
                     {ready && totalItems > 0 && (
                       <span className="absolute -right-1.5 -top-1.5 flex h-3.5 min-w-3.5 items-center justify-center rounded-full bg-[var(--primary)] px-0.5 text-[8px] font-bold leading-none text-[var(--secondary)]">
                         {totalItems > 99 ? "99+" : totalItems}
@@ -1549,7 +1549,7 @@ export function SiteHeader() {
                   className={bottomBarIdleBtn}
                   aria-label={isAuthenticated ? "My account" : "Login"}
                 >
-                  <UserIcon className="h-5 w-5" />
+                  <UserIcon className="h-6 w-6" />
                 </Link>
               ) : null}
             </div>
@@ -1567,7 +1567,7 @@ export function SiteHeader() {
                   aria-label={searchOpen ? "Close search" : "Search"}
                   aria-expanded={searchOpen}
                 >
-                  <SearchIcon className="h-5 w-5" />
+                  <SearchIcon className="h-6 w-6" />
                 </button>
               ) : null}
             </div>
@@ -1589,7 +1589,7 @@ export function SiteHeader() {
                     aria-label="Home"
                     aria-current="page"
                   >
-                    <HomeIcon className="h-5 w-5" />
+                    <HomeIcon className="h-6 w-6" />
                   </Link>
                 ) : null}
                 {bottomActiveIndex === 1 ? (
@@ -1601,7 +1601,7 @@ export function SiteHeader() {
                     aria-pressed={wishlistOpen}
                   >
                     <div className="relative">
-                      <HeartIcon className="h-5 w-5" />
+                      <HeartIcon className="h-6 w-6" />
                       {wishReady && wishCount > 0 && (
                         <span className="absolute -right-1.5 -top-1.5 flex h-3.5 min-w-3.5 items-center justify-center rounded-full bg-[var(--primary)] px-0.5 text-[8px] font-bold leading-none text-[var(--secondary)]">
                           {wishCount > 99 ? "99+" : wishCount}
@@ -1619,7 +1619,7 @@ export function SiteHeader() {
                     aria-pressed={cartMounted}
                   >
                     <div className="relative">
-                      <BagIcon className="h-5 w-5" />
+                      <BagIcon className="h-6 w-6" />
                       {ready && totalItems > 0 && (
                         <span className="absolute -right-1.5 -top-1.5 flex h-3.5 min-w-3.5 items-center justify-center rounded-full bg-[var(--primary)] px-0.5 text-[8px] font-bold leading-none text-[var(--secondary)]">
                           {totalItems > 99 ? "99+" : totalItems}
@@ -1635,7 +1635,7 @@ export function SiteHeader() {
                     className={bottomBarActiveChip}
                     aria-label={isAuthenticated ? "My account" : "Login"}
                   >
-                    <UserIcon className="h-5 w-5" />
+                    <UserIcon className="h-6 w-6" />
                   </Link>
                 ) : null}
                 {bottomActiveIndex === 4 ? (
@@ -1647,7 +1647,7 @@ export function SiteHeader() {
                     aria-label={searchOpen ? "Close search" : "Search"}
                     aria-expanded={searchOpen}
                   >
-                    <SearchIcon className="h-5 w-5" />
+                    <SearchIcon className="h-6 w-6" />
                   </button>
                 ) : null}
               </div>
