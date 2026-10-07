@@ -23,8 +23,8 @@ export function ProductsCatalog({ products }) {
     let list = [...products];
 
     if (edit) {
-      if (edit.tag === "new") {
-        list = list.filter((p) => p.tags?.includes("new"));
+      if (edit.tag) {
+        list = list.filter((p) => p.tags?.includes(edit.tag));
       } else if (edit.category) {
         list = list.filter((p) => p.category === edit.category);
       }

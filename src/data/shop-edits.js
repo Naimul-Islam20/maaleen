@@ -8,6 +8,8 @@ export const SHOP_EDITS = {
   "tailored-bottoms": { label: "Tailored bottoms", category: "bottoms" },
   "new-arrivals": { label: "New arrivals", tag: "new" },
   "full-edit": { label: "The full edit" },
+  sale: { label: "Sale", tag: "sale" },
+  featured: { label: "Featured", tag: "featured" },
 };
 
 export function getShopEdit(slug) {

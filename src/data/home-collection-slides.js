@@ -61,6 +61,23 @@ export const HOME_COLLECTION_SLIDES = [
         "https://images.unsplash.com/photo-1496747611176-843222e1e57c?w=900&q=80",
     },
   },
+  {
+    id: "s4",
+    left: {
+      title: "Sale",
+      description: "Selected pieces, marked down for a short time.",
+      href: buildShopEditHref("sale"),
+      image:
+        "https://images.unsplash.com/photo-1483985988355-763728e1935b?w=900&q=80",
+    },
+    right: {
+      title: "Featured",
+      description: "The edits we keep coming back to this season.",
+      href: buildShopEditHref("featured"),
+      image:
+        "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=900&q=80",
+    },
+  },
 ];
 
 /** Flat list for the collections page mosaic grid. */

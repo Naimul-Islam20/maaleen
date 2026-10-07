@@ -2,46 +2,44 @@ import { CollectionColumn } from "@/components/collections/collection-column";
 
 /**
  * Desktop mosaic:
- * [ featured ] [ a ] [ b ]
- * [ featured ] [ c ] [ d ]
- * [ e ] [ f ]
+ * [ big ] [ cat ] [ cat ]
+ * [ big ] [ cat ] [ cat ]
+ *         [ cat ] [ cat ]
+ * Two large tiles stacked on the left. Six landscape category cards on the right.
  */
 export function CollectionsMosaic({ items, className = "" }) {
-  const [featured, ...rest] = items;
-  const [a, b, c, d, e, f] = rest;
+  const left = items.slice(0, 2);
+  const right = items.slice(2, 8);
 
   return (
     <div
-      className={`hidden grid-cols-4 grid-rows-3 gap-4 lg:grid lg:h-[min(90vw,58rem)] ${className}`}
+      className={`hidden items-stretch gap-4 lg:grid lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] ${className}`}
     >
-      {featured ? (
-        <CollectionColumn
-          item={featured}
-          variant="tile"
-          priority
-          className="col-span-2 row-span-2 h-full min-h-0"
-          sizes="50vw"
-        />
-      ) : null}
-
-      {[
-        { item: a, className: "col-start-3 row-start-1" },
-        { item: b, className: "col-start-4 row-start-1" },
-        { item: c, className: "col-start-3 row-start-2" },
-        { item: d, className: "col-start-4 row-start-2" },
-        { item: e, className: "col-start-1 row-start-3" },
-        { item: f, className: "col-start-2 row-start-3" },
-      ]
-        .filter((entry) => entry.item)
-        .map((entry, index) => (
+      <div className="grid h-full min-h-0 grid-rows-2 gap-4">
+        {left.map((item, index) => (
           <CollectionColumn
-            key={`${entry.item.href}-d-${index}`}
-            item={entry.item}
+            key={`${item.href}-l-${index}`}
+            item={item}
             variant="tile"
-            className={`h-full min-h-0 ${entry.className}`}
-            sizes="25vw"
+            priority={index === 0}
+            className="h-full min-h-0"
+            sizes="40vw"
           />
         ))}
+      </div>
+
+      <div className="grid min-h-0 grid-cols-2 gap-4">
+        {right.map((item, index) => (
+          <CollectionColumn
+            key={`${item.href}-r-${index}`}
+            item={item}
+            variant="tile"
+            compact
+            className="aspect-video min-h-0 w-full"
+            sizes="240px"
+          />
+        ))}
+      </div>
     </div>
   );
 }
