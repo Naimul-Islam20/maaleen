@@ -73,6 +73,7 @@ export function QuickAddModal({ product, onClose }) {
       slug: product.slug,
       name: product.name,
       price: product.price,
+      compareAtPrice: product.compareAtPrice,
       currency: product.currency,
       image,
       size,

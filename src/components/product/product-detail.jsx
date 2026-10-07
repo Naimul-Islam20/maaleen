@@ -251,6 +251,7 @@ export function ProductDetail({ product, related, breadcrumbs = null }) {
       slug: product.slug,
       name: product.name,
       price: product.price,
+      compareAtPrice: product.compareAtPrice,
       currency: product.currency,
       image: main,
       size,

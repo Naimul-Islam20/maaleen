@@ -20,6 +20,7 @@ export function makeLineId(productId, size, color) {
 export function CartProvider({ children }) {
   const [items, setItems] = useState([]);
   const [ready, setReady] = useState(false);
+  const [cartOpen, setCartOpen] = useState(false);
 
   useEffect(() => {
     // Hydrate from localStorage after mount (SSR has no window; avoids hydration mismatch).
@@ -45,6 +46,7 @@ export function CartProvider({ children }) {
       slug,
       name,
       price,
+      compareAtPrice,
       currency,
       image,
       size,
@@ -59,6 +61,7 @@ export function CartProvider({ children }) {
         next[idx] = {
           ...next[idx],
           quantity: next[idx].quantity + quantity,
+          compareAtPrice: compareAtPrice ?? next[idx].compareAtPrice ?? null,
         };
         return next;
       }
@@ -70,6 +73,7 @@ export function CartProvider({ children }) {
           slug,
           name,
           price,
+          compareAtPrice: compareAtPrice ?? null,
           currency,
           image,
           size,
@@ -78,6 +82,7 @@ export function CartProvider({ children }) {
         },
       ];
     });
+    setCartOpen(true);
   }, []);
 
   const updateQuantity = useCallback((lineId, quantity) => {
@@ -93,6 +98,27 @@ export function CartProvider({ children }) {
   const removeItem = useCallback((lineId) => {
     setItems((prev) => prev.filter((i) => i.lineId !== lineId));
   }, []);
+
+  const changeSize = useCallback((lineId, size) => {
+    setItems((prev) => {
+      const line = prev.find((item) => item.lineId === lineId);
+      if (!line || line.size === size) return prev;
+      const nextId = makeLineId(line.productId, size, line.color);
+      const rest = prev.filter((item) => item.lineId !== lineId);
+      const existing = rest.find((item) => item.lineId === nextId);
+      if (existing) {
+        return rest.map((item) =>
+          item.lineId === nextId
+            ? { ...item, quantity: item.quantity + line.quantity }
+            : item,
+        );
+      }
+      return [...rest, { ...line, size, lineId: nextId }];
+    });
+  }, []);
+
+  const openCart = useCallback(() => setCartOpen(true), []);
+  const closeCart = useCallback(() => setCartOpen(false), []);
 
   const clearCart = useCallback(() => setItems([]), []);
 
@@ -110,8 +136,12 @@ export function CartProvider({ children }) {
     () => ({
       items,
       ready,
+      cartOpen,
+      openCart,
+      closeCart,
       addItem,
       updateQuantity,
+      changeSize,
       removeItem,
       clearCart,
       totalItems,
@@ -120,8 +150,12 @@ export function CartProvider({ children }) {
     [
       items,
       ready,
+      cartOpen,
+      openCart,
+      closeCart,
       addItem,
       updateQuantity,
+      changeSize,
       removeItem,
       clearCart,
       totalItems,

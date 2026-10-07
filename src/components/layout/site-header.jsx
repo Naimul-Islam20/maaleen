@@ -13,6 +13,9 @@ import { ChromeContainer } from "@/components/layout/container";
 import { ImageWithFallback } from "@/components/ui/image-with-fallback";
 import { getShopEdit } from "@/data/shop-edits";
 import { formatPrice } from "@/lib/format";
+import { getProductBySlug } from "@/lib/products";
+import { sizeOptionLabel } from "@/lib/size-chart";
+import { QuickAddModal } from "@/components/product/quick-add-modal";
 
 function HeartIcon({ className }) {
   return (
@@ -167,6 +170,28 @@ function MenuIcon({ className = "h-6 w-6" }) {
       <line x1="3" y1="12" x2="21" y2="12" />
       <line x1="3" y1="6" x2="21" y2="6" />
       <line x1="3" y1="18" x2="21" y2="18" />
+    </svg>
+  );
+}
+
+function TrashIcon({ className }) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+      aria-hidden
+    >
+      <path d="M3 6h18" />
+      <path d="M8 6V4h8v2" />
+      <path d="M19 6l-1 14H6L5 6" />
+      <path d="M10 11v6" />
+      <path d="M14 11v6" />
     </svg>
   );
 }
@@ -402,7 +427,11 @@ export function SiteHeader() {
     items: cartItems,
     subtotal,
     updateQuantity,
+    changeSize,
     removeItem: removeCartItem,
+    cartOpen,
+    openCart,
+    closeCart,
   } = useCart();
   const {
     totalItems: wishCount,
@@ -414,8 +443,8 @@ export function SiteHeader() {
   const accountHref = isAuthenticated ? "/account" : "/login";
   const [wishlistOpen, setWishlistOpen] = useState(false);
   const [wishlistFromBottom, setWishlistFromBottom] = useState(true);
-  const [cartMounted, setCartMounted] = useState(false);
-  const [cartFromBottom, setCartFromBottom] = useState(true);
+  const cartMounted = cartOpen;
+  const [anotherSizeProduct, setAnotherSizeProduct] = useState(null);
   const [logoError, setLogoError] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -497,17 +526,6 @@ export function SiteHeader() {
     setWishlistOpen(false);
   };
 
-  const openCart = () => {
-    if (typeof window !== "undefined") {
-      setCartFromBottom(window.matchMedia("(max-width: 639px)").matches);
-    }
-    setCartMounted(true);
-  };
-
-  const closeCart = () => {
-    setCartMounted(false);
-  };
-
   const closeBottomBarPanels = () => {
     if (searchOpen) setSearchOpen(false);
     if (wishlistOpen) closeWishlist();
@@ -523,15 +541,6 @@ export function SiteHeader() {
     mq.addEventListener("change", sync);
     return () => mq.removeEventListener("change", sync);
   }, [wishlistOpen]);
-
-  useEffect(() => {
-    if (!cartMounted) return;
-    const mq = window.matchMedia("(max-width: 639px)");
-    const sync = () => setCartFromBottom(mq.matches);
-    sync();
-    mq.addEventListener("change", sync);
-    return () => mq.removeEventListener("change", sync);
-  }, [cartMounted]);
 
   useEffect(() => {
     const onScroll = () => {
@@ -1102,7 +1111,7 @@ export function SiteHeader() {
       </AnimatePresence>
       <AnimatePresence>
         {cartMounted && (
-          <div className="fixed inset-0 z-50">
+          <div className="fixed inset-0 z-[80]">
             <motion.button
               type="button"
               aria-label="Close cart"
@@ -1114,169 +1123,174 @@ export function SiteHeader() {
               transition={{ duration: 0.18 }}
             />
             <motion.aside
-              initial={
-                cartFromBottom ? { y: "100%", x: 0 } : { x: "100%", y: 0 }
-              }
-              animate={{ x: 0, y: 0 }}
-              exit={cartFromBottom ? { y: "100%", x: 0 } : { x: "100%", y: 0 }}
+              initial={{ x: "100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "100%" }}
               transition={{ duration: 0.26, ease: "easeInOut" }}
-              className={
-                cartFromBottom
-                  ? "fixed bottom-[calc(4rem+env(safe-area-inset-bottom))] left-0 right-0 z-50 flex h-[68vh] max-h-[calc(100dvh-6rem)] flex-col rounded-t-2xl bg-[var(--surface-elevated)] shadow-[0_-12px_40px_rgba(0,0,0,0.15)] ring-1 ring-black/10"
-                  : "absolute right-0 top-0 z-50 flex h-full w-full max-w-sm flex-col bg-[var(--surface-elevated)] shadow-xl ring-1 ring-black/10"
-              }
+              className="absolute top-0 right-0 z-[80] flex h-full w-full max-w-[22rem] flex-col bg-white shadow-xl"
             >
-              <div className="flex shrink-0 items-center justify-between border-b border-stone-200 px-5 py-4">
-                <h2 className="text-sm font-semibold uppercase tracking-wide text-stone-700">
-                  Your bag
-                </h2>
+              <div className="relative flex h-11 shrink-0 items-center bg-[#2a2a2a] text-white">
                 <button
                   type="button"
                   onClick={closeCart}
-                  className="inline-flex h-7 w-7 items-center justify-center text-stone-400 hover:text-stone-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
+                  aria-label="Close cart"
+                  className="relative z-10 ml-2 inline-flex h-8 w-8 items-center justify-center rounded-none text-xl leading-none text-red-500"
                 >
-                  <span aria-hidden className="text-base leading-none">
-                    ×
-                  </span>
+                  ×
                 </button>
+                <h2 className="pointer-events-none absolute inset-0 flex items-center justify-center text-sm font-semibold tracking-[0.18em]">
+                  CART
+                </h2>
               </div>
-              <div className="flex min-h-0 flex-1 flex-col">
-                <div className="min-h-0 flex-1 overflow-y-auto px-5 py-4">
-                  {!ready ? (
-                    <p className="text-sm text-stone-500">Loading…</p>
-                  ) : cartItems.length === 0 ? (
-                    <div className="mt-6 text-sm text-stone-600">
-                      Your bag is empty.
-                    </div>
-                  ) : (
-                    <ul className="space-y-4 max-sm:space-y-2.5">
-                      {cartItems.map((line) => (
+              <div className="min-h-0 flex-1 overflow-y-auto">
+                {!ready ? (
+                  <p className="px-3 py-6 text-sm text-stone-500">Loading…</p>
+                ) : cartItems.length === 0 ? (
+                  <p className="px-3 py-6 text-sm text-stone-600">
+                    Your cart is empty.
+                  </p>
+                ) : (
+                  <ul>
+                    {cartItems.map((line) => {
+                      const product = getProductBySlug(line.slug);
+                      const sizes = product?.sizes?.length
+                        ? product.sizes
+                        : [line.size];
+                      const qtyOptions = Array.from(
+                        { length: Math.max(10, line.quantity) },
+                        (_, index) => index + 1,
+                      );
+                      const onSale =
+                        line.compareAtPrice != null &&
+                        line.compareAtPrice > line.price;
+                      return (
                         <li
                           key={line.lineId}
-                          className="flex gap-3 rounded-lg border border-stone-200 bg-[var(--surface)] p-3 max-sm:gap-2 max-sm:p-2"
+                          className="border-b border-stone-200 px-3 py-3"
                         >
-                          <Link
-                            href={`/shop/${line.slug}`}
-                            className="relative h-20 w-16 shrink-0 overflow-hidden rounded-md bg-stone-200 max-sm:h-14 max-sm:w-11"
-                            onClick={closeCart}
-                          >
-                            <ImageWithFallback
-                              src={line.image}
-                              alt=""
-                              useNative
-                              imageClassName="object-cover"
-                              fallbackClassName="flex h-full w-full items-center justify-center bg-stone-200 text-stone-500"
-                              fallbackLabelClassName="text-[9px] font-semibold uppercase tracking-[0.14em]"
-                            />
-                          </Link>
-                          <div className="min-w-0 flex-1">
-                            <div className="flex items-start justify-between gap-2">
-                              <div className="min-w-0 flex-1">
-                                <Link
-                                  href={`/shop/${line.slug}`}
-                                  className="truncate text-sm font-medium text-stone-900 hover:text-[var(--accent)] max-sm:text-xs"
-                                  onClick={closeCart}
-                                >
-                                  {line.name}
-                                </Link>
-                                <p className="mt-1 text-xs text-stone-500 max-sm:mt-0.5 max-sm:text-[10px]">
-                                  {line.color}-{line.size}
-                                </p>
-                              </div>
-                              <button
-                                type="button"
-                                onClick={() => removeItem(line.lineId)}
-                                className="ml-2 inline-flex h-9 w-9 items-center justify-center text-stone-400 hover:text-stone-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)] max-sm:ml-1 max-sm:h-7 max-sm:w-7"
-                                aria-label="Remove from bag"
-                              >
-                                <span
-                                  aria-hidden
-                                  className="text-xl font-semibold leading-none max-sm:text-base"
-                                >
-                                  ×
+                          <div className="flex items-start gap-3">
+                            <p className="min-w-0 flex-1 text-sm leading-snug font-medium text-stone-900">
+                              {line.name}
+                            </p>
+                            <Link
+                              href={`/shop/${line.slug}`}
+                              onClick={closeCart}
+                              className="relative h-16 w-14 shrink-0 overflow-hidden bg-stone-100"
+                            >
+                              <ImageWithFallback
+                                src={line.image}
+                                alt=""
+                                useNative
+                                imageClassName="object-cover"
+                                fallbackClassName="flex h-full w-full items-center justify-center bg-stone-200 text-stone-500"
+                                fallbackLabelClassName="text-[8px] font-semibold uppercase tracking-[0.12em]"
+                              />
+                            </Link>
+                          </div>
+                          <div className="mt-2 grid grid-cols-[5.5rem_1fr] items-center gap-y-2 text-xs text-stone-700">
+                            <span>Price</span>
+                            <span className="text-right font-medium text-stone-900">
+                              {onSale ? (
+                                <span className="mr-1.5 font-normal text-stone-400 line-through">
+                                  {formatPrice(line.compareAtPrice, line.currency)}
                                 </span>
-                              </button>
-                            </div>
-                            <div className="mt-2 flex items-center justify-between gap-3 max-sm:mt-1.5 max-sm:gap-2">
-                              <p className="text-sm font-medium text-stone-900 max-sm:text-xs">
-                                {formatPrice(
-                                  line.price * line.quantity,
-                                  line.currency,
-                                )}
-                              </p>
-                              <div className="inline-flex items-center gap-2 rounded-full border border-stone-200 bg-[var(--surface)] px-2 py-1 text-xs text-stone-800 max-sm:gap-1.5 max-sm:px-1.5 max-sm:py-0.5 max-sm:text-[10px]">
-                                <button
-                                  type="button"
-                                  onClick={() =>
-                                    updateQuantity(
-                                      line.lineId,
-                                      line.quantity - 1,
-                                    )
-                                  }
-                                  className="px-1 text-sm leading-none disabled:text-stone-300 max-sm:text-xs"
-                                  disabled={line.quantity <= 1}
-                                  aria-label="Decrease quantity"
-                                >
-                                  -
-                                </button>
-                                <span className="min-w-[1.25rem] text-center max-sm:min-w-[1rem]">
-                                  {line.quantity}
-                                </span>
-                                <button
-                                  type="button"
-                                  onClick={() =>
-                                    updateQuantity(
-                                      line.lineId,
-                                      line.quantity + 1,
-                                    )
-                                  }
-                                  className="px-1 text-sm leading-none max-sm:text-xs"
-                                  aria-label="Increase quantity"
-                                >
-                                  +
-                                </button>
-                              </div>
-                            </div>
+                              ) : null}
+                              {formatPrice(line.price, line.currency)}
+                            </span>
+                            <span>Size</span>
+                            <select
+                              aria-label={`Size for ${line.name}`}
+                              value={line.size}
+                              onChange={(event) =>
+                                changeSize(line.lineId, event.target.value)
+                              }
+                              className="w-full rounded border border-stone-300 bg-white px-2 py-1 text-xs text-stone-800"
+                            >
+                              {sizes.map((size) => (
+                                <option key={size} value={size}>
+                                  {sizeOptionLabel(size, product?.category)}
+                                </option>
+                              ))}
+                            </select>
+                            <span>Quantity</span>
+                            <select
+                              aria-label={`Quantity for ${line.name}`}
+                              value={line.quantity}
+                              onChange={(event) =>
+                                updateQuantity(
+                                  line.lineId,
+                                  Number(event.target.value),
+                                )
+                              }
+                              className="w-full rounded border border-stone-300 bg-white px-2 py-1 text-xs text-stone-800"
+                            >
+                              {qtyOptions.map((qty) => (
+                                <option key={qty} value={qty}>
+                                  {qty}
+                                </option>
+                              ))}
+                            </select>
+                            <span>Subtotal</span>
+                            <span className="text-right font-medium text-stone-900">
+                              {formatPrice(
+                                line.price * line.quantity,
+                                line.currency,
+                              )}
+                            </span>
+                          </div>
+                          <div className="mt-3 flex items-center gap-2">
+                            <button
+                              type="button"
+                              onClick={() => {
+                                if (product) setAnotherSizeProduct(product);
+                              }}
+                              disabled={!product}
+                              className="flex-1 rounded-sm bg-[var(--primary)] py-2 text-sm font-medium text-white disabled:opacity-40"
+                            >
+                              + Add another Size
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => removeCartItem(line.lineId)}
+                              aria-label={`Remove ${line.name}`}
+                              className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-sm bg-red-600 text-white"
+                            >
+                              <TrashIcon className="h-4 w-4" />
+                            </button>
                           </div>
                         </li>
-                      ))}
-                    </ul>
-                  )}
-                </div>
-                <div className="shrink-0 border-t border-stone-200 px-5 py-4">
-                  {ready && cartItems.length > 0 ? (
-                    <>
-                      <div className="flex items-center justify-between text-sm text-stone-700">
-                        <span>Subtotal</span>
-                        <span className="font-semibold text-stone-900">
-                          {formatPrice(subtotal, cartItems[0].currency)}
-                        </span>
-                      </div>
-                      <p className="mt-1 text-xs text-stone-500">
-                        Shipping and tax calculated at checkout.
-                      </p>
-                      <Link
-                        href="/checkout"
-                        className="mt-4 flex w-full items-center justify-center rounded-full bg-stone-900 py-3 text-sm font-semibold text-white hover:bg-stone-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
-                        onClick={closeCart}
-                      >
-                        Checkout
-                      </Link>
-                      <Link
-                        href="/cart"
-                        className="mt-2 block text-center text-xs font-medium text-[var(--accent)] hover:underline"
-                        onClick={closeCart}
-                      >
-                        View full bag
-                      </Link>
-                    </>
-                  ) : null}
-                </div>
+                      );
+                    })}
+                  </ul>
+                )}
               </div>
+              {ready && cartItems.length > 0 ? (
+                <div className="flex shrink-0 items-stretch border-t border-stone-200">
+                  <div className="flex w-[7.5rem] flex-col justify-center px-3 py-2">
+                    <span className="text-[11px] text-stone-500">Cart Total</span>
+                    <span className="text-sm font-semibold text-stone-900">
+                      {formatPrice(subtotal, cartItems[0].currency)}
+                    </span>
+                  </div>
+                  <Link
+                    href="/checkout"
+                    onClick={closeCart}
+                    className="flex flex-1 items-center justify-center bg-[var(--primary)] text-sm font-semibold text-white"
+                  >
+                    Checkout &gt;
+                  </Link>
+                </div>
+              ) : null}
             </motion.aside>
           </div>
         )}
       </AnimatePresence>
+      {anotherSizeProduct ? (
+        <QuickAddModal
+          product={anotherSizeProduct}
+          onClose={() => setAnotherSizeProduct(null)}
+        />
+      ) : null}
 
       <AnimatePresence>
         {menuOpen && (
