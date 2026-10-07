@@ -815,8 +815,8 @@ export function SiteHeader() {
                 priority
                 className={`w-auto object-contain transition-[height] duration-300 ease-out ${
                   headerCompact
-                    ? "h-14 sm:h-16"
-                    : "h-[4.5rem] sm:h-[5.5rem]"
+                    ? "h-12 sm:h-16"
+                    : "h-16 sm:h-[5.5rem]"
                 }`}
                 onError={() => setLogoError(true)}
               />

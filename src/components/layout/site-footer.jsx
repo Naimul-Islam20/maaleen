@@ -67,7 +67,7 @@ export function SiteFooter() {
                 alt="Maaleen"
                 width={280}
                 height={320}
-                className="mx-auto h-28 w-auto object-contain sm:mx-0 sm:h-32"
+                className="mx-auto h-20 w-auto object-contain sm:mx-0 sm:h-28"
               />
             </Link>
             <p className="mt-2 text-sm leading-relaxed text-white/80">

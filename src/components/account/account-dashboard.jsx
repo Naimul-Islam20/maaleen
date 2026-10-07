@@ -1415,9 +1415,14 @@ export function AccountDashboard() {
       {/* Top Header Bar */}
       <header className="sticky top-0 z-30 hidden items-center justify-between border-b border-[#eee7e1] bg-white px-4 sm:px-6 py-3 sm:py-3.5 shadow-2xs font-sans lg:flex">
         {/* Brand Logo */}
-        <Link href="/" className="flex items-center gap-1 font-sans text-xl sm:text-2xl font-bold tracking-tight text-[#370006]">
-          <span>maaleen</span>
-          <span className="h-1.5 w-1.5 sm:h-2 sm:w-2 rounded-full bg-[#370006] inline-block align-baseline" />
+        <Link href="/" className="flex items-center" aria-label="Maaleen">
+          <Image
+            src="/Maaleen_New_Logo-2.png"
+            alt=""
+            width={80}
+            height={50}
+            className="h-9 w-auto object-contain"
+          />
         </Link>
 
         {/* Right Action Icons */}
@@ -1522,7 +1527,7 @@ export function AccountDashboard() {
             activeSection === "dashboard" ? "pb-16" : "pb-6"
           }`}
         >
-          <div className="flex items-center justify-between">
+          <div className="relative flex items-center justify-between">
             <button
               type="button"
               onClick={() => setActiveSection("profile")}
@@ -1531,6 +1536,19 @@ export function AccountDashboard() {
             >
               {firstName.charAt(0)}
             </button>
+            <Link
+              href="/"
+              className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
+              aria-label="Maaleen"
+            >
+              <Image
+                src="/Maaleen_New_Logo-2.png"
+                alt=""
+                width={72}
+                height={44}
+                className="h-8 w-auto object-contain"
+              />
+            </Link>
             <div className="flex items-center gap-1">
               <Link
                 href="/shop"
@@ -1594,10 +1612,10 @@ export function AccountDashboard() {
               { id: "orders", label: "Orders", icon: IconPackage },
               { id: "shop", label: "Shop", href: "/shop", icon: IconBag },
               { id: "wishlist", label: "Wishlist", icon: IconHeart },
-              { id: "services", label: "Services", icon: IconGrid },
+              { id: "signout", label: "Sign out", icon: IconLogout, signOut: true },
             ].map((item) => {
               const IconComp = item.icon;
-              const active = !item.href && activeSection === item.id;
+              const active = !item.href && !item.signOut && activeSection === item.id;
               const className = `flex flex-col items-center gap-1 px-1 pb-2 pt-2.5 text-[10px] font-semibold ${
                 active ? "text-[#370006]" : "text-stone-400"
               }`;
@@ -1621,7 +1639,7 @@ export function AccountDashboard() {
                 <button
                   key={item.id}
                   type="button"
-                  onClick={() => setActiveSection(item.id)}
+                  onClick={item.signOut ? handleSignOut : () => setActiveSection(item.id)}
                   className={className}
                 >
                   {inner}
