@@ -116,7 +116,8 @@ function LoginPanelContent() {
   };
 
   return (
-    <div className="w-full">
+    <div className="w-full rounded-lg bg-[#efe4da] p-5">
+      <div className="rounded-lg bg-[var(--surface)] px-5 py-6 sm:px-6">
       <h1 className="font-[family-name:var(--font-display)] text-4xl text-stone-900 sm:text-5xl">
         Welcome Back
       </h1>
@@ -141,7 +142,7 @@ function LoginPanelContent() {
           } ${mode ? "gap-2 px-3 sm:gap-2.5 sm:px-4" : "w-full"}`}
         >
           <PhoneIcon className="h-4 w-4 shrink-0" />
-          <span className={mode ? "text-center leading-tight" : undefined}>
+          <span className="whitespace-nowrap text-center text-xs leading-none">
             Login with Phone
           </span>
         </button>
@@ -155,7 +156,7 @@ function LoginPanelContent() {
           } ${mode ? "gap-2 px-3 sm:gap-2.5 sm:px-4" : "w-full"}`}
         >
           <MailIcon className="h-4 w-4 shrink-0" />
-          <span className={mode ? "text-center leading-tight" : undefined}>
+          <span className="whitespace-nowrap text-center text-xs leading-none">
             Login with Email
           </span>
         </button>
@@ -314,6 +315,7 @@ function LoginPanelContent() {
         >
           Create one now
         </Link>
+      </div>
       </div>
     </div>
   );
