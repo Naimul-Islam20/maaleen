@@ -15,7 +15,7 @@ export default function SizeGuidePage() {
         <img
           src="size.jpg"
           alt="Size guide chart"
-          className="block w-full h-auto"
+          className="block h-auto w-full rounded-md"
         />
       </Container>
     </section>

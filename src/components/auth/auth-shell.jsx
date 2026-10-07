@@ -21,7 +21,7 @@ export function AuthShell({
         </div>
 
         <div
-          className={`relative hidden overflow-hidden bg-stone-200 lg:block ${AUTH_SHELL_MIN_H}`}
+          className={`relative hidden overflow-hidden rounded-md bg-stone-200 lg:block ${AUTH_SHELL_MIN_H}`}
         >
           <Image
             src={imageSrc}

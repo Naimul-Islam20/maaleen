@@ -91,6 +91,11 @@ body {
   font-family: var(--font-sans);
 }
 
+/* Slight radius. Classes that already set rounded-* keep their own shape. */
+button:not([class*="rounded-"]) {
+  border-radius: 0.375rem;
+}
+
 /* Home products Embla: slide width = share of carousel viewport (not fixed rem) so 4 fit on lg.
    Margin between slides instead of flex gap — Embla loop + gap can collapse at the wrap. */
 .maaleen-products-embla {

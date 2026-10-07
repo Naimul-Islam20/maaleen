@@ -58,7 +58,7 @@ export function HeroSlider() {
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
-      <div className="relative h-[28rem] w-full overflow-hidden sm:h-[34rem] lg:h-[40rem]">
+      <div className="relative h-[28rem] w-full overflow-hidden rounded-md sm:h-[34rem] lg:h-[40rem]">
         <div className="sr-only" aria-live="polite" aria-atomic="true">
           {`Slide ${index + 1} of ${SLIDES.length}: ${slide.title}`}
         </div>

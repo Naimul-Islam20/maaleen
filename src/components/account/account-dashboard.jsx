@@ -1235,7 +1235,7 @@ function DashboardHomeView({ onNavigate, wishCount }) {
                   </span>
                 </div>
                 <div className="flex flex-1 flex-col">
-                  <div className="relative h-36 w-full overflow-hidden bg-stone-100">
+                  <div className="relative h-36 w-full overflow-hidden rounded-md bg-stone-100">
                     <Image
                       src={offer.image}
                       alt={offer.title}

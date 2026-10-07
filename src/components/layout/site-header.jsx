@@ -1461,9 +1461,11 @@ export function SiteHeader() {
             style={{
               height: BOTTOM_DOCK_H,
               width: dockWidth,
-              backdropFilter: "blur(22px)",
-              WebkitBackdropFilter: "blur(22px)",
-              backgroundColor: "rgba(255, 255, 255, 0.72)",
+              backdropFilter: "blur(28px) saturate(1.45)",
+              WebkitBackdropFilter: "blur(28px) saturate(1.45)",
+              backgroundColor: "rgba(255, 246, 238, 0.84)",
+              backgroundImage:
+                "linear-gradient(180deg, rgba(255,255,255,0.5) 0%, rgba(255,240,225,0.16) 52%, rgba(197,158,117,0.24) 100%)",
               WebkitMaskImage: "url(#maaleen-dock-mask)",
               maskImage: "url(#maaleen-dock-mask)",
             }}
