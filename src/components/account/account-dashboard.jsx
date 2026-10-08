@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 import { AnimatePresence, motion } from "framer-motion";
+import { LuShoppingBag, LuSparkle } from "react-icons/lu";
 import { AddAddressModal } from "@/components/account/add-address-modal";
 import { useAuth } from "@/contexts/auth-context";
 import { useWishlist } from "@/contexts/wishlist-context";
@@ -913,8 +914,8 @@ function MobileDashboardHome({ onNavigate }) {
       <div className="relative rounded-[1.35rem] bg-white px-3 pb-2 pt-3.5 shadow-[0_8px_24px_rgba(55,0,6,0.06)]">
         <div className="grid grid-cols-2">
           {[
-            { id: "quick", label: "Quick Shopping", icon: IconBag },
-            { id: "favourites", label: "Favourites", icon: IconSpark },
+            { id: "quick", label: "Quick Shopping", icon: LuShoppingBag },
+            { id: "favourites", label: "Favourites", icon: LuSparkle },
           ].map((item) => {
             const TabIcon = item.icon;
             const active = tab === item.id;
@@ -929,7 +930,7 @@ function MobileDashboardHome({ onNavigate }) {
                     : "border-b border-stone-100 text-stone-400"
                 }`}
               >
-                <TabIcon className="h-4 w-4" />
+                <TabIcon className="h-[18px] w-[18px]" strokeWidth={1.75} />
                 {item.label}
               </button>
             );
