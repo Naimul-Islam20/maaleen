@@ -32,8 +32,34 @@ export function InfoPage({ title, children }) {
           {title}
         </h1>
 
+        <nav
+          aria-label="Information"
+          className="-mx-3 mt-6 border-b border-stone-200 lg:hidden"
+        >
+          <ul className="flex gap-1 overflow-x-auto px-3 scrollbar-none">
+            {LINKS.map((item) => {
+              const active = pathname === item.href;
+              return (
+                <li key={item.href} className="shrink-0">
+                  <Link
+                    href={item.href}
+                    aria-current={active ? "page" : undefined}
+                    className={`block border-b-2 px-3 py-3 text-sm whitespace-nowrap transition ${
+                      active
+                        ? "border-[#370006] font-semibold text-stone-950"
+                        : "border-transparent text-stone-500"
+                    }`}
+                  >
+                    {item.label}
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+        </nav>
+
         <div className="mt-8 grid items-start gap-8 lg:mt-12 lg:grid-cols-[240px_minmax(0,1fr)] lg:gap-14">
-          <aside className="lg:sticky lg:top-24">
+          <aside className="hidden lg:sticky lg:top-24 lg:block">
             <nav
               aria-label="Information"
               className="rounded-2xl border border-stone-200/80 bg-white py-3 shadow-[0_10px_30px_rgba(55,0,6,0.04)]"

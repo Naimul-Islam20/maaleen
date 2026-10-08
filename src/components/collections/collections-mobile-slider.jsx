@@ -173,7 +173,7 @@ export function CollectionsMobileSlider({ items }) {
             item={items[activeIndex]}
             variant="tile"
             compact
-            className="aspect-video min-h-0"
+            className="aspect-[4/3] min-h-0"
             sizes="80vw"
           />
         </div>
@@ -201,7 +201,7 @@ export function CollectionsMobileSlider({ items }) {
                 variant="tile"
                 compact
                 priority={slot.offset === 0}
-                className="aspect-video min-h-0"
+                className="aspect-[4/3] min-h-0"
                 sizes="80vw"
               />
             </div>
@@ -209,29 +209,23 @@ export function CollectionsMobileSlider({ items }) {
         })}
       </div>
 
-      <div className="mt-8 flex flex-wrap items-center justify-center gap-3 sm:mt-10">
-        <button
-          type="button"
-          aria-label="Previous collections"
-          onClick={goPrev}
-          disabled={!hasLoop}
-          className="inline-flex min-h-12 min-w-12 items-center justify-center rounded-full border border-[var(--primary)] bg-transparent text-[var(--primary)] transition-all hover:bg-[var(--primary)] hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)] disabled:cursor-not-allowed disabled:opacity-30"
-        >
-          <span aria-hidden className="text-2xl leading-none">
-            ‹
-          </span>
-        </button>
-        <button
-          type="button"
-          aria-label="Next collections"
-          onClick={goNext}
-          disabled={!hasLoop}
-          className="inline-flex min-h-12 min-w-12 items-center justify-center rounded-full border border-[var(--primary)] bg-transparent text-[var(--primary)] transition-all hover:bg-[var(--primary)] hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)] disabled:cursor-not-allowed disabled:opacity-30"
-        >
-          <span aria-hidden className="text-2xl leading-none">
-            ›
-          </span>
-        </button>
+      <div className="mt-4 flex items-center justify-center gap-2" role="tablist" aria-label="Collection slides">
+        {items.map((item, index) => {
+          const active = index === activeIndex;
+          return (
+            <button
+              key={`${item.href}-${index}`}
+              type="button"
+              role="tab"
+              aria-selected={active}
+              aria-label={`Go to ${item.title}`}
+              onClick={() => setActiveIndex(index)}
+              className={`h-2 rounded-full transition-all duration-300 ${
+                active ? "w-6 bg-[#370006]" : "w-2 bg-[#370006]/30"
+              }`}
+            />
+          );
+        })}
       </div>
     </div>
   );
