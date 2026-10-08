@@ -4,6 +4,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
+import { createPortal } from "react-dom";
+import { AnimatePresence, motion } from "framer-motion";
 import { AddAddressModal } from "@/components/account/add-address-modal";
 import { useAuth } from "@/contexts/auth-context";
 import { useWishlist } from "@/contexts/wishlist-context";
@@ -1350,10 +1352,25 @@ export function AccountDashboard() {
 
   const [activeSection, setActiveSection] = useState("dashboard");
   const [greeting, setGreeting] = useState("Good Afternoon");
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [searchMounted, setSearchMounted] = useState(false);
 
   useEffect(() => {
     setGreeting(getGreeting());
   }, []);
+
+  useEffect(() => {
+    setSearchMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!searchOpen) return undefined;
+    function onKey(event) {
+      if (event.key === "Escape") setSearchOpen(false);
+    }
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [searchOpen]);
 
   useEffect(() => {
     if (ready && !isAuthenticated) {
@@ -1412,6 +1429,54 @@ export function AccountDashboard() {
 
   return (
     <div className="min-h-screen bg-[#fcf9f6] text-stone-900 font-sans antialiased overflow-x-hidden">
+      {searchMounted
+        ? createPortal(
+            <AnimatePresence>
+              {searchOpen ? (
+                <motion.form
+                  key="dashboard-search"
+                  action="/shop"
+                  method="get"
+                  role="search"
+                  aria-label="Search products"
+                  initial={{ y: "-100%", opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  exit={{ y: "-100%", opacity: 0 }}
+                  transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                  className="fixed inset-x-0 top-0 z-[80] flex items-center gap-2 bg-[#370006] px-4 py-3 shadow-lg"
+                >
+                  <button
+                    type="button"
+                    onClick={() => setSearchOpen(false)}
+                    className="inline-flex h-10 w-10 shrink-0 items-center justify-center text-[var(--secondary)]"
+                    aria-label="Close search"
+                  >
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="h-5 w-5" aria-hidden>
+                      <path d="M18 6 6 18" strokeLinecap="round" />
+                      <path d="m6 6 12 12" strokeLinecap="round" />
+                    </svg>
+                  </button>
+                  <div className="relative min-w-0 flex-1">
+                    <input
+                      type="search"
+                      name="q"
+                      placeholder="Search products"
+                      autoFocus
+                      className="h-11 w-full rounded-full border border-white/35 bg-white/10 px-4 pr-24 text-sm text-white outline-none placeholder:text-white/70 focus:border-white"
+                    />
+                    <button
+                      type="submit"
+                      className="absolute right-1 top-1/2 -translate-y-1/2 rounded-full bg-white/15 px-3 py-1.5 text-xs font-semibold text-white"
+                    >
+                      Search
+                    </button>
+                  </div>
+                </motion.form>
+              ) : null}
+            </AnimatePresence>,
+            document.body,
+          )
+        : null}
       {/* Top Header Bar */}
       <header className="sticky top-0 z-30 hidden items-center justify-between border-b border-[#eee7e1] bg-white px-4 sm:px-6 py-3 sm:py-3.5 shadow-2xs font-sans lg:flex">
         {/* Brand Logo */}
@@ -1427,13 +1492,15 @@ export function AccountDashboard() {
 
         {/* Right Action Icons */}
         <div className="flex items-center gap-1 sm:gap-2">
-          <Link
-            href="/shop"
-            aria-label="Search"
+          <button
+            type="button"
+            aria-label={searchOpen ? "Close search" : "Search"}
+            aria-expanded={searchOpen}
+            onClick={() => setSearchOpen((open) => !open)}
             className="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-full text-stone-600 transition hover:bg-stone-100 hover:text-[#370006]"
           >
             <IconSearch className="h-4 w-4 sm:h-5 sm:w-5" />
-          </Link>
+          </button>
           <button
             type="button"
             aria-label="Trophy Rewards"
@@ -1550,13 +1617,15 @@ export function AccountDashboard() {
               />
             </Link>
             <div className="flex items-center gap-1">
-              <Link
-                href="/shop"
-                aria-label="Search"
+              <button
+                type="button"
+                aria-label={searchOpen ? "Close search" : "Search"}
+                aria-expanded={searchOpen}
+                onClick={() => setSearchOpen((open) => !open)}
                 className="flex h-10 w-10 items-center justify-center rounded-full text-white"
               >
                 <IconSearch className="h-5 w-5" />
-              </Link>
+              </button>
               <button
                 type="button"
                 aria-label="Rewards"
