@@ -644,7 +644,7 @@ function AccountDetailView({ onBack }) {
               </div>
               <div className="mt-4 flex items-center gap-3">
                 <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#370006] text-white font-black text-xs">
-                  ★
+                  <Image src="/Maaleen_New_Logo-2.png" alt="" width={26} height={16} className="h-4 w-auto object-contain" />
                 </div>
                 <div>
                   <p className="text-[11px] font-bold uppercase text-stone-800">MAALEEN REWARDS</p>
@@ -833,12 +833,20 @@ function MobileDashboardHome({ onNavigate }) {
     : QUICK_SHOPPING_ACTIONS.slice(0, 3);
 
   return (
-    <div className="space-y-4 lg:hidden">
-      <div className="-mx-3 -mt-4 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-1">
+    <div className="lg:hidden">
+      <div className="relative z-10">
+        <div className="flex snap-x snap-mandatory gap-3 overflow-x-auto pb-1 scrollbar-none">
         {accounts.map((account) => (
           <div
             key={account.id}
-            className="w-[84%] shrink-0 snap-start rounded-2xl bg-gradient-to-b from-white to-[#fff6f2] p-4 text-left shadow-md"
+            className="w-[78%] shrink-0 snap-start bg-white/50 overflow-hidden rounded-[1.35rem] border border-white p-4 text-left shadow-[0_8px_24px_rgba(255,255,255,0.08)]"
+            style={{
+              backdropFilter: "blur(16px) saturate(1.25)",
+              WebkitBackdropFilter: "blur(16px) saturate(1.25)",
+              backgroundColor: "rgba(255, 255, 255, 0.58)",
+              backgroundImage:
+                "linear-gradient(180deg, rgba(255,255,255,0.72) 0%, rgba(255,248,244,0.5) 58%, rgba(255,236,228,0.38) 100%)",
+            }}
           >
             <div className="flex items-center gap-2 text-lg font-semibold tracking-wide text-[#370006]">
               <button
@@ -867,7 +875,17 @@ function MobileDashboardHome({ onNavigate }) {
               className="mt-4 flex w-full items-center gap-2.5 text-left"
             >
               <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-[#370006] text-[10px] font-bold text-white">
-                {account.mark}
+                {account.id === "rewards" ? (
+                  <Image
+                    src="/Maaleen_New_Logo-2.png"
+                    alt=""
+                    width={26}
+                    height={16}
+                    className="h-4 w-auto object-contain"
+                  />
+                ) : (
+                  account.mark
+                )}
               </span>
               <span className="min-w-0">
                 <span className="block text-[11px] font-bold uppercase tracking-wide text-stone-800">
@@ -878,31 +896,52 @@ function MobileDashboardHome({ onNavigate }) {
             </button>
           </div>
         ))}
+        </div>
       </div>
 
-      <div className="rounded-2xl bg-white px-3 pb-3 pt-4 shadow-sm">
-        <div className="grid grid-cols-2 border-b border-stone-100">
+      <div className="relative z-0 -mx-3 -mt-[3.7rem] rounded-t-xl bg-white px-3 pt-[4.7rem]">
+      <div className="space-y-3.5">
+      <div className="relative rounded-[1.35rem] bg-white px-3 pb-2 pt-3.5 shadow-[0_8px_24px_rgba(55,0,6,0.06)]">
+        <div className="grid grid-cols-2">
           {[
-            { id: "quick", label: "Quick Shopping" },
-            { id: "favourites", label: "Favourites" },
-          ].map((item) => (
-            <button
-              key={item.id}
-              type="button"
-              onClick={() => setTab(item.id)}
-              className={`rounded-none pb-2.5 text-sm font-semibold ${
-                tab === item.id
-                  ? "border-b-2 border-[#370006] text-[#370006]"
-                  : "text-stone-400"
-              }`}
-            >
-              {item.label}
-            </button>
-          ))}
+            { id: "quick", label: "Quick Shopping", icon: IconBag },
+            { id: "favourites", label: "Favourites", icon: IconSpark },
+          ].map((item) => {
+            const TabIcon = item.icon;
+            const active = tab === item.id;
+            return (
+              <button
+                key={item.id}
+                type="button"
+                onClick={() => setTab(item.id)}
+                className={`flex items-center justify-center gap-1.5 rounded-none pb-2.5 text-sm font-semibold ${
+                  active
+                    ? "border-b-2 border-[#370006] text-[#370006]"
+                    : "border-b border-stone-100 text-stone-400"
+                }`}
+              >
+                <TabIcon className="h-4 w-4" />
+                {item.label}
+              </button>
+            );
+          })}
         </div>
+        {tab === "quick" ? (
+          <button
+            type="button"
+            onClick={() => setQuickOpen((value) => !value)}
+            aria-expanded={quickOpen}
+            aria-label={quickOpen ? "Show fewer actions" : "Show more actions"}
+            className="absolute top-1/2 right-0 z-10 flex h-14 w-7 -translate-y-1/2 items-center justify-center rounded-l-xl bg-stone-200/90 text-stone-500 shadow-sm"
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" className="h-4 w-4" aria-hidden>
+              <path d="M14 6l-6 6 6 6" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </button>
+        ) : null}
 
         {tab === "quick" ? (
-          <div className="grid grid-cols-3 gap-y-4 px-1 pt-5">
+          <div className="grid grid-cols-3 gap-y-4 px-1 pr-5 pt-5">
             {quickItems.map((item) => {
               const IconComponent = item.icon;
               const inner = (
@@ -976,7 +1015,7 @@ function MobileDashboardHome({ onNavigate }) {
         ) : null}
       </div>
 
-      <div className="flex items-center gap-3 rounded-2xl border border-[#c59e75]/30 bg-gradient-to-r from-[#fff8f4] to-[#fff1e8] p-4">
+      <div className="flex items-center gap-3 rounded-[1.35rem] border border-[#f0d9cc] bg-gradient-to-r from-[#fff9f6] to-[#fff1ea] px-4 py-3.5 shadow-sm">
         <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-white text-2xl shadow-sm">
           🎁
         </div>
@@ -990,8 +1029,8 @@ function MobileDashboardHome({ onNavigate }) {
         </div>
       </div>
 
-      <div className="overflow-hidden rounded-2xl bg-white shadow-sm">
-        <h3 className="px-4 pt-4 text-sm font-semibold text-stone-800">My Orders</h3>
+      <div className="overflow-hidden rounded-[1.35rem] bg-white shadow-[0_8px_24px_rgba(55,0,6,0.05)]">
+        <h3 className="px-4 pb-3 pt-4 text-[15px] font-semibold text-stone-800">My Orders</h3>
         <button
           type="button"
           onClick={() => onNavigate("orders")}
@@ -1052,6 +1091,8 @@ function MobileDashboardHome({ onNavigate }) {
           ))}
         </div>
       </div>
+      </div>
+      </div>
     </div>
   );
 }
@@ -1092,7 +1133,7 @@ function DashboardHomeView({ onNavigate, wishCount }) {
             </div>
             <div className="mt-3 flex items-center gap-2">
               <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#370006] text-white font-bold text-xs shadow-xs">
-                ★
+                <Image src="/Maaleen_New_Logo-2.png" alt="" width={26} height={16} className="h-4 w-auto object-contain" />
               </div>
               <div className="min-w-0">
                 <p className="text-[10px] font-bold uppercase tracking-wide text-stone-800 group-hover:text-[#370006] transition truncate">MAALEEN REWARDS</p>
@@ -1151,7 +1192,7 @@ function DashboardHomeView({ onNavigate, wishCount }) {
         <div className="rounded-2xl border border-[#eee7e1] bg-white p-3.5 sm:p-5 shadow-xs">
           <h3 className="text-xs sm:text-sm font-semibold text-stone-800">Quick Shopping &amp; Services</h3>
           <hr className="my-2.5 sm:my-3 border-stone-100" />
-          
+
           <div className="grid grid-cols-5 gap-y-4 gap-x-1 sm:gap-y-5 sm:gap-x-4">
             {QUICK_SHOPPING_ACTIONS.map((item) => {
               const IconComponent = item.icon;
@@ -1191,7 +1232,7 @@ function DashboardHomeView({ onNavigate, wishCount }) {
         {/* MY FAVOURITE COLLECTIONS */}
         <div className="rounded-2xl border border-[#eee7e1] bg-white p-3.5 sm:p-5 shadow-xs overflow-hidden">
           <h3 className="text-xs sm:text-sm font-semibold text-stone-800">My Favourite Collections</h3>
-          
+
           <div className="mt-3 -mx-3.5 sm:-mx-5 flex items-center gap-3 overflow-x-auto px-3.5 sm:px-5 pb-2 scrollbar-none">
             {FAVORITES_LIST.map((fav) => (
               <Link
@@ -1590,33 +1631,20 @@ export function AccountDashboard() {
         </aside>
 
         <div
-          className={`bg-gradient-to-b from-[#8d2430] via-[#5c1018] to-[#370006] px-4 pt-4 text-white lg:hidden ${
-            activeSection === "dashboard" ? "pb-16" : "pb-6"
+          className={`bg-gradient-to-b from-[#9a3038] via-[#6e1520] to-[#370006] px-4 pt-3.5 text-white lg:hidden ${
+            activeSection === "dashboard" ? "pb-24" : "pb-6"
           }`}
         >
-          <div className="relative flex items-center justify-between">
+          <div className="flex items-center justify-between">
             <button
               type="button"
               onClick={() => setActiveSection("profile")}
-              className="flex h-11 w-11 items-center justify-center rounded-full bg-white/15 text-base font-semibold"
+              className="flex h-11 w-11 items-center justify-center rounded-full bg-[#c45660] text-base font-semibold text-white"
               aria-label="Profile"
             >
               {firstName.charAt(0)}
             </button>
-            <Link
-              href="/"
-              className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
-              aria-label="Maaleen"
-            >
-              <Image
-                src="/Maaleen_New_Logo-2.png"
-                alt=""
-                width={72}
-                height={44}
-                className="h-8 w-auto object-contain"
-              />
-            </Link>
-            <div className="flex items-center gap-1">
+            <div className="flex items-center">
               <button
                 type="button"
                 aria-label={searchOpen ? "Close search" : "Search"}
@@ -1640,16 +1668,16 @@ export function AccountDashboard() {
                 className="relative flex h-10 w-10 items-center justify-center rounded-full text-white"
               >
                 <IconBell className="h-5 w-5" />
-                <span className="absolute right-1 top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-[#e2b657] px-1 text-[9px] font-bold text-[#370006]">
+                <span className="absolute right-0.5 top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-[#f0c14d] px-1 text-[9px] font-bold text-[#370006]">
                   2
                 </span>
               </button>
             </div>
           </div>
-          <div className="mt-5 flex items-end justify-between gap-3">
+          <div className="mt-4 flex items-end justify-between gap-3">
             <div>
-              <p className="text-sm text-white/80">{greeting}</p>
-              <p className="mt-0.5 text-lg font-bold uppercase tracking-wide">
+              <p className="text-sm text-white/75">{greeting}</p>
+              <p className="mt-0.5 text-[1.35rem] font-extrabold uppercase leading-tight tracking-wide">
                 {user.name}
               </p>
             </div>
@@ -1667,14 +1695,14 @@ export function AccountDashboard() {
         <main
           className={`min-w-0 w-full flex-1 overflow-x-hidden px-3 sm:px-5 lg:px-8 ${
             activeSection === "dashboard"
-              ? "-mt-12 pb-24 pt-0 lg:mt-0 lg:py-6"
+              ? "-mt-20 pb-24 pt-0 lg:mt-0 lg:py-6"
               : "py-4 pb-24 lg:py-6"
           }`}
         >
           {renderSection()}
         </main>
 
-        <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-stone-200 bg-white pb-[env(safe-area-inset-bottom)] lg:hidden">
+        <nav className="fixed inset-x-0 bottom-0 z-40 bg-white pb-[env(safe-area-inset-bottom)] shadow-[0_-6px_18px_rgba(0,0,0,0.06)] lg:hidden">
           <div className="grid grid-cols-5">
             {[
               { id: "dashboard", label: "Home", icon: IconHome },
@@ -1685,15 +1713,17 @@ export function AccountDashboard() {
             ].map((item) => {
               const IconComp = item.icon;
               const active = !item.href && !item.signOut && activeSection === item.id;
-              const className = `flex flex-col items-center gap-1 px-1 pb-2 pt-2.5 text-[10px] font-semibold ${
+              const className = `relative flex flex-col items-center gap-1 rounded-none px-1 pb-2 pt-2 text-[10px] font-semibold ${
                 active ? "text-[#370006]" : "text-stone-400"
               }`;
               const inner = (
                 <>
                   <span
-                    className={`h-0.5 w-8 rounded-full ${active ? "bg-[#370006]" : "bg-transparent"}`}
+                    className={`absolute inset-x-0 top-0 mx-auto h-[3px] w-8 rounded-b-full ${
+                      active ? "bg-[#370006]" : "bg-transparent"
+                    }`}
                   />
-                  <IconComp className="h-5 w-5" />
+                  <IconComp className="mt-1 h-5 w-5" />
                   {item.label}
                 </>
               );
