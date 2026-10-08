@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Container } from "@/components/layout/container";
+import { InfoPage } from "@/components/layout/info-page";
 
 function FaqItem({ question, children }) {
   const [open, setOpen] = useState(false);
@@ -43,13 +43,8 @@ function FaqItem({ question, children }) {
 
 export default function FaqsPage() {
   return (
-    <section className="w-full py-12 sm:py-16 lg:py-20">
-      <Container>
-        <div className="max-w-3xl mx-auto">
-          <h1 className="font-[family-name:var(--font-display)] text-3xl sm:text-4xl font-semibold tracking-tight text-stone-900">
-            Welcome to the MAALEEN FAQs
-          </h1>
-          <p className="mt-4 text-sm sm:text-base leading-relaxed text-stone-700 text-justify">
+    <InfoPage title="FAQs">
+          <p className="text-justify">
             Welcome to the MAALEEN FAQs page. Here you will find answers to the
             most frequently asked questions about our brand, products, ordering
             process, and customer support. If you need additional information or
@@ -160,8 +155,6 @@ export default function FaqsPage() {
             questions or need further clarification, please do not hesitate to
             reach out. Your satisfaction is important to us.
           </p>
-        </div>
-      </Container>
-    </section>
+    </InfoPage>
   );
 }

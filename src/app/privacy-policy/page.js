@@ -1,14 +1,9 @@
-import { Container } from "@/components/layout/container";
+import { InfoPage } from "@/components/layout/info-page";
 
 export default function PrivacyPolicyPage() {
   return (
-    <section className="w-full py-12 sm:py-16 lg:py-20">
-      <Container>
-        <div className="max-w-3xl mx-auto">
-          <h1 className="font-[family-name:var(--font-display)] text-3xl sm:text-4xl font-semibold tracking-tight text-stone-900">
-            Privacy Policy
-          </h1>
-          <p className="mt-1 text-xs text-stone-500">Effective Date: 01/01/26</p>
+    <InfoPage title="Privacy Policy">
+          <p className="text-xs text-stone-500">Effective Date: 01/01/26</p>
 
           <p className="mt-4 text-justify text-sm sm:text-base leading-relaxed text-stone-700">
             Welcome to MAALEEN. We are committed to respecting and protecting the privacy
@@ -202,9 +197,7 @@ export default function PrivacyPolicyPage() {
               and used.
             </p>
           </section>
-        </div>
-      </Container>
-    </section>
+    </InfoPage>
   );
 }
 

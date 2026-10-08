@@ -1,15 +1,9 @@
-import { Container } from "@/components/layout/container";
+import { InfoPage } from "@/components/layout/info-page";
 
 export default function ReturnPolicyPage() {
   return (
-    <section className="w-full py-12 sm:py-16 lg:py-20">
-      <Container>
-        <div className="max-w-3xl mx-auto">
-          <h1 className="font-[family-name:var(--font-display)] text-3xl sm:text-4xl font-semibold tracking-tight text-stone-900">
-            Exchange &amp; Return Policy
-          </h1>
-
-          <p className="mt-4 text-justify text-sm sm:text-base leading-relaxed text-stone-700">
+    <InfoPage title="Return Policy">
+          <p className="text-justify">
             At MAALEEN, customer satisfaction is a priority. We carefully inspect every
             product before dispatch to ensure quality standards are met. However, if you
             encounter any issues with your purchase, we are here to assist you through our
@@ -138,9 +132,7 @@ export default function ReturnPolicyPage() {
             </p>
             <p>Products sent without prior authorization will not be accepted.</p>
           </section>
-        </div>
-      </Container>
-    </section>
+    </InfoPage>
   );
 }
 

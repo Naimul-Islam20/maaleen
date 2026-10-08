@@ -1,14 +1,9 @@
-import { Container } from "@/components/layout/container";
+import { InfoPage } from "@/components/layout/info-page";
 
 export default function ShippingPolicyPage() {
   return (
-    <section className="w-full py-12 sm:py-16 lg:py-20">
-      <Container>
-        <div className="max-w-3xl mx-auto">
-          <h1 className="font-[family-name:var(--font-display)] text-3xl sm:text-4xl font-semibold tracking-tight text-stone-900">
-            Shipping Policy
-          </h1>
-          <p className="mt-4 text-justify text-sm sm:text-base leading-relaxed text-stone-700">
+    <InfoPage title="Shipping Policy">
+          <p className="text-justify">
             At MAALEEN, we value your time and trust. Our goal is to ensure that your
             orders are processed efficiently and delivered safely. This Shipping Policy
             outlines our shipping methods, delivery timelines, and related terms so you
@@ -164,9 +159,7 @@ export default function ShippingPolicyPage() {
               forward to delivering a seamless shopping experience.
             </p>
           </section>
-        </div>
-      </Container>
-    </section>
+    </InfoPage>
   );
 }
 

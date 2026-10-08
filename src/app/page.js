@@ -1,6 +1,7 @@
 import { CollectionsSection } from "@/components/home/collections-section";
 import { HeroSlider } from "@/components/home/hero-slider";
 import { ProductsSliderSection } from "@/components/home/products-slider-section";
+import { ServiceStrip } from "@/components/home/service-strip";
 import { getNewArrivals, getProducts } from "@/lib/products";
 
 export default function HomePage() {
@@ -12,6 +13,8 @@ export default function HomePage() {
       <section>
         <HeroSlider />
       </section>
+
+      <ServiceStrip />
 
       <CollectionsSection />
 
