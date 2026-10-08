@@ -347,6 +347,15 @@ function IconTrophy({ className = "h-5 w-5" }) {
   );
 }
 
+function IconUser({ className = "h-5 w-5" }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className={className} aria-hidden>
+      <circle cx="12" cy="8" r="3.2" />
+      <path d="M5.5 19.2a6.5 6.5 0 0113 0" strokeLinecap="round" />
+    </svg>
+  );
+}
+
 function IconBell({ className = "h-5 w-5" }) {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className={className}>
@@ -834,7 +843,7 @@ function MobileDashboardHome({ onNavigate }) {
 
   return (
     <div className="lg:hidden">
-      <div className="relative z-10">
+      <div className="relative z-10 -mr-3">
         <div className="flex snap-x snap-mandatory gap-3 overflow-x-auto pb-1 scrollbar-none">
         {accounts.map((account) => (
           <div
@@ -1015,10 +1024,8 @@ function MobileDashboardHome({ onNavigate }) {
         ) : null}
       </div>
 
-      <div className="flex items-center gap-3 rounded-[1.35rem] border border-[#f0d9cc] bg-gradient-to-r from-[#fff9f6] to-[#fff1ea] px-4 py-3.5 shadow-sm">
-        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-white text-2xl shadow-sm">
-          🎁
-        </div>
+      <div className="flex items-center gap-3 rounded-[1.35rem] border border-[#370006]/25 bg-gradient-to-r from-[#370006]/20 to-[#c59e75]/45 px-4 py-3.5 shadow-sm">
+        <IconGift className="h-8 w-8 shrink-0 text-[#370006]" />
         <div>
           <p className="text-sm font-bold leading-snug text-[#370006]">
             Spend &amp; Earn! Get Rewards on Every Order.
@@ -1350,9 +1357,7 @@ function DashboardHomeView({ onNavigate, wishCount }) {
       <div className="w-full min-w-0 space-y-3 lg:col-span-4 xl:col-span-4">
         {/* Banner 1: Spend & Earn */}
         <div className="flex items-center gap-3 rounded-2xl border border-[#c59e75]/40 bg-gradient-to-r from-[#fffbf7] to-[#fff3e6] p-3 shadow-xs">
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white text-xl shadow-xs">
-            🎁
-          </div>
+          <IconGift className="h-7 w-7 shrink-0 text-[#370006]" />
           <div className="min-w-0 flex-1">
             <h4 className="text-[11px] font-bold leading-snug text-[#370006]">
               Spend &amp; Earn! Get Rewards on Every Order.
@@ -1569,8 +1574,8 @@ export function AccountDashboard() {
           {/* User Profile Card */}
           <div className="flex items-start gap-3 px-1">
             <div className="relative">
-              <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#f2efe9] text-[#370006] text-xl font-bold">
-                {firstName.charAt(0)}
+              <div className="flex h-14 w-14 items-center justify-center rounded-full bg-[#f2efe9] text-[#370006]">
+                <IconUser className="h-7 w-7" />
               </div>
               <button
                 type="button"
@@ -1639,10 +1644,10 @@ export function AccountDashboard() {
             <button
               type="button"
               onClick={() => setActiveSection("profile")}
-              className="flex h-11 w-11 items-center justify-center rounded-full bg-[#c45660] text-base font-semibold text-white"
+              className="flex h-11 w-11 items-center justify-center rounded-full bg-[#c45660] text-white"
               aria-label="Profile"
             >
-              {firstName.charAt(0)}
+              <IconUser className="h-6 w-6" />
             </button>
             <div className="flex items-center">
               <button
