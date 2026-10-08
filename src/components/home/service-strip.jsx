@@ -1,8 +1,8 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import { LuBanknote, LuGlobe, LuPackageSearch, LuRefreshCcw, LuSmile } from "react-icons/lu";
 import { Container } from "@/components/layout/container";
-import useEmblaAutoplay from "@/hooks/useEmblaAutoplay";
 
 const iconClass = "h-8 w-8 text-[#b5b5b5]";
 
@@ -27,23 +27,67 @@ function PromiseCard({ item }) {
 }
 
 export function ServiceStrip() {
-  const { emblaRef } = useEmblaAutoplay({
-    slideCount: ITEMS.length,
-    delay: 2800,
-    emblaOptions: {
-      loop: true,
-      align: "start",
-      slidesToScroll: 1,
-    },
-  });
+  const scrollerRef = useRef(null);
+
+  useEffect(() => {
+    const el = scrollerRef.current;
+    if (!el) return;
+
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    let paused = false;
+    let timer;
+
+    const advance = () => {
+      if (!paused && !reduceMotion.matches && el.clientWidth > 0) {
+        const step = el.clientWidth / 2;
+        const max = el.scrollWidth - el.clientWidth;
+        const next = el.scrollLeft + step;
+        el.scrollTo({
+          left: next >= max - 4 ? 0 : next,
+          behavior: "smooth",
+        });
+      }
+      timer = window.setTimeout(advance, 2800);
+    };
+
+    const pause = () => {
+      paused = true;
+      window.clearTimeout(timer);
+    };
+    const resume = () => {
+      if (!paused) return;
+      paused = false;
+      window.clearTimeout(timer);
+      timer = window.setTimeout(advance, 2800);
+    };
+
+    timer = window.setTimeout(advance, 2800);
+    el.addEventListener("pointerdown", pause);
+    window.addEventListener("pointerup", resume);
+    window.addEventListener("pointercancel", resume);
+
+    return () => {
+      window.clearTimeout(timer);
+      el.removeEventListener("pointerdown", pause);
+      window.removeEventListener("pointerup", resume);
+      window.removeEventListener("pointercancel", resume);
+    };
+  }, []);
 
   return (
     <section aria-label="Store promises" className="bg-[var(--surface)]">
       <Container className="py-6 sm:py-8">
-        <div className="overflow-hidden sm:hidden" ref={emblaRef}>
-          <ul className="flex">
+        <div
+          ref={scrollerRef}
+          className="snap-x snap-mandatory overflow-x-auto overscroll-x-contain scrollbar-none sm:hidden"
+        >
+          <ul className="flex" style={{ width: `${(ITEMS.length / 2) * 100}%` }}>
             {ITEMS.map((item) => (
-              <li key={item.label} className="min-w-0 shrink-0 basis-1/2 pr-3">
+              <li
+                key={item.label}
+                className="shrink-0 snap-start pr-3"
+                style={{ width: `${100 / ITEMS.length}%` }}
+              >
                 <PromiseCard item={item} />
               </li>
             ))}
