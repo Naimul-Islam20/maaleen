@@ -3,11 +3,23 @@
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useLayoutEffect, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import { ChromeContainer } from "@/components/layout/container";
+
+const disclosureEase = [0.16, 1, 0.3, 1];
 
 function FooterDisclosure({ title, children }) {
   const [open, setOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useLayoutEffect(() => {
+    const mq = window.matchMedia("(max-width: 639px)");
+    const sync = () => setIsMobile(mq.matches);
+    sync();
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
+  }, []);
 
   return (
     <>
@@ -31,7 +43,7 @@ function FooterDisclosure({ title, children }) {
             strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"
-            className={`h-5 w-5 transition-transform duration-200 ${open ? "rotate-180" : ""}`}
+            className={`h-5 w-5 transition-transform duration-500 ease-out ${open ? "rotate-180" : ""}`}
           >
             <path d="M6 9l6 6 6-6" />
           </svg>
@@ -40,7 +52,32 @@ function FooterDisclosure({ title, children }) {
       <h3 className="mb-8 hidden text-base font-bold uppercase tracking-[0.2em] text-white sm:block">
         {title}
       </h3>
-      <div className={open ? "mt-5 sm:mt-0" : "hidden sm:block"}>{children}</div>
+      {isMobile ? (
+        <AnimatePresence initial={false}>
+          {open ? (
+            <motion.div
+              key="panel"
+              className="overflow-hidden"
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.55, ease: disclosureEase }}
+            >
+              <motion.div
+                className="pt-5"
+                initial={{ y: -16, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                exit={{ y: -10, opacity: 0 }}
+                transition={{ duration: 0.55, ease: disclosureEase }}
+              >
+                {children}
+              </motion.div>
+            </motion.div>
+          ) : null}
+        </AnimatePresence>
+      ) : (
+        <div className="hidden sm:block">{children}</div>
+      )}
     </>
   );
 }

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
+import { motion } from "framer-motion";
 import { useCart } from "@/contexts/cart-context";
 import { useToast } from "@/contexts/toast-context";
 import { SIZE_MEASUREMENTS, sizeOptionLabel } from "@/lib/size-chart";
@@ -88,17 +89,23 @@ export function QuickAddModal({ product, onClose }) {
 
   return createPortal(
     <div className="fixed inset-0 z-[130] flex items-center justify-center p-4">
-      <button
+      <motion.button
         type="button"
         aria-label="Close choose size"
         className="absolute inset-0 bg-black/55"
         onClick={onClose}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.45, ease: "easeOut" }}
       />
-      <div
+      <motion.div
         role="dialog"
         aria-modal="true"
         aria-labelledby="quick-add-title"
         className="relative z-10 flex max-h-[min(88dvh,44rem)] w-full max-w-[24rem] flex-col overflow-hidden rounded-md bg-white shadow-2xl"
+        initial={{ y: "-42vh", opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
       >
         <div className="relative bg-[var(--primary)] px-12 py-3 text-center text-white">
           <h2 id="quick-add-title" className="text-base font-semibold">
@@ -232,7 +239,7 @@ export function QuickAddModal({ product, onClose }) {
             Add to Cart
           </button>
         </div>
-      </div>
+      </motion.div>
     </div>,
     document.body,
   );
